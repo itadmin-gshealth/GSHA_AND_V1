@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.uploads.PharmaFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textBrowseHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginTop="20dp"
+                android:text="Upload prescription"
+                android:textColor="@color/purple_700"
+                android:textSize="25sp"
+                android:paddingLeft="20dp"
+                android:textStyle="bold"
+                android:tooltipText="Browse Doctor's prescription"/>
+
+            <RadioGroup
+                android:id="@+id/radioPharmaGroup"
+                android:layout_width="362dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text1"
+                android:layout_marginTop="18dp"
+                android:orientation="horizontal"
+                android:paddingLeft="20dp">
+
+                <RadioButton
+                    android:id="@+id/radioSend"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:textSize="18dp"
+                    android:textStyle="bold"
+                    android:text="Home Delivery"></RadioButton>
+
+                <RadioButton
+                    android:id="@+id/radioCollect"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="18dp"
+                    android:textStyle="bold"
+                    android:text="Store Pickup"></RadioButton>
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/textPharmaLocator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16dp"
+                android:textColor="@color/teal_200"
+                android:layout_centerInParent="true"
+                android:paddingLeft="200dp"
+                android:layout_below="@+id/radioPharma"
+                android:textStyle="bold"
+                android:linksClickable="false"
+                android:autoLink="all"/>
+
+            <EditText
+                android:id="@+id/text_address"
+                android:layout_width="match_parent"
+                android:textSize="18dp"
+                android:layout_height="200dp"
+                android:layout_below="@+id/text2"
+                android:layout_marginTop="30dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:paddingLeft="13dp"
+                android:hint="Enter your delivery address"
+                android:inputType="text"
+                android:background="@drawable/account_background">
+            </EditText>
+
+            <LinearLayout
+                android:id="@+id/LinearLayout02"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true">
+
+                <Button
+                    android:id="@+id/btnBrowse"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_below="@+id/text_address"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="33dp"
+                    android:layout_marginTop="20dp"
+                    app:icon="@drawable/baseline_attach_file_24"></Button>
+
+                <Button
+                    android:id="@+id/btnRepeat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_below="@+id/text_address"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="20dp"
+                    android:text="Repeat Last Order"
+                    android:textSize="20sp"></Button>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>

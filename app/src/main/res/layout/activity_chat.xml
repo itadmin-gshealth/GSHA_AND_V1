@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/chatBackgroungColor"
+    tools:context=".ChatActivity">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chatRecyclerView"
+        android:layout_above="@+id/chatLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop ="true"
+        android:paddingTop="80dp"
+        android:layout_marginBottom="150dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/chatLinearLayout"
+        android:layout_alignParentBottom = "true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="100"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingRight="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp">
+
+        <EditText
+            android:id="@+id/messageBox"
+            android:layout_width="238dp"
+            android:layout_height="50dp"
+            android:layout_weight="80"
+            android:background="@drawable/messagebox_background"
+            android:hint="Type a message"
+            android:paddingLeft="10dp"
+            tools:layout_editor_absoluteX="3dp"
+            tools:layout_editor_absoluteY="470dp"></EditText>
+
+        <ImageView
+            android:id="@+id/sendButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="20"
+            android:paddingLeft="5dp"
+            android:src="@drawable/baseline_send_24"
+            tools:layout_editor_absoluteX="148dp"
+            tools:layout_editor_absoluteY="480dp"></ImageView>
+
+        <ImageView
+            android:id="@+id/prescripButton"
+            android:layout_width="42dp"
+            android:layout_height="match_parent"
+            android:layout_weight="20"
+            android:src="@drawable/baseline_event_note_24"
+            tools:layout_editor_absoluteX="175dp"
+            tools:layout_editor_absoluteY="485dp"></ImageView>
+
+        <ImageView
+            android:id="@+id/homeButton"
+            android:layout_width="41dp"
+            android:layout_height="match_parent"
+            android:layout_weight="20"
+            android:src="@drawable/baseline_arrow_back_24"
+            tools:layout_editor_absoluteX="175dp"
+            tools:layout_editor_absoluteY="485dp"></ImageView>
+    </LinearLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "509047722373",
+    "project_id": "omif-gsha-and-v1",
+    "storage_bucket": "omif-gsha-and-v1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:509047722373:android:6d1afda3b95cd8a10c34ec",
+        "android_client_info": {
+          "package_name": "com.omif.gsha"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBR4lNwqtyTdQ2QA0sKyNdyl6960fW4eQ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

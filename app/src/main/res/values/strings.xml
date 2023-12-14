@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">GSHA</string>
+    <string name="title_home">Home</string>
+    <string name="title_services">Services</string>
+    <string name="title_notifications">Messages</string>
+    <string name="title_offers">Records</string>
+    <string name="title_account">Account</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="app_widget_description">This is an app widget description</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="message_font">Helvetica font</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+        <string name="hyperlink"> <a href="https://maps.app.goo.gl/mEtPX5ncwP7DEd6R7">Pharmacy Locator</a></string>
+</resources>

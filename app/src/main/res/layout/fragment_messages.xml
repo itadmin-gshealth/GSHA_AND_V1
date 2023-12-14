@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/chatBackgroungColor"
+    tools:context=".ui.messages.MessagesFragment">
+  <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <View
+                android:id="@+id/divider2"
+                android:layout_marginTop="40dp"
+                android:layout_width="fill_parent"
+                android:layout_height="20dp"
+                android:background="@color/purple_700"/>
+
+            <TextView
+                android:id="@+id/text_messages"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:textAlignment="center"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:textColor="@color/teal_700"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id ="@+id/userRecyclerView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:listitem="@layout/user_layout"
+                android:paddingTop="5dp"
+                app:layout_constraintBottom_toBottomOf="@+id/text_messages"
+                app:layout_constraintEnd_toEndOf="@+id/text_messages"
+                app:layout_constraintStart_toStartOf="@+id/text_messages"
+                app:layout_constraintTop_toTopOf="@+id/text_messages"
+                ></androidx.recyclerview.widget.RecyclerView>
+
+           <!-- <View
+                android:id="@+id/seperator"
+                app:layout_constraintBottom_toBottomOf="@+id/userRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_height="2dp"
+                android:background="@color/amber"></View>-->
+
+       </LinearLayout>
+
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
