@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.internal.ContextUtils.getActivity
 import com.omif.gsha.ChatActivity
 import com.omif.gsha.R
 import com.omif.gsha.model.User
@@ -28,6 +30,7 @@ class UserAdapter(val context: Context, private val userList:ArrayList<User>):
         holder.txtName.text = currentUser.name
 
         holder.itemView.setOnClickListener{
+
             val intent = Intent(context, ChatActivity::class.java)
             intent.putExtra("name", currentUser.name)
             intent.putExtra("uid", currentUser.uid)

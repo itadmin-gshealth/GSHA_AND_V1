@@ -1,4 +1,4 @@
-package com.omif.gsha.ui.appointment
+package com.omif.gsha.ui.lab
 
 import android.app.AlertDialog
 import android.content.DialogInterface
@@ -13,30 +13,28 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.omif.gsha.R
 import com.omif.gsha.databinding.FragmentAppointmentBinding
-import com.omif.gsha.ui.home.HomeFragment
-import com.omif.gsha.ui.services.ServicesFragment
+import com.omif.gsha.databinding.FragmentLabBinding
 
 
-class AppointmentFragment : Fragment() {
+class LabFragment : Fragment() {
 
-    private var _binding: FragmentAppointmentBinding? = null
+    private var _binding: FragmentLabBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var viewModel: AppointmentViewModel
+    private lateinit var viewModel: LabViewModel
     private lateinit var btnAppointment: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val appointmentViewModel =
-            ViewModelProvider(this).get(AppointmentViewModel::class.java)
+        val labViewModel =
+            ViewModelProvider(this).get(LabViewModel::class.java)
 
-        _binding = FragmentAppointmentBinding.inflate(inflater, container, false)
+        _binding = FragmentLabBinding.inflate(inflater, container, false)
         val root: View = binding.root
         btnAppointment = binding.btnAppointment
         btnAppointment.setOnClickListener(View.OnClickListener {
@@ -46,7 +44,7 @@ class AppointmentFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(AppointmentViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(LabViewModel::class.java)
         // TODO: Use the ViewModel
     }
 
@@ -65,16 +63,14 @@ class AppointmentFragment : Fragment() {
         textView.setTextColor(Color.WHITE)
         textView.typeface = Typeface.DEFAULT_BOLD;
 
-        val alertDialog = AlertDialog.Builder(this@AppointmentFragment.context).create()
+        val alertDialog = AlertDialog.Builder(this@LabFragment.context).create()
         alertDialog.setCustomTitle(textView)
         alertDialog.setMessage("Appointment has been requested. You will receive a confirmation text on your registered mobile number shortly. ")
         alertDialog.setButton(
             AlertDialog.BUTTON_NEUTRAL, "OK"
-        ) { dialog, which ->   var fragment: Fragment? = null
-            fragment = ServicesFragment()
-            replaceFragment(fragment) }
-            alertDialog.show()
-            alertDialog.apply {
+        ) { dialog, which -> dialog.dismiss() }
+        alertDialog.show()
+        alertDialog.apply {
             getButton(DialogInterface.BUTTON_NEUTRAL).apply{
                 setBackgroundColor(resources.getColor(R.color.purple_700))
                 setTextColor(Color.WHITE)
@@ -82,15 +78,6 @@ class AppointmentFragment : Fragment() {
                 layoutParams = params;
             }
         }
-    }
-
-    private fun replaceFragment(someFragment: Fragment?) {
-        val transaction: FragmentTransaction = requireFragmentManager().beginTransaction()
-        if (someFragment != null) {
-            transaction.replace(com.omif.gsha.R.id.nav_host_fragment_activity_main, someFragment)
-        }
-        //transaction.addToBackStack(null)
-        transaction.commit()
     }
 
 
