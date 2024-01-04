@@ -6,7 +6,10 @@ buildscript {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
     }
     repositories {
+        google()
+        jcenter()
         mavenCentral()
+        maven {  url = uri("https://maven.google.com") }
     }
 }
 plugins {
