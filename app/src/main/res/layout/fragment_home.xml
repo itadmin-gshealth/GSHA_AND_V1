@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/chatBackgroungColor"
+    android:background="@color/white"
     tools:context=".ui.home.HomeFragment">
 
     <ScrollView
@@ -234,7 +234,7 @@
                 android:paddingLeft="20dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginTop="20dp"
-                android:background="@color/chatBackgroungColor">
+                android:background="@color/white">
 
                 <LinearLayout
                     android:layout_width="wrap_content"

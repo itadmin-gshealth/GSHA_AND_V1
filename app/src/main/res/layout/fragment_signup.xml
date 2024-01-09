@@ -78,12 +78,26 @@
             android:inputType="textPassword"
             android:background="@drawable/account_background">
         </EditText>
+
+        <EditText
+            android:id="@+id/text_phonenumber"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/text_password"
+            android:layout_marginTop="18dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:paddingLeft="13dp"
+            android:hint="Phone Number"
+            android:inputType="number"
+            android:background="@drawable/account_background">
+        </EditText>
         
         <Button
             android:id="@+id/SignUp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/text_password"
+            android:layout_below="@+id/text_phonenumber"
             android:text="SIGN UP"
             android:layout_marginLeft="144dp"
             android:layout_centerHorizontal="true"

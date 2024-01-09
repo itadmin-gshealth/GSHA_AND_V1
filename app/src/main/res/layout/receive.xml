@@ -21,7 +21,7 @@
             android:text="This is a received message"
             android:fontFamily="@string/message_font"
             android:textColor="@color/black"
-            android:textSize="23sp">
+            android:textSize="20sp">
         </TextView>
     </RelativeLayout>
 

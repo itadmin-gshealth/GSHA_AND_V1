@@ -68,7 +68,7 @@ class MessagesFragment : Fragment() {
                 for(postSnapshot in snapshot.children)
                 {
                     val currentUser = postSnapshot.getValue(User::class.java)
-                    if(mAuth.currentUser?.uid != currentUser?.uid) {
+                    if(mAuth.currentUser?.uid != currentUser?.uid && currentUser?.uType==2) {
                         userList.add(currentUser!!)
                     }
                 }

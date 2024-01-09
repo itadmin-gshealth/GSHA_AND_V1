@@ -31,6 +31,7 @@ class SignUpFragment : Fragment() {
     private lateinit var txtName: EditText
     private lateinit var txtEmail: EditText
     private lateinit var txtPassword: EditText
+    private lateinit var txtPhoneNumber: EditText
     private lateinit var btnSignUp: Button
     private lateinit var btnSignUpDoctor: Button
 
@@ -53,13 +54,14 @@ class SignUpFragment : Fragment() {
         txtName=binding.textName
         txtEmail=binding.textEmail
         txtPassword = binding.textPassword
+        txtPhoneNumber = binding.textPhonenumber
         btnSignUp = binding.SignUp
         btnSignUpDoctor = binding.SignUpDoctor
         mAuth = FirebaseAuth.getInstance()
 
         btnSignUp.setOnClickListener(){
             if(CheckAllFields()) {
-                signUp(txtName.text.toString(),txtEmail.text.toString(), txtPassword.text.toString(), 0)
+                signUp(txtName.text.toString(),txtEmail.text.toString(), txtPassword.text.toString(), txtPhoneNumber.text.toString(), 0)
             }
         }
 
@@ -71,7 +73,8 @@ class SignUpFragment : Fragment() {
                     txtName.text.toString(),
                     txtEmail.text.toString(),
                     txtPassword.text.toString(),
-                    1
+                    txtPhoneNumber.text.toString(),
+                    2
                 )
             }
         }
@@ -79,11 +82,11 @@ class SignUpFragment : Fragment() {
         return root
     }
 
-    private fun signUp(name: String, email:String, password: String, uType: Int)
+    private fun signUp(name: String, email:String, password: String, phoneNumber: String, uType: Int)
     {
         mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener {task->
             if(task.isSuccessful) {
-                mAuth.uid?.let { addtoDatabase(name, email, it, uType) }
+                mAuth.uid?.let { addtoDatabase(name, email, it, phoneNumber, uType) }
                 Toast.makeText(this@SignUpFragment.context, "User Created Successfully", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this@SignUpFragment.context, MainActivity::class.java)
                 startActivity(intent)
@@ -94,9 +97,9 @@ class SignUpFragment : Fragment() {
         }
     }
 
-    private fun addtoDatabase(name: String, email: String, uid: String, uType: Int) {
+    private fun addtoDatabase(name: String, email: String, uid: String, phoneNumber: String, uType: Int) {
         mdbRef = FirebaseDatabase.getInstance().reference
-        mdbRef.child("userWithType").child(uid).setValue(User(name, email, uid, uType))
+        mdbRef.child("userWithType").child(uid).setValue(User(name, email, uid,phoneNumber, uType))
     }
 
     private fun CheckAllFields(): Boolean {
@@ -115,7 +118,10 @@ class SignUpFragment : Fragment() {
         } else if (txtPassword.text.length < 8) {
             txtPassword.error = "Password must be minimum 8 characters"
             return false
-        }
+        } else if (txtPhoneNumber.text.length < 10) {
+            txtPhoneNumber.error = "Phone number must be 10 digits"
+        return false
+    }
         // after all validation return true.
         return true
     }
