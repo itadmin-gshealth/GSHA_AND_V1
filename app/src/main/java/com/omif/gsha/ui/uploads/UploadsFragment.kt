@@ -42,8 +42,9 @@ class UploadsFragment : Fragment() {
         viewPager.adapter = PagerAdapter(this)
         TabLayoutMediator(tabLayout, viewPager){tab, index ->
             tab.text = when(index){
-                0->{"UPLOAD DOCTOR'S PRESCRIPTION"}
-                1->{"UPLOAD MEDICAL RECORDS"}
+                0->{"VITALS"}
+                1->{"RECORDS"}
+                2->{"MEDS"}
                 else-> {throw Resources.NotFoundException("Position not found")
                 }
             }

@@ -17,7 +17,7 @@ import com.omif.gsha.R
 import com.omif.gsha.databinding.FragmentServicesBinding
 import com.omif.gsha.ui.appointment.AppointmentFragment
 import com.omif.gsha.ui.messages.MessagesFragment
-import com.omif.gsha.ui.uploads.UploadsFragment
+import com.omif.gsha.ui.pharma.PharmaFragment
 
 
 class ServicesFragment : Fragment() {
@@ -234,7 +234,7 @@ class ServicesFragment : Fragment() {
         binding.textIns.setOnClickListener{this.onClick()}
         binding.textPhar.setOnClickListener {
             var fragment: Fragment? = null
-            fragment = UploadsFragment()
+            fragment = PharmaFragment()
             replaceFragment(fragment)
         }
 

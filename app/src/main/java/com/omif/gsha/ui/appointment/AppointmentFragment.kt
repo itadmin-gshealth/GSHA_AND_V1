@@ -14,17 +14,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.CalendarView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
+import com.google.firebase.auth.FirebaseAuth
+import com.omif.gsha.BuildConfig
 import com.omif.gsha.R
 import com.omif.gsha.adapter.AppExecutors
 import com.omif.gsha.adapter.Credentials
 import com.omif.gsha.databinding.FragmentAppointmentBinding
 import com.omif.gsha.ui.services.ServicesFragment
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.util.Date
 import javax.mail.Message
 import javax.mail.MessagingException
 import javax.mail.PasswordAuthentication
@@ -38,11 +44,13 @@ class AppointmentFragment : Fragment() {
 
     private var _binding: FragmentAppointmentBinding? = null
     private val binding get() = _binding!!
+    private lateinit var mAuth: FirebaseAuth
 
     private lateinit var viewModel: AppointmentViewModel
     private lateinit var btnAppointment: Button
-
+    private lateinit var calendarView: CalendarView
     lateinit var appExecutors: AppExecutors
+    private lateinit var appointmentDate:String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,10 +61,20 @@ class AppointmentFragment : Fragment() {
 
         _binding = FragmentAppointmentBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        mAuth = FirebaseAuth.getInstance()
+
         btnAppointment = binding.btnAppointment
-        btnAppointment.setOnClickListener(View.OnClickListener {
+        calendarView = binding.calendarView
+        btnAppointment.setOnClickListener {
             this.onClick()
-        })
+        }
+        val formatter = SimpleDateFormat("yyyy-MM-dd")
+        val date = Date()
+        appointmentDate = formatter.format(date)
+        calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
+            val actMonth = month+1
+            appointmentDate = "$year-$actMonth-$dayOfMonth"
+        }
         return root   }
 
     override fun onAttach(context: Context) {
@@ -171,19 +189,20 @@ class AppointmentFragment : Fragment() {
                 })
 
             try {
+
                 //Creating MimeMessage object
                 val mm = MimeMessage(session)
-                val emailId = "sathiavathy.raph@gmail.com"
+                val emailIdTo = BuildConfig.mailAppointmentTo
                 //Setting sender address
-                mm.setFrom(InternetAddress("gs-telehealth.dev@gsoim.org"))
+                mm.setFrom(InternetAddress(BuildConfig.mailAppointmentFrom))
                 //Adding receiver
                 mm.addRecipient(
                     Message.RecipientType.TO,
-                    InternetAddress(emailId))
+                    InternetAddress(emailIdTo))
                 //Adding subject
-                mm.subject = "testing"
+                mm.subject = "Appointment Booking - "
                 //Adding message
-                mm.setText("Your mail body.")
+                mm.setText("Name - " + mAuth.currentUser?.uid.toString() +"Booking Date : "+ appointmentDate)
                 //Sending email
                 Transport.send(mm)
 

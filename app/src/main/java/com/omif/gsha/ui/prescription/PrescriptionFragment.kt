@@ -27,7 +27,7 @@ class PrescriptionFragment : Fragment() {
 
         _binding = FragmentPrescriptionBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        btnAppointment = binding.btnPrescription
+        btnAppointment = binding.btnSavePrescription
         btnAppointment.setOnClickListener(View.OnClickListener {
             this.onClick()
         })

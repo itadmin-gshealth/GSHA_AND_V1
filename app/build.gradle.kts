@@ -20,9 +20,32 @@ android {
             useSupportLibrary = true
         }
     }
+    productFlavors {
+        flavorDimensions += "tier"
+        create("prod") {
+            dimension = "tier"
+            buildConfigField("String", "mailAppointmentFrom", "\"gs-telehealth.dev@gsoim.org\"")
+            buildConfigField("String", "mailAppointmentTo", "\"sathiavathy.raph@gmail.com\"")
+        }
+        create("dev") {
+            dimension = "tier"
+            buildConfigField("String", "mailAppointmentFrom", "\"gs-telehealth.dev@gsoim.org\"")
+            buildConfigField("String", "mailAppointmentTo", "\"sathia.raphael@gshealth-india.org\"")
+        }
+        create("unittest") {
+            dimension = "tier"
+            buildConfigField("String", "mailAppointmentFrom", "\"gs-telehealth.dev@gsoim.org\"")
+            buildConfigField("String", "mailAppointmentTo", "\"sathiavathy.raph@gmail.com\"")
+        }
+    }
 
     buildTypes {
-        release {
+        var mailAppointmentFrom =""
+        var mailAppointmentTo =""
+
+        getByName("release") {
+            buildConfigField("String", mailAppointmentFrom, "gs-telehealth.dev@gsoim.org")
+            buildConfigField("String", mailAppointmentTo, "sathiavathy.raph@gmail.com")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -40,6 +63,7 @@ android {
     buildFeatures {
         compose = true
         viewBinding = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"

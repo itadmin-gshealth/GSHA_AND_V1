@@ -17,36 +17,85 @@
             android:orientation="vertical"
             android:layout_gravity="center">
 
-            <View
-                android:id="@+id/divider2"
-                android:layout_marginTop="40dp"
-                android:layout_width="fill_parent"
-                android:layout_height="20dp"
-                android:background="@color/purple_700"
-                app:layout_constraintBottom_toTopOf="@+id/textBrowseHeader" />
-
             <TextView
                 android:id="@+id/textBrowseHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="32dp"
-                android:layout_marginTop="10dp"
-                android:text="SCHEDULE YOUR DOCTOR'S VISIT"
-                android:textColor="@color/teal_700"
-                android:layout_centerHorizontal="true"
-                android:textSize="22sp"
+                android:layout_marginTop="20dp"
+                android:text="Prescription"
+                android:textColor="@color/purple_700"
+                android:textSize="25sp"
                 android:paddingLeft="20dp"
-                android:textStyle="bold"></TextView>
+                android:textStyle="bold"/>
+
+            <EditText
+                android:id="@+id/txtPrescription"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_below="@+id/calendarView"
+                android:ems="10"
+                android:inputType="text"
+                android:background="@drawable/account_background"/>
+
+        <LinearLayout
+            android:id="@+id/llPrescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
+
 
             <Button
-                android:id="@+id/btnPrescription"
+                android:id="@+id/btnDownload"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:layout_below="@+id/calendarView"
+                android:layout_below="@+id/txtPrescription"
                 android:layout_centerHorizontal="true"
-                android:layout_marginLeft="60dp"
+                android:layout_marginLeft="10dp"
                 android:layout_marginTop="20dp"
-                android:text="Save"
                 android:clickable="true"
+                android:text="DOWNLOAD"
+                android:textSize="10sp"></Button>
+
+            <Button
+                android:id="@+id/btnGetMedicine"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_below="@+id/txtPrescription"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="20dp"
+                android:clickable="true"
+                android:text="GET MEDICINE"
+                android:textSize="10sp"></Button>
+
+            <Button
+                android:id="@+id/btnLastPrescription"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_below="@+id/txtPrescription"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="10dp"
+                android:clickable="true"
+                android:text="VIEW LAST PRESCRIPTION"
+                android:textSize="10sp"></Button>
+
+        </LinearLayout>
+
+            <Button
+                android:id="@+id/btnSavePrescription"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_below="@+id/llPrescription"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="150dp"
+                android:layout_marginTop="20dp"
+                android:clickable="true"
+                android:text="Save"
                 android:textSize="20sp"></Button>
 
         </LinearLayout>

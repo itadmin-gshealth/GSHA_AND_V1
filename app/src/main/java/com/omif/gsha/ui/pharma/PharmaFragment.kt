@@ -1,11 +1,9 @@
-package com.omif.gsha.ui.uploads
+package com.omif.gsha.ui.pharma
 
-import android.R
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableString
-import android.text.method.LinkMovementMethod
 import android.text.style.UnderlineSpan
 import android.view.LayoutInflater
 import android.view.View

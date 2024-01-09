@@ -1,4 +1,4 @@
-package com.omif.gsha.ui.uploads
+package com.omif.gsha.ui.pharma
 
 import androidx.lifecycle.ViewModel
 
