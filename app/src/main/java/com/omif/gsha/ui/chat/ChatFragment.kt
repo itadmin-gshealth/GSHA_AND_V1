@@ -32,6 +32,8 @@ import com.omif.gsha.databinding.ActivityChatBinding
 import com.omif.gsha.databinding.FragmentAppointmentBinding
 import com.omif.gsha.databinding.FragmentChatBinding
 import com.omif.gsha.model.Message
+import java.text.SimpleDateFormat
+import java.util.Date
 
 
 class ChatFragment : Fragment() {
@@ -88,7 +90,7 @@ class ChatFragment : Fragment() {
         chatRecyclerView.adapter = messageAdapter
 
 
-        mDbRef.child("chats").child(senderRoom!!).child("messages")
+        mDbRef.child("tblChats").child(senderRoom!!).child("messages")
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     messageList.clear()
@@ -109,11 +111,12 @@ class ChatFragment : Fragment() {
 
         sendButton.setOnClickListener{
             val message = messageBox.text.toString()
-            val messageObject = Message(message, senderUid)
+            val formatter = SimpleDateFormat("yyyy-MM-dd")
+            val messageObject = Message(message, senderUid, receiverUid, formatter.format(Date()) )
 
-            mDbRef.child("chats").child(senderRoom!!).child("messages").push()
+            mDbRef.child("tblChats").child(senderRoom!!).child("messages").push()
                 .setValue(messageObject).addOnSuccessListener {
-                    mDbRef.child("chats").child(receiverRoom!!).child("messages").push()
+                    mDbRef.child("tblChats").child(receiverRoom!!).child("messages").push()
                         .setValue(messageObject)
                 }
             messageBox.text=""

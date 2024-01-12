@@ -1,22 +1,34 @@
 package com.omif.gsha.ui.signup
 
+import android.R
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.SignInMethodQueryResult
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.omif.gsha.MainActivity
-import com.omif.gsha.model.User
+import com.omif.gsha.adapter.OnEmailCheckListener
 import com.omif.gsha.databinding.FragmentSignupBinding
+import com.omif.gsha.model.User
+import kotlinx.coroutines.selects.select
 
 
 class SignUpFragment : Fragment() {
@@ -34,6 +46,13 @@ class SignUpFragment : Fragment() {
     private lateinit var txtPhoneNumber: EditText
     private lateinit var btnSignUp: Button
     private lateinit var btnSignUpDoctor: Button
+    private lateinit var ddlDept: Spinner
+    var isEmailRegistered = false
+
+    var dept = arrayOf(
+        "Department","Gynecology ", "Paediatrics", "Dentistry ", "General", "Dermatology ", "Psychiatrist"
+    )
+    var selectedDept = ""
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -57,11 +76,12 @@ class SignUpFragment : Fragment() {
         txtPhoneNumber = binding.textPhonenumber
         btnSignUp = binding.SignUp
         btnSignUpDoctor = binding.SignUpDoctor
+
         mAuth = FirebaseAuth.getInstance()
 
         btnSignUp.setOnClickListener(){
             if(CheckAllFields()) {
-                signUp(txtName.text.toString(),txtEmail.text.toString(), txtPassword.text.toString(), txtPhoneNumber.text.toString(), 0)
+                signUp(txtName.text.toString(),txtEmail.text.toString(), txtPassword.text.toString(), txtPhoneNumber.text.toString(), 1)
             }
         }
 
@@ -69,39 +89,110 @@ class SignUpFragment : Fragment() {
 
         btnSignUpDoctor.setOnClickListener() {
             if (CheckAllFields()) {
-                signUp(
-                    txtName.text.toString(),
-                    txtEmail.text.toString(),
-                    txtPassword.text.toString(),
-                    txtPhoneNumber.text.toString(),
-                    2
-                )
+                showDialog()
             }
-        }
 
+        }
         return root
     }
+
+    private fun showDialog() {
+
+        ddlDept = Spinner(this@SignUpFragment.context)
+        val adapter: ArrayAdapter<String>? = this@SignUpFragment.context?.let {
+            ArrayAdapter<String>(
+                it, R.layout.simple_spinner_item, dept
+            )
+        }
+        adapter?.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
+        ddlDept.adapter = adapter
+
+        val textView = TextView(context)
+        textView.text = "Select Department"
+        textView.setPadding(20, 30, 20, 30)
+        textView.textSize = 20f
+        textView.setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))
+        textView.setTextColor(Color.WHITE)
+        textView.typeface = Typeface.DEFAULT_BOLD;
+        val builder: AlertDialog.Builder = AlertDialog.Builder(context)
+        builder
+            .setView(ddlDept)
+            .setCustomTitle(textView)
+            .setPositiveButton("Ok") { dialog, which ->
+                selectedDept = ddlDept.selectedItem.toString()
+                if(selectedDept == "Department")
+                {
+                    Toast.makeText(this@SignUpFragment.context, "Please select Department", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    signUp(
+                        txtName.text.toString(),
+                        txtEmail.text.toString(),
+                        txtPassword.text.toString(),
+                        txtPhoneNumber.text.toString(),
+                        2
+                    )
+                }
+            }
+
+        val params = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        params.setMargins(20, 0, 0, 0)
+
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+        dialog.apply {
+            getButton(DialogInterface.BUTTON_POSITIVE).apply {
+                setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))
+                setTextColor(Color.WHITE)
+                typeface = Typeface.DEFAULT_BOLD;
+                layoutParams = params;
+            }
+        }
+    }
+
 
     private fun signUp(name: String, email:String, password: String, phoneNumber: String, uType: Int)
     {
         mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener {task->
             if(task.isSuccessful) {
-                mAuth.uid?.let { addtoDatabase(name, email, it, phoneNumber, uType) }
-                Toast.makeText(this@SignUpFragment.context, "User Created Successfully", Toast.LENGTH_SHORT).show()
+                mAuth.uid?.let { if(selectedDept == "" ){
+                    addPatienttoDatabase(name, email, it, phoneNumber,"OutPatient", uType)
+                    addUsertoDatabase(name, email, it, phoneNumber,"OutPatient", uType)
+                    Toast.makeText(this@SignUpFragment.context, "User Created Successfully", Toast.LENGTH_SHORT).show()}
+                else{ if(selectedDept == "Department"){
+                    Toast.makeText(this@SignUpFragment.context, "Please select Department", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    addDoctortoDatabase(name, email, it, phoneNumber, selectedDept, uType)}}
+                    addUsertoDatabase(name, email, it, phoneNumber, selectedDept, uType)
+                    Toast.makeText(this@SignUpFragment.context, "User Created Successfully", Toast.LENGTH_SHORT).show()}
                 val intent = Intent(this@SignUpFragment.context, MainActivity::class.java)
                 startActivity(intent)
             }
             else{
-                Toast.makeText(this@SignUpFragment.context, "Error Creating User, Contact system administrator", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@SignUpFragment.context, task.exception?.message, Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun addtoDatabase(name: String, email: String, uid: String, phoneNumber: String, uType: Int) {
+    private fun addPatienttoDatabase(name: String, email: String, uid: String, phoneNumber: String,department:String, uType: Int) {
         mdbRef = FirebaseDatabase.getInstance().reference
-        mdbRef.child("userWithType").child(uid).setValue(User(name, email, uid,phoneNumber, uType))
+        mdbRef.child("tblPatient").child(uid).setValue(User(name, email, uid,phoneNumber, department, uType))
     }
 
+    private fun addDoctortoDatabase(name: String, email: String, uid: String, phoneNumber: String, department: String, uType: Int) {
+        mdbRef = FirebaseDatabase.getInstance().reference
+        mdbRef.child("tblDoctor").child(uid).setValue(User(name, email, uid,phoneNumber, department, uType))
+    }
+
+    private fun addUsertoDatabase(name: String, email: String, uid: String, phoneNumber: String, department: String, uType: Int) {
+        mdbRef = FirebaseDatabase.getInstance().reference
+        mdbRef.child("tblUserWithType").child(uid).setValue(User(name, email, uid,phoneNumber, department, uType))
+    }
     private fun CheckAllFields(): Boolean {
 
         if (txtName.text.length === 0) {
@@ -125,6 +216,34 @@ class SignUpFragment : Fragment() {
         // after all validation return true.
         return true
     }
+
+    private fun isEmailRegistered()
+    {
+        isCheckEmail(txtEmail.text.toString(), object : OnEmailCheckListener {
+            override fun onSuccess(isRegistered: Boolean) {
+                if(isRegistered)
+                {
+                    Toast.makeText(this@SignUpFragment.context, "Email found", Toast.LENGTH_SHORT).show()
+                }
+                else    {
+                    Toast.makeText(this@SignUpFragment.context, "Email not found", Toast.LENGTH_SHORT).show()
+
+                }
+            }
+        })
+    }
+
+    private fun isCheckEmail(email: String?, listener: OnEmailCheckListener) {
+        if (email != null) {
+            mAuth.fetchSignInMethodsForEmail(email)
+                .addOnCompleteListener(OnCompleteListener<SignInMethodQueryResult> { task ->
+                    val check: Boolean = !task.result.signInMethods?.isNotEmpty()!!
+                    Toast.makeText(this@SignUpFragment.context, check.toString(), Toast.LENGTH_SHORT).show()
+                    listener.onSuccess(check)
+
+                })
+            }
+        }
 
     override fun onDestroyView() {
         super.onDestroyView()
