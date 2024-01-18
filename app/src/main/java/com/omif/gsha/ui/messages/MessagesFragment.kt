@@ -1,5 +1,6 @@
 package com.omif.gsha.ui.messages
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -92,6 +93,9 @@ class MessagesFragment : Fragment() {
                                          val mess = item.getValue(Message::class.java)
                                          if (mAuth.currentUser?.uid == mess?.receiverId && (mess?.messageDate == formatter.format(Date()) || mess?.messageDate == yesterday.toString()))
                                          {
+                                              val preferences =
+                                                   activity?.getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
+
                                              mDbRef.child("tblPatient").addValueEventListener(object : ValueEventListener {
                                                  override fun onDataChange(snapshot: DataSnapshot) {
                                                      for (postSnapshot in snapshot.children) {
@@ -102,6 +106,12 @@ class MessagesFragment : Fragment() {
                                                              {
                                                                  emailList.add(currentUser?.email.toString())
                                                                  userList.add(currentUser!!)
+                                                                 var editor = preferences?.edit()
+                                                                 var patientNames = currentUser.name.plus(",")
+                                                                 var patientuids = currentUser.uid.plus(",")
+                                                                     editor?.putString("patientNames",patientNames)
+                                                                     editor?.putString("patientUids",patientuids)
+                                                                    editor?.commit()
                                                              }
                                                          }
                                                      }
@@ -109,7 +119,7 @@ class MessagesFragment : Fragment() {
                                                  }
 
                                                  override fun onCancelled(error: DatabaseError) {
-                                                     Toast.makeText(context, error.message, Toast.LENGTH_LONG)
+                                                     Toast.makeText(context, error.message, Toast.LENGTH_LONG).show()
                                                  }
                                              })
                                          }
@@ -121,7 +131,7 @@ class MessagesFragment : Fragment() {
                              adapter.notifyDataSetChanged()
                          }
                          override fun onCancelled(error: DatabaseError) {
-                             Toast.makeText(context, error.message, Toast.LENGTH_LONG)
+                             Toast.makeText(context, error.message, Toast.LENGTH_LONG).show()
                          }
                      })
 

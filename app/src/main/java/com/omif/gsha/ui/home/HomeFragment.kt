@@ -1,6 +1,9 @@
 package com.omif.gsha.ui.home
 
+import android.content.Context
 import android.os.Bundle
+import android.preference.PreferenceManager
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +13,13 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.omif.gsha.databinding.FragmentHomeBinding
+import com.omif.gsha.model.User
 
 
 class HomeFragment : Fragment() {
@@ -21,6 +30,8 @@ class HomeFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
     private lateinit var mAuth: FirebaseAuth
+    private lateinit var mDbRef: DatabaseReference
+
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -35,6 +46,36 @@ class HomeFragment : Fragment() {
         val root: View = binding.root
 
         val textView: TextView = binding.textHome
+        mAuth = FirebaseAuth.getInstance()
+        mDbRef = FirebaseDatabase.getInstance().reference
+
+        if(mAuth.currentUser != null)
+       {
+           val preferences = activity?.getSharedPreferences("PREFERENCE_NAME",Context.MODE_PRIVATE)
+
+           val patientId = preferences?.getString("patientId","")
+           val patientName = preferences?.getString("patientName","")
+
+           mDbRef.child("tblUserWithType").child(mAuth.currentUser?.uid!!).addValueEventListener(object :
+               ValueEventListener {
+               override fun onDataChange(snapshot: DataSnapshot) {
+                   val user = snapshot.getValue(User::class.java)
+                   if (user?.uid == mAuth.currentUser?.uid) {
+                       if (user != null) {
+                           var editor = preferences?.edit()
+                           editor?.putString("uName",user.name)
+                           editor?.putString("uEmail",user.email)
+                           editor?.putInt("uType",user.uType)
+                           editor?.commit()
+                       }
+                   }
+               }
+               override fun onCancelled(error: DatabaseError) {
+                   Toast.makeText(context, error.message, Toast.LENGTH_LONG)
+               }
+           })
+       }
+
         homeViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }

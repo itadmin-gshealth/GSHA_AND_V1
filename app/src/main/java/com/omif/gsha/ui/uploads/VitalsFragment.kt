@@ -1,60 +1,103 @@
 package com.omif.gsha.ui.uploads
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.omif.gsha.R
+import android.widget.Button
+import android.widget.TextView
+import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.omif.gsha.databinding.FragmentVitalsBinding
+import com.omif.gsha.model.Vitals
+import java.text.SimpleDateFormat
+import java.util.Date
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [VitalsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class VitalsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private var _binding: FragmentVitalsBinding? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
+    private lateinit var mAuth: FirebaseAuth
+    private lateinit var mDbRef: DatabaseReference
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_vitals, container, false)
-    }
+    ): View {
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment VitalsFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            VitalsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+        val vitalsViewModel =
+            ViewModelProvider(this).get(VitalsViewModel::class.java)
+
+        _binding = FragmentVitalsBinding.inflate(inflater, container, false)
+        val root: View = binding.root
+
+        val txtWeightValue: TextView = binding.txtWeightValue
+        val txtHeightValue: TextView = binding.txtHeightValue
+        val txtbpSysValue: TextView = binding.txtbpSysValue
+        val txtbpDiaValue: TextView = binding.txtbpDiaValue
+        val txtTempValue: TextView = binding.txtTempValue
+        val txtSugarValue: TextView = binding.txtSugarValue
+        val txtPulseRateValue: TextView = binding.txtPulseRateValue
+        val txtSPO2Value: TextView = binding.txtSPO2Value
+        var uName  = ""
+        var uType : Int = 0
+
+
+        val btnSave: Button = binding.btnSaveVitals
+
+        mAuth = FirebaseAuth.getInstance()
+        mDbRef = FirebaseDatabase.getInstance().reference
+
+        if (mAuth.currentUser != null) {
+            val preferences =
+                activity?.getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
+            uName = preferences?.getString("uName", "").toString()
+            uType = preferences?.getInt("uType",0)!!
+        }
+
+        val textView: TextView = binding.txtVitals
+        val preferences = activity?.getSharedPreferences("PREFERENCE_NAME",Context.MODE_PRIVATE)
+        val patientNames = preferences?.getString("patientNames","")
+        val patientuids = preferences?.getString("patientuids","")
+        vitalsViewModel.text.observe(viewLifecycleOwner) {
+                textView.text = it
+        }
+
+        btnSave.setOnClickListener{
+            val formatter = SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+            var weight = if(txtWeightValue.text.toString().toDoubleOrNull() == null) 0.0 else txtWeightValue.text.toString().toDoubleOrNull()
+            var height = if(txtHeightValue.text.toString().toDoubleOrNull() == null) 0.0 else txtHeightValue.text.toString().toDoubleOrNull()
+            var bpDia = if(txtbpDiaValue.text.toString().toIntOrNull() == null) 0 else txtbpDiaValue.text.toString().toIntOrNull()
+            var bpSys = if(txtbpSysValue.text.toString().toIntOrNull() == null) 0 else txtbpSysValue.text.toString().toIntOrNull()
+            var temp = if(txtTempValue.text.toString().toIntOrNull() == null) 0 else txtTempValue.text.toString().toIntOrNull()
+            var sugar = if(txtSugarValue.text.toString().toIntOrNull() == null) 0 else txtSugarValue.text.toString().toIntOrNull()
+            var pulseRate = if(txtPulseRateValue.text.toString().toIntOrNull() == null) 0 else txtPulseRateValue.text.toString().toIntOrNull()
+            var spO2 = if(txtSPO2Value.text.toString().toIntOrNull() == null) 0 else txtSPO2Value.text.toString().toIntOrNull()
+
+            val messageObject = Vitals(
+                weight,
+                height,
+                bpDia,
+                bpSys,
+                temp,
+                sugar,
+                pulseRate,
+                spO2,
+                mAuth.currentUser!!.uid.toString(),
+                formatter.format(Date())
+            )
+
+            mDbRef.child("tblVitals").push()
+                .setValue(messageObject)
+        }
+
+        return root
     }
 }

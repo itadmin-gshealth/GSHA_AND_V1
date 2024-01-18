@@ -1,5 +1,6 @@
 package com.omif.gsha.ui.uploads
 
+import android.content.Context
 import android.content.res.Resources
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -39,16 +40,35 @@ class UploadsFragment : Fragment() {
         startActivity(intent)*/
         tabLayout = binding.tabLayout
         viewPager = binding.viewPager
-        viewPager.adapter = PagerAdapter(this)
-        TabLayoutMediator(tabLayout, viewPager){tab, index ->
-            tab.text = when(index){
-                0->{"VITALS"}
-                1->{"RECORDS"}
-                2->{"MEDS"}
-                else-> {throw Resources.NotFoundException("Position not found")
+        val preferences =
+            activity?.getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
+        val uType = preferences?.getInt("uType",0)
+        viewPager.adapter = uType?.let { PagerAdapter(this, it) }
+
+        if(uType == 2)
+        {
+            TabLayoutMediator(tabLayout, viewPager){tab, index ->
+                tab.text = when(index){
+                    0->{"RECORDS"}
+                    1->{"MEDS"}
+                    else-> {throw Resources.NotFoundException("Position not found")
+                    }
                 }
-            }
-        }.attach()
+            }.attach()
+        }
+        else
+        {
+            TabLayoutMediator(tabLayout, viewPager){tab, index ->
+                tab.text = when(index){
+                    0->{"VITALS"}
+                    1->{"RECORDS"}
+                    2->{"MEDS"}
+                    else-> {throw Resources.NotFoundException("Position not found")
+                    }
+                }
+            }.attach()
+        }
+
 
        /* val textView: TextView = binding.textOffers
         uploadsViewModel.text.observe(viewLifecycleOwner) {
