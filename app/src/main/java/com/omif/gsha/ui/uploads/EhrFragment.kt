@@ -1,5 +1,6 @@
 package com.omif.gsha.ui.uploads
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.omif.gsha.R
 import com.omif.gsha.adapter.CommonMethods
@@ -29,7 +31,15 @@ class EhrFragment : Fragment() {
         _binding = FragmentEhrBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        val preferences =
+            activity?.getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
+        val uType = preferences?.getInt("uType",0)
+
         btnAttachFiles = binding.btnAddFiles
+        if(uType == 2)
+        {
+            btnAttachFiles.isVisible = false
+        }
         btnAttachFiles.setOnClickListener {
             this.context?.let { it1 -> CommonMethods(it1).openFolder() }
             //openFolder()

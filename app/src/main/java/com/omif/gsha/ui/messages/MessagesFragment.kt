@@ -1,13 +1,22 @@
 package com.omif.gsha.ui.messages
 
+import android.R
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
+import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.LinearLayout
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,6 +30,8 @@ import com.omif.gsha.adapter.UserAdapter
 import com.omif.gsha.databinding.FragmentMessagesBinding
 import com.omif.gsha.model.Message
 import com.omif.gsha.model.User
+import com.omif.gsha.ui.pharma.PharmaFragment
+import com.omif.gsha.ui.signin.SignInFragment
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -68,101 +79,160 @@ class MessagesFragment : Fragment() {
         userRecyclerView.layoutManager = LinearLayoutManager(binding.root.context)
         userRecyclerView.adapter = adapter
 
-         mDbRef.child("tblUserWithType").child(mAuth.currentUser?.uid!!).addValueEventListener(object : ValueEventListener {
-             override fun onDataChange(snapshot: DataSnapshot) {
-                     val user = snapshot.getValue(User::class.java)
-                     if (user?.uid == mAuth.currentUser?.uid) {
-                         if (user != null) {
-                             loggedInUser = user
-                         }
-                     }
-                 if(loggedInUser.uType == 2)
-                     mDbRef.child("tblChats").addValueEventListener(object: ValueEventListener {
-                         override fun onDataChange(snapshot: DataSnapshot) {
-                             userList.clear()
-                             val formatter = SimpleDateFormat("yyyy-MM-dd")
-                             val cal: Calendar = Calendar.getInstance()
-                             cal.add(Calendar.DATE, -1)
-                             val yesterday = formatter.format(cal.time)
-                             for (postSnapshot in snapshot.children) {
-                                 val value = postSnapshot.children
-                                 for(item in postSnapshot.children)
-                                 {
-                                     for(item in item.children)
-                                     {
-                                         val mess = item.getValue(Message::class.java)
-                                         if (mAuth.currentUser?.uid == mess?.receiverId && (mess?.messageDate == formatter.format(Date()) || mess?.messageDate == yesterday.toString()))
-                                         {
-                                              val preferences =
-                                                   activity?.getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
+        if(mAuth.currentUser !=null)
+        {
+            mDbRef.child("tblUserWithType").child(mAuth.currentUser?.uid!!).addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val user = snapshot.getValue(User::class.java)
+                    if (user?.uid == mAuth.currentUser?.uid) {
+                        if (user != null) {
+                            loggedInUser = user
+                        }
+                    }
+                    if(loggedInUser.uType == 2)
+                        mDbRef.child("tblChats").addValueEventListener(object: ValueEventListener {
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                userList.clear()
+                                val formatter = SimpleDateFormat("yyyy-MM-dd")
+                                val cal: Calendar = Calendar.getInstance()
+                                cal.add(Calendar.DATE, -1)
+                                val yesterday = formatter.format(cal.time)
+                                for (postSnapshot in snapshot.children) {
+                                    val value = postSnapshot.children
+                                    for(item in postSnapshot.children)
+                                    {
+                                        for(item in item.children)
+                                        {
+                                            val mess = item.getValue(Message::class.java)
+                                            if (mAuth.currentUser?.uid == mess?.receiverId && (mess?.messageDate == formatter.format(Date()) || mess?.messageDate == yesterday.toString()))
+                                            {
+                                                val preferences =
+                                                    activity?.getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
 
-                                             mDbRef.child("tblPatient").addValueEventListener(object : ValueEventListener {
-                                                 override fun onDataChange(snapshot: DataSnapshot) {
-                                                     for (postSnapshot in snapshot.children) {
-                                                         val currentUser = postSnapshot.getValue(User::class.java)
-                                                         if (mess?.senderId == currentUser?.uid ) {
+                                                mDbRef.child("tblPatient").addValueEventListener(object : ValueEventListener {
+                                                    override fun onDataChange(snapshot: DataSnapshot) {
+                                                        for (postSnapshot in snapshot.children) {
+                                                            val currentUser = postSnapshot.getValue(User::class.java)
+                                                            if (mess?.senderId == currentUser?.uid ) {
 
-                                                             if(!emailList.contains(currentUser?.email.toString()))
-                                                             {
-                                                                 emailList.add(currentUser?.email.toString())
-                                                                 userList.add(currentUser!!)
-                                                                 var editor = preferences?.edit()
-                                                                 var patientNames = currentUser.name.plus(",")
-                                                                 var patientuids = currentUser.uid.plus(",")
-                                                                     editor?.putString("patientNames",patientNames)
-                                                                     editor?.putString("patientUids",patientuids)
+                                                                if(!emailList.contains(currentUser?.email.toString()))
+                                                                {
+                                                                    emailList.add(currentUser?.email.toString())
+                                                                    userList.add(currentUser!!)
+                                                                    var editor = preferences?.edit()
+                                                                    var patientNames = currentUser.name.plus(",")
+                                                                    var patientuids = currentUser.uid.plus(",")
+                                                                    editor?.putString("patientNames",patientNames)
+                                                                    editor?.putString("patientUids",patientuids)
                                                                     editor?.commit()
-                                                             }
-                                                         }
-                                                     }
-                                                     adapter.notifyDataSetChanged()
-                                                 }
+                                                                }
+                                                            }
+                                                        }
+                                                        adapter.notifyDataSetChanged()
+                                                    }
 
-                                                 override fun onCancelled(error: DatabaseError) {
-                                                     Toast.makeText(context, error.message, Toast.LENGTH_LONG).show()
-                                                 }
-                                             })
-                                         }
+                                                    override fun onCancelled(error: DatabaseError) {
+                                                        Toast.makeText(context, error.message, Toast.LENGTH_LONG).show()
+                                                    }
+                                                })
+                                            }
 
-                                     }
-                                 }
-                             }
+                                        }
+                                    }
+                                }
 
-                             adapter.notifyDataSetChanged()
-                         }
-                         override fun onCancelled(error: DatabaseError) {
-                             Toast.makeText(context, error.message, Toast.LENGTH_LONG).show()
-                         }
-                     })
+                                adapter.notifyDataSetChanged()
+                            }
+                            override fun onCancelled(error: DatabaseError) {
+                                Toast.makeText(context, error.message, Toast.LENGTH_LONG).show()
+                            }
+                        })
 
-                 if(loggedInUser.uType == 1) {
-                     mDbRef.child("tblDoctor").addValueEventListener(object : ValueEventListener {
-                         override fun onDataChange(snapshot: DataSnapshot) {
-                             userList.clear()
-                             for (postSnapshot in snapshot.children) {
-                                 val currentUser = postSnapshot.getValue(User::class.java)
-                                 if (mAuth.currentUser?.uid != currentUser?.uid && currentUser?.uType == 2) {
-                                     userList.add(currentUser!!)
-                                 }
-                             }
-                             adapter.notifyDataSetChanged()
-                         }
+                    if(loggedInUser.uType == 1) {
+                        mDbRef.child("tblDoctor").addValueEventListener(object : ValueEventListener {
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                userList.clear()
+                                for (postSnapshot in snapshot.children) {
+                                    val currentUser = postSnapshot.getValue(User::class.java)
+                                    if (mAuth.currentUser?.uid != currentUser?.uid && currentUser?.uType == 2) {
+                                        userList.add(currentUser!!)
+                                    }
+                                }
+                                adapter.notifyDataSetChanged()
+                            }
 
-                         override fun onCancelled(error: DatabaseError) {
-                             Toast.makeText(context, error.message, Toast.LENGTH_LONG)
-                         }
-                     })
-                 }
-             }
+                            override fun onCancelled(error: DatabaseError) {
+                                Toast.makeText(context, error.message, Toast.LENGTH_LONG)
+                            }
+                        })
+                    }
+                }
 
-             override fun onCancelled(error: DatabaseError) {
-                 Toast.makeText(context, error.message, Toast.LENGTH_LONG)
-             }
-         })
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(context, error.message, Toast.LENGTH_LONG)
+                }
+            })
+        }
+        else
+        {
+            showDialog()
+        }
 
         return root
     }
 
+    private fun showDialog() {
+        val textView = TextView(context)
+        textView.text = "GSHA Says"
+        textView.setPadding(20, 30, 20, 30)
+        textView.textSize = 20f
+        textView.setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))
+        textView.setTextColor(Color.WHITE)
+        textView.typeface = Typeface.DEFAULT_BOLD;
+
+        val textView1 = TextView(context)
+        textView1.text = "Sign-Up/Log-In to connect with a Doctor"
+        textView1.setPadding(20, 30, 20, 30)
+        textView1.textSize = 20f
+        textView1.setBackgroundColor(Color.WHITE)
+        textView1.setTextColor(Color.BLACK)
+        textView1.typeface = Typeface.DEFAULT_BOLD;
+        val builder: AlertDialog.Builder = AlertDialog.Builder(context)
+        builder
+            .setView(textView1)
+            .setCustomTitle(textView)
+            .setPositiveButton("Ok") { dialog, which ->
+                var fragment: Fragment? = null
+                fragment = SignInFragment()
+                replaceFragment(fragment)
+            }
+
+        val params = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        params.setMargins(20, 0, 0, 0)
+
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+        dialog.apply {
+            getButton(DialogInterface.BUTTON_POSITIVE).apply {
+                setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))
+                setTextColor(Color.WHITE)
+                typeface = Typeface.DEFAULT_BOLD;
+                layoutParams = params;
+            }
+        }
+    }
+
+    private fun replaceFragment(someFragment: Fragment?) {
+        val transaction: FragmentTransaction = requireFragmentManager().beginTransaction()
+        if (someFragment != null) {
+            transaction.replace(com.omif.gsha.R.id.nav_host_fragment_activity_main, someFragment)
+        }
+        //transaction.addToBackStack(null)
+        transaction.commit()
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
