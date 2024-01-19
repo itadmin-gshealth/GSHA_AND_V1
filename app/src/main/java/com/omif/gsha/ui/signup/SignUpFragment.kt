@@ -47,6 +47,9 @@ class SignUpFragment : Fragment() {
     private lateinit var btnSignUp: Button
     private lateinit var btnSignUpDoctor: Button
     private lateinit var ddlDept: Spinner
+    private lateinit var ddlgender: Spinner
+    private lateinit var txtAge: EditText
+
     var isEmailRegistered = false
 
     var dept = arrayOf(
@@ -76,12 +79,14 @@ class SignUpFragment : Fragment() {
         txtPhoneNumber = binding.textPhonenumber
         btnSignUp = binding.SignUp
         btnSignUpDoctor = binding.SignUpDoctor
+        ddlgender = binding.ddlGender
+        txtAge = binding.txtAge
 
         mAuth = FirebaseAuth.getInstance()
 
         btnSignUp.setOnClickListener(){
             if(CheckAllFields()) {
-                signUp(txtName.text.toString(),txtEmail.text.toString(), txtPassword.text.toString(), txtPhoneNumber.text.toString(), 1)
+                signUp(txtName.text.toString(),txtEmail.text.toString(), txtPassword.text.toString(), txtPhoneNumber.text.toString(),ddlgender.selectedItem.toString(),txtAge.text.toString().toInt(), 1)
             }
         }
 
@@ -131,6 +136,8 @@ class SignUpFragment : Fragment() {
                         txtEmail.text.toString(),
                         txtPassword.text.toString(),
                         txtPhoneNumber.text.toString(),
+                        ddlgender.selectedItem.toString(),
+                        txtAge.text.toString().toInt(),
                         2
                     )
                 }
@@ -155,20 +162,20 @@ class SignUpFragment : Fragment() {
     }
 
 
-    private fun signUp(name: String, email:String, password: String, phoneNumber: String, uType: Int)
+    private fun signUp(name: String, email:String, password: String, phoneNumber: String, gender: String, age:Int, uType: Int)
     {
         mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener {task->
             if(task.isSuccessful) {
                 mAuth.uid?.let { if(selectedDept == "" ){
-                    addPatienttoDatabase(name, email, it, phoneNumber,"OutPatient", uType)
-                    addUsertoDatabase(name, email, it, phoneNumber,"OutPatient", uType)
+                    addPatienttoDatabase(name, email, it, phoneNumber,"OutPatient", gender, age,"", uType)
+                    addUsertoDatabase(name, email, it, phoneNumber,"OutPatient",gender, age,"", uType)
                     Toast.makeText(this@SignUpFragment.context, "User Created Successfully", Toast.LENGTH_SHORT).show()}
                 else{ if(selectedDept == "Department"){
                     Toast.makeText(this@SignUpFragment.context, "Please select Department", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    addDoctortoDatabase(name, email, it, phoneNumber, selectedDept, uType)}}
-                    addUsertoDatabase(name, email, it, phoneNumber, selectedDept, uType)
+                    addDoctortoDatabase(name, email, it, phoneNumber, selectedDept, gender, age, "MBBS", uType)}}
+                    addUsertoDatabase(name, email, it, phoneNumber, selectedDept, gender, age,"",uType)
                     Toast.makeText(this@SignUpFragment.context, "User Created Successfully", Toast.LENGTH_SHORT).show()}
                 val intent = Intent(this@SignUpFragment.context, MainActivity::class.java)
                 startActivity(intent)
@@ -179,19 +186,19 @@ class SignUpFragment : Fragment() {
         }
     }
 
-    private fun addPatienttoDatabase(name: String, email: String, uid: String, phoneNumber: String,department:String, uType: Int) {
+    private fun addPatienttoDatabase(name: String, email: String, uid: String, phoneNumber: String,department:String, gender: String, age:Int, qual: String?, uType: Int) {
         mdbRef = FirebaseDatabase.getInstance().reference
-        mdbRef.child("tblPatient").child(uid).setValue(User(name, email, uid,phoneNumber, department, uType))
+        mdbRef.child("tblPatient").child(uid).setValue(User(name, email, uid,phoneNumber, department, gender, age, qual, uType))
     }
 
-    private fun addDoctortoDatabase(name: String, email: String, uid: String, phoneNumber: String, department: String, uType: Int) {
+    private fun addDoctortoDatabase(name: String, email: String, uid: String, phoneNumber: String, department: String, gender:String, age:Int, qual:String?, uType: Int) {
         mdbRef = FirebaseDatabase.getInstance().reference
-        mdbRef.child("tblDoctor").child(uid).setValue(User(name, email, uid,phoneNumber, department, uType))
+        mdbRef.child("tblDoctor").child(uid).setValue(User(name, email, uid,phoneNumber, department, gender, age,qual, uType))
     }
 
-    private fun addUsertoDatabase(name: String, email: String, uid: String, phoneNumber: String, department: String, uType: Int) {
+    private fun addUsertoDatabase(name: String, email: String, uid: String, phoneNumber: String, department: String, gender:String, age:Int,qual:String?, uType: Int) {
         mdbRef = FirebaseDatabase.getInstance().reference
-        mdbRef.child("tblUserWithType").child(uid).setValue(User(name, email, uid,phoneNumber, department, uType))
+        mdbRef.child("tblUserWithType").child(uid).setValue(User(name, email, uid,phoneNumber, department, gender, age, qual, uType))
     }
     private fun CheckAllFields(): Boolean {
 
@@ -212,6 +219,12 @@ class SignUpFragment : Fragment() {
         } else if (txtPhoneNumber.text.length < 10) {
             txtPhoneNumber.error = "Phone number must be 10 digits"
         return false
+        } else if (txtAge.text.length === 0) {
+            txtAge.error = "Age is required"
+            return false
+        } else if (txtAge.text.toString().toIntOrNull()!! < 18) {
+            txtAge.error = "Users below 18 years should be added as a dependant of an adult"
+            return false
     }
         // after all validation return true.
         return true

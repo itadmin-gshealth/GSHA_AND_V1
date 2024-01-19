@@ -93,21 +93,50 @@
             android:background="@drawable/account_background">
         </EditText>
 
-      <!--  <Spinner
-            android:id="@+id/ddlDept"
+
+        <LinearLayout
+            android:id="@+id/llgender"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="52dp"
             android:layout_below="@+id/text_phonenumber"
-            android:layout_marginTop="18dp"
+            android:paddingLeft="13dp"
             android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:background="@drawable/account_background"/>
-        -->
+            android:layout_marginTop="18dp"
+            android:layout_marginRight="30dp">
+
+            <TextView
+                android:id="@+id/txtGender"
+                android:paddingTop="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:hint="Gender :"
+                android:textSize="20sp"></TextView>
+
+            <Spinner
+                android:id="@+id/ddlGender"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="15dp"
+                android:entries="@array/gender"
+                android:background="@drawable/account_background" />
+
+            <EditText
+                android:id="@+id/txtAge"
+                android:layout_width="80dp"
+                android:layout_height="50dp"
+                android:background="@drawable/account_background"
+                android:layout_marginLeft="15dp"
+                android:paddingLeft="13dp"
+                android:hint="Age"
+                android:inputType="number"></EditText>
+
+        </LinearLayout>
+
         <Button
             android:id="@+id/SignUp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/text_phonenumber"
+            android:layout_below="@+id/llgender"
             android:text="SIGN UP"
             android:layout_marginLeft="144dp"
             android:layout_centerHorizontal="true"

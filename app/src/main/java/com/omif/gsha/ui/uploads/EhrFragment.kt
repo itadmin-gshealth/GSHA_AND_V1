@@ -42,7 +42,6 @@ class EhrFragment : Fragment() {
         }
         btnAttachFiles.setOnClickListener {
             this.context?.let { it1 -> CommonMethods(it1).openFolder() }
-            //openFolder()
         }
         // Inflate the layout for this fragment
         return root

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
@@ -63,9 +64,6 @@ class VitalsFragment : Fragment() {
         }
 
         val textView: TextView = binding.txtVitals
-        val preferences = activity?.getSharedPreferences("PREFERENCE_NAME",Context.MODE_PRIVATE)
-        val patientNames = preferences?.getString("patientNames","")
-        val patientuids = preferences?.getString("patientuids","")
         vitalsViewModel.text.observe(viewLifecycleOwner) {
                 textView.text = it
         }
@@ -96,6 +94,8 @@ class VitalsFragment : Fragment() {
 
             mDbRef.child("tblVitals").push()
                 .setValue(messageObject)
+            Toast.makeText(this@VitalsFragment.context, "Vitals saved Successfully", Toast.LENGTH_SHORT).show()
+
         }
 
         return root
