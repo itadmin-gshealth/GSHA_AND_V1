@@ -42,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_below="@+id/text_account"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="20dp"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:paddingLeft="13dp"
@@ -56,7 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_below="@+id/text_name"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="10dp"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:paddingLeft="13dp"
@@ -70,7 +70,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_below="@+id/text_email"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="10dp"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:paddingLeft="13dp"
@@ -84,7 +84,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_below="@+id/text_password"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="10dp"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:paddingLeft="13dp"
@@ -93,7 +93,6 @@
             android:background="@drawable/account_background">
         </EditText>
 
-
         <LinearLayout
             android:id="@+id/llgender"
             android:layout_width="match_parent"
@@ -101,7 +100,7 @@
             android:layout_below="@+id/text_phonenumber"
             android:paddingLeft="13dp"
             android:layout_marginLeft="30dp"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="10dp"
             android:layout_marginRight="30dp">
 
             <TextView
@@ -129,7 +128,41 @@
                 android:paddingLeft="13dp"
                 android:hint="Age"
                 android:inputType="number"></EditText>
+        </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/llImg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/llgender"
+            android:paddingLeft="10dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="30dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/userImg"
+                android:layout_width="95dp"
+                android:layout_height="93dp"
+                android:layout_centerInParent="true"
+                android:layout_gravity="left"
+                android:layout_margin="2dp"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/avatar"
+                app:civ_border_color="@color/purple_700"
+                app:civ_border_width="3dp" />
+
+        <Button
+            android:id="@+id/AddImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/llgender"
+            android:text="ADD IMAGE"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="15dp"
+            android:textSize="20sp"
+            android:layout_marginTop="25dp">
+        </Button>
         </LinearLayout>
 
         <Button

@@ -37,6 +37,20 @@
                 android:paddingLeft="20dp"
                 android:textStyle="bold"></TextView>
 
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                app:cardBackgroundColor="@color/lightblue"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="10dp"
+                app:cardMaxElevation="12dp"
+                app:cardPreventCornerOverlap="true"
+                app:cardUseCompatPadding="true">
+
             <CalendarView
                 android:theme="@style/CustomCalendarMonth"
                 android:id="@+id/calendarView"
@@ -47,6 +61,7 @@
                 android:dateTextAppearance="@style/CustomCalendarWeek"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
+            </androidx.cardview.widget.CardView>
 
             <Button
                 android:id="@+id/btnAppointment"

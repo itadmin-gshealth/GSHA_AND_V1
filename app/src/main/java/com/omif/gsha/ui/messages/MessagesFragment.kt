@@ -62,11 +62,6 @@ class MessagesFragment : Fragment() {
         _binding = FragmentMessagesBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textMessages
-        messagesViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
-
         mAuth = FirebaseAuth.getInstance()
         mDbRef = FirebaseDatabase.getInstance().reference
 
@@ -79,6 +74,9 @@ class MessagesFragment : Fragment() {
         userRecyclerView.layoutManager = LinearLayoutManager(binding.root.context)
         userRecyclerView.adapter = adapter
 
+        val preferences =
+            activity?.getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
+        var uType = preferences?.getInt("uType",0)!!
         if(mAuth.currentUser !=null)
         {
             mDbRef.child("tblUserWithType").child(mAuth.currentUser?.uid!!).addValueEventListener(object : ValueEventListener {
@@ -106,8 +104,6 @@ class MessagesFragment : Fragment() {
                                             val mess = item.getValue(Message::class.java)
                                             if (mAuth.currentUser?.uid == mess?.receiverId && (mess?.messageDate == formatter.format(Date()) || mess?.messageDate == yesterday.toString()))
                                             {
-                                                val preferences =
-                                                    activity?.getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
 
                                                 mDbRef.child("tblPatient").addValueEventListener(object : ValueEventListener {
                                                     override fun onDataChange(snapshot: DataSnapshot) {
@@ -176,6 +172,12 @@ class MessagesFragment : Fragment() {
         else
         {
             showDialog()
+        }
+
+        val textView: TextView = binding.textMessages
+        messagesViewModel.text.observe(viewLifecycleOwner) {
+            if(uType == 2) textView.text ="WAITING ARENA" else
+            textView.text = it
         }
 
         return root

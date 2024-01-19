@@ -65,12 +65,14 @@ class AppointmentFragment : Fragment() {
 
         btnAppointment = binding.btnAppointment
         calendarView = binding.calendarView
+        calendarView.minDate = System.currentTimeMillis() - 1000
         btnAppointment.setOnClickListener {
             this.onClick()
         }
         val formatter = SimpleDateFormat("yyyy-MM-dd")
         val date = Date()
         appointmentDate = formatter.format(date)
+
         calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
             val actMonth = month+1
             appointmentDate = "$year-$actMonth-$dayOfMonth"

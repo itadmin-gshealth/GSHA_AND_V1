@@ -1,33 +1,46 @@
 package com.omif.gsha.ui.signup
 
 import android.R
+import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
+import android.net.Uri
 import android.os.Bundle
+import android.provider.OpenableColumns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.gms.auth.api.signin.internal.Storage
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.SignInMethodQueryResult
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.storage
 import com.omif.gsha.MainActivity
 import com.omif.gsha.adapter.OnEmailCheckListener
 import com.omif.gsha.databinding.FragmentSignupBinding
 import com.omif.gsha.model.User
+import com.squareup.picasso.Picasso
 import kotlinx.coroutines.selects.select
 
 
@@ -39,16 +52,19 @@ class SignUpFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
     private lateinit var mAuth: FirebaseAuth
+    private lateinit var storageRef: StorageReference
     private lateinit var mdbRef: DatabaseReference
     private lateinit var txtName: EditText
     private lateinit var txtEmail: EditText
     private lateinit var txtPassword: EditText
     private lateinit var txtPhoneNumber: EditText
+    private lateinit var btnAddImage: Button
     private lateinit var btnSignUp: Button
     private lateinit var btnSignUpDoctor: Button
     private lateinit var ddlDept: Spinner
     private lateinit var ddlgender: Spinner
     private lateinit var txtAge: EditText
+    private lateinit var userImg: de.hdodenhof.circleimageview.CircleImageView
 
     var isEmailRegistered = false
 
@@ -56,6 +72,7 @@ class SignUpFragment : Fragment() {
         "Department","Gynecology ", "Paediatrics", "Dentistry ", "General", "Dermatology ", "Psychiatrist"
     )
     var selectedDept = ""
+    var imageLink : String? = ""
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -77,16 +94,19 @@ class SignUpFragment : Fragment() {
         txtEmail=binding.textEmail
         txtPassword = binding.textPassword
         txtPhoneNumber = binding.textPhonenumber
+        btnAddImage = binding.AddImage
         btnSignUp = binding.SignUp
         btnSignUpDoctor = binding.SignUpDoctor
         ddlgender = binding.ddlGender
         txtAge = binding.txtAge
+        userImg = binding.userImg
 
         mAuth = FirebaseAuth.getInstance()
+        storageRef = Firebase.storage.reference
 
         btnSignUp.setOnClickListener(){
             if(CheckAllFields()) {
-                signUp(txtName.text.toString(),txtEmail.text.toString(), txtPassword.text.toString(), txtPhoneNumber.text.toString(),ddlgender.selectedItem.toString(),txtAge.text.toString().toInt(), 1)
+                signUp(txtName.text.toString(),txtEmail.text.toString(), txtPassword.text.toString(), txtPhoneNumber.text.toString(),ddlgender.selectedItem.toString(),txtAge.text.toString().toInt(), imageLink, 1)
             }
         }
 
@@ -96,9 +116,52 @@ class SignUpFragment : Fragment() {
             if (CheckAllFields()) {
                 showDialog()
             }
+        }
 
+        btnAddImage.setOnClickListener {
+            val intent = Intent()
+            intent.type = "*/*"
+            intent.action = Intent.ACTION_GET_CONTENT
+            imagePickerActivityResult.launch(intent)
         }
         return root
+    }
+
+    private var imagePickerActivityResult: ActivityResultLauncher<Intent> =
+    // lambda expression to receive a result back, here we
+        // receive single item(photo) on selection
+        registerForActivityResult( ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result != null) {
+                val imageUri: Uri? = result.data?.data
+                val sd = this@SignUpFragment.context?.let { getFileName(it, imageUri!!) }
+                val uploadTask = imageUri?.let { storageRef.child("user/$sd").putFile(it) }
+                uploadTask?.addOnSuccessListener {
+                    storageRef.child("user/$sd").downloadUrl.addOnSuccessListener {
+                        Picasso.get().load(it.toString()).into(userImg)
+                        imageLink = it.toString()
+                    }.addOnFailureListener {
+                        Toast.makeText(this@SignUpFragment.context, "Failed in downloading", Toast.LENGTH_SHORT).show();
+                    }
+                }?.addOnFailureListener {
+                    Toast.makeText(this@SignUpFragment.context, "Failed in downloading", Toast.LENGTH_SHORT).show();
+                    //Log.e("Firebase", "Image Upload fail")
+                }
+            }
+        }
+
+    @SuppressLint("Range")
+    private fun getFileName(context: Context, uri: Uri): String? {
+        if (uri.scheme == "content") {
+            val cursor = context.contentResolver.query(uri, null, null, null, null)
+            cursor.use {
+                if (cursor != null) {
+                    if(cursor.moveToFirst()) {
+                        return cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                    }
+                }
+            }
+        }
+        return uri.path?.lastIndexOf('/')?.let { uri.path?.substring(it) }
     }
 
     private fun showDialog() {
@@ -138,6 +201,7 @@ class SignUpFragment : Fragment() {
                         txtPhoneNumber.text.toString(),
                         ddlgender.selectedItem.toString(),
                         txtAge.text.toString().toInt(),
+                        imageLink,
                         2
                     )
                 }
@@ -162,20 +226,20 @@ class SignUpFragment : Fragment() {
     }
 
 
-    private fun signUp(name: String, email:String, password: String, phoneNumber: String, gender: String, age:Int, uType: Int)
+    private fun signUp(name: String, email:String, password: String, phoneNumber: String, gender: String, age:Int, imageLink:String?, uType: Int)
     {
         mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener {task->
             if(task.isSuccessful) {
                 mAuth.uid?.let { if(selectedDept == "" ){
-                    addPatienttoDatabase(name, email, it, phoneNumber,"OutPatient", gender, age,"", uType)
-                    addUsertoDatabase(name, email, it, phoneNumber,"OutPatient",gender, age,"", uType)
+                    addPatienttoDatabase(name, email, it, phoneNumber,"OutPatient", gender, age,"",imageLink, uType)
+                    addUsertoDatabase(name, email, it, phoneNumber,"OutPatient",gender, age,"",imageLink, uType)
                     Toast.makeText(this@SignUpFragment.context, "User Created Successfully", Toast.LENGTH_SHORT).show()}
                 else{ if(selectedDept == "Department"){
                     Toast.makeText(this@SignUpFragment.context, "Please select Department", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    addDoctortoDatabase(name, email, it, phoneNumber, selectedDept, gender, age, "MBBS", uType)}}
-                    addUsertoDatabase(name, email, it, phoneNumber, selectedDept, gender, age,"",uType)
+                    addDoctortoDatabase(name, email, it, phoneNumber, selectedDept, gender, age, "MBBS",imageLink, uType)}}
+                    addUsertoDatabase(name, email, it, phoneNumber, selectedDept, gender, age,"",imageLink, uType)
                     Toast.makeText(this@SignUpFragment.context, "User Created Successfully", Toast.LENGTH_SHORT).show()}
                 val intent = Intent(this@SignUpFragment.context, MainActivity::class.java)
                 startActivity(intent)
@@ -186,19 +250,19 @@ class SignUpFragment : Fragment() {
         }
     }
 
-    private fun addPatienttoDatabase(name: String, email: String, uid: String, phoneNumber: String,department:String, gender: String, age:Int, qual: String?, uType: Int) {
+    private fun addPatienttoDatabase(name: String, email: String, uid: String, phoneNumber: String,department:String, gender: String, age:Int, qual: String?, imageLink: String?, uType: Int) {
         mdbRef = FirebaseDatabase.getInstance().reference
-        mdbRef.child("tblPatient").child(uid).setValue(User(name, email, uid,phoneNumber, department, gender, age, qual, uType))
+        mdbRef.child("tblPatient").child(uid).setValue(User(name, email, uid,phoneNumber, department, gender, age, qual, imageLink, uType))
     }
 
-    private fun addDoctortoDatabase(name: String, email: String, uid: String, phoneNumber: String, department: String, gender:String, age:Int, qual:String?, uType: Int) {
+    private fun addDoctortoDatabase(name: String, email: String, uid: String, phoneNumber: String, department: String, gender:String, age:Int, qual:String?, imageLink: String?, uType: Int) {
         mdbRef = FirebaseDatabase.getInstance().reference
-        mdbRef.child("tblDoctor").child(uid).setValue(User(name, email, uid,phoneNumber, department, gender, age,qual, uType))
+        mdbRef.child("tblDoctor").child(uid).setValue(User(name, email, uid,phoneNumber, department, gender, age,qual, imageLink, uType))
     }
 
-    private fun addUsertoDatabase(name: String, email: String, uid: String, phoneNumber: String, department: String, gender:String, age:Int,qual:String?, uType: Int) {
+    private fun addUsertoDatabase(name: String, email: String, uid: String, phoneNumber: String, department: String, gender:String, age:Int,qual:String?, imageLink: String?, uType: Int) {
         mdbRef = FirebaseDatabase.getInstance().reference
-        mdbRef.child("tblUserWithType").child(uid).setValue(User(name, email, uid,phoneNumber, department, gender, age, qual, uType))
+        mdbRef.child("tblUserWithType").child(uid).setValue(User(name, email, uid,phoneNumber, department, gender, age, qual, imageLink, uType))
     }
     private fun CheckAllFields(): Boolean {
 
