@@ -97,22 +97,6 @@
                     android:textStyle="bold"></TextView>
 
                 <TextView
-                    android:id="@+id/meds"
-                    android:layout_width="wrap_content"
-                    android:layout_height="200dp"
-                    android:layout_gravity="top|center_horizontal"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="80dp"
-                    android:layout_marginBottom="20dp"
-                    android:text="Medicine"
-                    android:layout_below="@+id/regNo"
-                    android:textColor="@color/purple_700"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:scrollbars = "vertical"></TextView>
-
-                <TextView
                     android:id="@+id/docRegNo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

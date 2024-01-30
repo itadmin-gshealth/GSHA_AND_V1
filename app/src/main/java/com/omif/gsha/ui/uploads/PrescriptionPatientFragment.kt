@@ -50,7 +50,6 @@ class PrescriptionPatientFragment : Fragment() {
         val preferences = activity?.getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
 
         _binding = FragmentPrescriptionPatientBinding.inflate(inflater, container, false)
-        txtMeds = binding.meds
         txtRegNo = binding.regNo
         txtDept = binding.dept
         btnGetMedicine = binding.btnGetMedicine
