@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".ui.uploads.EhrFragment">
 
     <ScrollView
@@ -19,7 +21,7 @@
                 android:id="@+id/textBrowseHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="32dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="30dp"
                 android:text="Health Records"
                 android:textColor="@color/purple_700"
                 android:textSize="25sp"
@@ -37,7 +39,14 @@
                 android:text="ADD FILES"
                 android:textSize="20sp"></Button>
 
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp"></Space>
+
         </LinearLayout>
     </ScrollView>
 
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--
+</FrameLayout>-->

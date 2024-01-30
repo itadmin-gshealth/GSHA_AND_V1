@@ -133,6 +133,13 @@ class ChatActivity : AppCompatActivity() {
         if(uType != 2)
         {
             vitalButton.isVisible = false
+            if(receiverUid!= null)
+            {
+                var editor = preferences?.edit()
+                editor?.putString("patientName",name)
+                editor?.putString("patientId",receiverUid.toString())
+                editor?.commit()
+            }
         }
         else
         {

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.prescription.PrescriptionFragment">
+    tools:context=".ui.uploads.PrescriptionPatientFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -21,35 +21,12 @@
                 android:id="@+id/textBrowseHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="32dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="20dp"
                 android:text="Out-Patient Prescription"
                 android:textColor="@color/purple_700"
                 android:textSize="25sp"
                 android:paddingLeft="20dp"
                 android:textStyle="bold"/>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center"
-            android:layout_marginTop="5dp">
-            <TextView
-                android:id="@+id/textSelectPatient"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Select Patient : "
-                android:textColor="@color/purple_700"
-                android:textSize="15sp"
-                android:paddingLeft="20dp"
-                android:textStyle="bold"/>
-
-            <Spinner
-                android:id="@+id/ddlPatients"
-                android:layout_width="wrap_content"
-                android:textSize="15sp"
-                android:layout_height="wrap_content"></Spinner>
-        </LinearLayout>
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -57,6 +34,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
                 app:cardBackgroundColor="@color/lightblue"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="10dp"
@@ -118,22 +96,21 @@
                     android:textSize="12sp"
                     android:textStyle="bold"></TextView>
 
-                <EditText
+                <TextView
                     android:id="@+id/meds"
-                    android:inputType="textMultiLine"
-                    android:background="@color/white"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="200dp"
                     android:layout_gravity="top|center_horizontal"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="80dp"
                     android:layout_marginBottom="20dp"
+                    android:text="Medicine"
                     android:layout_below="@+id/regNo"
                     android:textColor="@color/purple_700"
                     android:textSize="15sp"
                     android:textStyle="bold"
-                    android:scrollbars = "vertical"></EditText>
+                    android:scrollbars = "vertical"></TextView>
 
                 <TextView
                     android:id="@+id/docRegNo"
@@ -150,25 +127,58 @@
                     android:textStyle="bold"></TextView>
 
             </androidx.cardview.widget.CardView>
-            <Button
-                android:id="@+id/btnSavePrescription"
-                android:layout_width="wrap_content"
+
+            <LinearLayout
+                android:id="@+id/llPrescription"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/llPrescription"
-                android:layout_centerHorizontal="true"
-                android:layout_marginLeft="160dp"
-                android:clickable="true"
-                android:text="Save"
-                android:textSize="16sp"></Button>
+                android:layout_alignParentBottom="true">
+
+
+                <Button
+                    android:id="@+id/btnDownload"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_below="@+id/txtPrescription"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:clickable="true"
+                    android:text="DOWNLOAD"
+                    android:textSize="10sp" android:textStyle="bold"></Button>
+
+                <Button
+                    android:id="@+id/btnGetMedicine"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_below="@+id/txtPrescription"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:clickable="true"
+                    android:text="GET MEDICINE"
+                    android:textSize="10sp"  android:textStyle="bold"></Button>
+
+                <Button
+                    android:id="@+id/btnLastPrescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_below="@+id/txtPrescription"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="10dp"
+                    android:clickable="true"
+                    android:text="VIEW LAST PRESCRIPTION"
+                    android:textSize="10sp"  android:textStyle="bold"></Button>
+
+            </LinearLayout>
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="50dp"></Space>
+                android:layout_height="30dp"></Space>
 
         </LinearLayout>
     </ScrollView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
-<!--
-
-</FrameLayout>-->
+</FrameLayout>

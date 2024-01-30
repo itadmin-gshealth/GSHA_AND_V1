@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".ui.uploads.VitalsFragment">
 
     <ScrollView
@@ -19,8 +21,8 @@
             <TextView
                 android:id="@+id/txtVitals"
                 android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:layout_marginTop="20dp"
+                android:layout_height="35dp"
+                android:layout_marginTop="30dp"
                 android:textColor="@color/purple_700"
                 android:textSize="25sp"
                 android:paddingLeft="20dp"
@@ -30,7 +32,7 @@
                 android:id="@+id/tableVitals"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp">
+                android:layout_marginTop="10dp">
 
                 <TableRow
                     android:layout_width="match_parent"
@@ -244,12 +246,18 @@
                 android:layout_below="@+id/tableVitals"
                 android:layout_centerHorizontal="true"
                 android:layout_marginLeft="180dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="20dp"
                 android:clickable="true"
                 android:text="Save"
                 android:textSize="20sp"></Button>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="40dp"></Space>
+
         </LinearLayout>
 
     </ScrollView>
-
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
+<!--
+</FrameLayout>-->

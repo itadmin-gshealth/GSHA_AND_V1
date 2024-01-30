@@ -25,6 +25,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.omif.gsha.BuildConfig
 import com.omif.gsha.R
 import com.omif.gsha.adapter.AppExecutors
+import com.omif.gsha.adapter.CommonMethods
 import com.omif.gsha.adapter.Credentials
 import com.omif.gsha.databinding.FragmentAppointmentBinding
 import com.omif.gsha.ui.services.ServicesFragment
@@ -93,7 +94,7 @@ class AppointmentFragment : Fragment() {
     private fun onClick() {
         //sendSms("6505551212","testing", 0)
         //sendSms1("6505551212","Appointment",false)
-        sendEmail()
+        CommonMethods.sendEmail("Appointment Booking - ", "Name - " + mAuth.currentUser?.uid.toString() +"Booking Date : "+ appointmentDate)
         val params = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
@@ -173,50 +174,7 @@ class AppointmentFragment : Fragment() {
                 .show()
         }
     }
-    private fun sendEmail(){
-        appExecutors.diskIO().execute {
-            val props = System.getProperties()
-            props.put("mail.smtp.host", "smtp.gmail.com")
-            props.put("mail.smtp.socketFactory.port", "465")
-            props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory")
-            props.put("mail.smtp.auth", "true")
-            props.put("mail.smtp.port", "465")
 
-            val session =  Session.getInstance(props,
-                object : javax.mail.Authenticator() {
-                    //Authenticating the password
-                    override fun getPasswordAuthentication(): PasswordAuthentication {
-                        return PasswordAuthentication(Credentials.EMAIL, Credentials.PASSWORD)
-                    }
-                })
-
-            try {
-
-                //Creating MimeMessage object
-                val mm = MimeMessage(session)
-                val emailIdTo = BuildConfig.mailAppointmentTo
-                //Setting sender address
-                mm.setFrom(InternetAddress(BuildConfig.mailAppointmentFrom))
-                //Adding receiver
-                mm.addRecipient(
-                    Message.RecipientType.TO,
-                    InternetAddress(emailIdTo))
-                //Adding subject
-                mm.subject = "Appointment Booking - "
-                //Adding message
-                mm.setText("Name - " + mAuth.currentUser?.uid.toString() +"Booking Date : "+ appointmentDate)
-                //Sending email
-                Transport.send(mm)
-
-                appExecutors.mainThread().execute {
-                    //Something that should be executed on main thread.
-                }
-
-            } catch (e: MessagingException) {
-                e.printStackTrace()
-            }
-        }
-    }
 }
 
 class Receiver : BroadcastReceiver() {

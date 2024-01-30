@@ -91,6 +91,8 @@ class MessagesFragment : Fragment() {
                         mDbRef.child("tblChats").addValueEventListener(object: ValueEventListener {
                             override fun onDataChange(snapshot: DataSnapshot) {
                                 userList.clear()
+                                var patientNames = ""
+                                var patientuids = ""
                                 val formatter = SimpleDateFormat("yyyy-MM-dd")
                                 val cal: Calendar = Calendar.getInstance()
                                 cal.add(Calendar.DATE, -1)
@@ -110,22 +112,22 @@ class MessagesFragment : Fragment() {
                                                         for (postSnapshot in snapshot.children) {
                                                             val currentUser = postSnapshot.getValue(User::class.java)
                                                             if (mess?.senderId == currentUser?.uid ) {
-
                                                                 if(!emailList.contains(currentUser?.email.toString()))
                                                                 {
                                                                     emailList.add(currentUser?.email.toString())
                                                                     userList.add(currentUser!!)
-                                                                    var editor = preferences?.edit()
-                                                                    var patientNames = currentUser.name.plus(",")
-                                                                    var patientuids = currentUser.uid.plus(",")
-                                                                    editor?.putString("patientNames",patientNames)
-                                                                    editor?.putString("patientUids",patientuids)
-                                                                    editor?.commit()
+                                                                    patientNames = patientNames.plus(currentUser.name.plus(","))
+                                                                    patientuids = patientuids.plus(currentUser.uid.plus(","))
                                                                 }
                                                             }
                                                         }
+                                                        var editor = preferences?.edit()
+                                                        editor?.putString("patientNames",patientNames)
+                                                        editor?.putString("patientUids",patientuids)
+                                                        editor?.commit()
                                                         adapter.notifyDataSetChanged()
                                                     }
+
 
                                                     override fun onCancelled(error: DatabaseError) {
                                                         Toast.makeText(context, error.message, Toast.LENGTH_LONG).show()
@@ -176,7 +178,7 @@ class MessagesFragment : Fragment() {
 
         val textView: TextView = binding.textMessages
         messagesViewModel.text.observe(viewLifecycleOwner) {
-            if(uType == 2) textView.text ="WAITING ARENA" else
+            if(uType == 2) textView.text ="WAITING AREA" else
             textView.text = it
         }
 

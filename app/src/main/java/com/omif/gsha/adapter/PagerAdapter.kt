@@ -7,6 +7,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.omif.gsha.ui.uploads.EhrFragment
 import com.omif.gsha.ui.pharma.PharmaFragment
 import com.omif.gsha.ui.prescription.PrescriptionFragment
+import com.omif.gsha.ui.uploads.PrescriptionPatientFragment
 import com.omif.gsha.ui.uploads.UploadsFragment
 import com.omif.gsha.ui.uploads.VitalsFragment
 
@@ -47,7 +48,7 @@ class PagerAdapter(fragmentActivity: UploadsFragment, uType: Int):FragmentStateA
             }
 
             2 -> {
-                PrescriptionFragment()
+                PrescriptionPatientFragment()
             }
 
             else -> {

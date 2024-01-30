@@ -1,6 +1,7 @@
 package com.omif.gsha.ui.services
 
 import android.app.AlertDialog
+import android.content.Context
 import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.Typeface
@@ -222,17 +223,51 @@ class ServicesFragment : Fragment() {
 
     private fun attachClick()
     {
-        binding.textDerm.setOnClickListener { this.onClick() }
-        binding.textDent.setOnClickListener { this.onDentalClick() }
-        binding.textDiag.setOnClickListener { this.onLabClick() }
-        binding.textPaed.setOnClickListener { this.onClick() }
-        binding.textPsy.setOnClickListener { this.onClick() }
-        binding.textGen.setOnClickListener { this.onClick() }
-        binding.textEld.setOnClickListener { this.onClick() }
-        binding.textDiab.setOnClickListener { this.onClick() }
-        binding.textEmer.setOnClickListener { this.onClick() }
-        binding.textIns.setOnClickListener{this.onClick()}
+        val preferences = activity?.getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
+        var editor = preferences?.edit()
+        binding.textDerm.setOnClickListener {
+            editor?.putString("dept","Dermatology")
+            editor?.commit()
+            this.onClick() }
+        binding.textDent.setOnClickListener {
+            editor?.putString("dept","Dentistry")
+            editor?.commit()
+            this.onDentalClick() }
+        binding.textDiag.setOnClickListener {
+            editor?.putString("dept","Lab")
+            editor?.commit()
+            this.onLabClick() }
+        binding.textPaed.setOnClickListener {
+            editor?.putString("dept","Paediatrics")
+            editor?.commit()
+            this.onClick() }
+        binding.textPsy.setOnClickListener {
+            editor?.putString("dept","Psychiatrist")
+            editor?.commit()
+            this.onClick() }
+        binding.textGen.setOnClickListener {
+            editor?.putString("dept","General")
+            editor?.commit()
+            this.onClick() }
+        binding.textEld.setOnClickListener {
+            editor?.putString("dept","General")
+            editor?.commit()
+            this.onClick() }
+        binding.textDiab.setOnClickListener {
+            editor?.putString("dept","General")
+            editor?.commit()
+            this.onClick() }
+        binding.textEmer.setOnClickListener {
+            editor?.putString("dept","General")
+            editor?.commit()
+            this.onClick() }
+        binding.textIns.setOnClickListener{
+            editor?.putString("dept","General")
+            editor?.commit()
+            this.onClick()}
         binding.textPhar.setOnClickListener {
+            editor?.putString("dept","Pharma")
+            editor?.commit()
             var fragment: Fragment? = null
             fragment = PharmaFragment()
             replaceFragment(fragment)
