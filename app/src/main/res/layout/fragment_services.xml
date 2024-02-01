@@ -78,10 +78,10 @@
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
                         android:layout_gravity="center_horizontal"
-                        android:textSize="17sp"
+                        android:textSize="15sp"
+                        android:textAppearance="@style/CustomTabText"
                         android:text="Dermatology"
                         android:clickable="true"
-                        android:textColor="@color/purple_700"
                         android:textFontWeight="400" />
                 </LinearLayout>
                 <LinearLayout
@@ -104,10 +104,10 @@
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
                         android:layout_gravity="center_horizontal"
-                        android:textSize="17sp"
+                        android:textSize="15sp"
+                        android:textAppearance="@style/CustomTabText"
                         android:text="Dentistry"
                         android:clickable="true"
-                        android:textColor="@color/purple_700"
                         android:textFontWeight="400" />
                 </LinearLayout>
                 <LinearLayout
@@ -130,9 +130,9 @@
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
                         android:layout_gravity="center_horizontal"
-                        android:textSize="17sp"
+                        android:textSize="15sp"
+                        android:textAppearance="@style/CustomTabText"
                         android:text="Gynaecology"
-                        android:textColor="@color/purple_700"
                         android:textFontWeight="800" />
                 </LinearLayout>
 
@@ -162,10 +162,10 @@
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
                         android:layout_gravity="center_horizontal"
-                        android:textSize="17sp"
+                        android:textSize="15sp"
+                        android:textAppearance="@style/CustomTabText"
                         android:clickable="true"
                         android:text="Paediatrics"
-                        android:textColor="@color/purple_700"
                         android:textFontWeight="400" />
                 </LinearLayout>
                 <LinearLayout
@@ -188,10 +188,10 @@
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
                         android:layout_gravity="center_horizontal"
-                        android:textSize="17sp"
+                        android:textSize="15sp"
+                        android:textAppearance="@style/CustomTabText"
                         android:clickable="true"
                         android:text="Psychiatrist"
-                        android:textColor="@color/purple_700"
                         android:textFontWeight="400" />
                 </LinearLayout>
                 <LinearLayout
@@ -214,10 +214,10 @@
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
                         android:layout_gravity="center_horizontal"
-                        android:textSize="17sp"
+                        android:textSize="15sp"
+                        android:textAppearance="@style/CustomTabText"
                         android:clickable="true"
                         android:text="General"
-                        android:textColor="@color/purple_700"
                         android:textFontWeight="400" />
                 </LinearLayout>
             </TableRow>
@@ -265,10 +265,10 @@
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
                         android:layout_gravity="center_horizontal"
-                        android:textSize="17sp"
+                        android:textSize="15sp"
+                        android:textAppearance="@style/CustomTabText"
                         android:clickable="true"
                         android:text="Pharmacy"
-                        android:textColor="@color/purple_700"
                         android:textFontWeight="400" />
                 </LinearLayout>
                 <LinearLayout
@@ -291,11 +291,11 @@
                         android:layout_height="100dp"
                         android:textAlignment="center"
                         android:layout_gravity="center_horizontal"
-                        android:textSize="17sp"
+                        android:textSize="15sp"
+                        android:textAppearance="@style/CustomTabText"
                         android:clickable="true"
                         android:text="Diagnostics"
-                        android:textColor="@color/purple_700"
-                        android:textFontWeight="@integer/material_motion_duration_long_2" />
+                        android:textFontWeight="400" />
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="100dp"
@@ -317,11 +317,11 @@
                         android:layout_height="100dp"
                         android:textAlignment="center"
                         android:layout_gravity="center_horizontal"
-                        android:textSize="17sp"
+                        android:textSize="15sp"
+                        android:textAppearance="@style/CustomTabText"
                         android:clickable="true"
                         android:text="Insurance"
-                        android:textColor="@color/purple_700"
-                        android:textFontWeight="@integer/material_motion_duration_long_2" />
+                        android:textFontWeight="400" />
                 </LinearLayout>
             </TableRow>
             <Space
@@ -329,7 +329,7 @@
                 android:layout_height="25dp"></Space>
             <TableRow android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="15dp"
                 android:gravity="left">
                 <LinearLayout
                     android:layout_width="100dp"
@@ -351,10 +351,10 @@
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
                         android:layout_gravity="center_horizontal"
-                        android:textSize="17sp"
+                        android:textSize="15sp"
+                        android:textAppearance="@style/CustomTabText"
                         android:clickable="true"
                         android:text="First Aid"
-                        android:textColor="@color/purple_700"
                         android:textFontWeight="400" />
                 </LinearLayout>
             </TableRow>
@@ -382,8 +382,8 @@
 
             <TableRow android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="24dp"
-                android:gravity="left">>
+                android:layout_marginLeft="35dp"
+                android:gravity="left">
                 <LinearLayout
                     android:layout_width="100dp"
                     android:layout_height="120dp"
@@ -403,10 +403,10 @@
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
                         android:layout_gravity="center_horizontal"
-                        android:textSize="17sp"
+                        android:textSize="15sp"
+                        android:textAppearance="@style/CustomTabText"
                         android:clickable="true"
                         android:text="Elderly Care"
-                        android:textColor="@color/purple_700"
                         android:textFontWeight="400" />
                 </LinearLayout>
                 <LinearLayout
@@ -429,9 +429,9 @@
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
                         android:layout_gravity="center_horizontal"
-                        android:textSize="17sp"
+                        android:textSize="15sp"
+                        android:textAppearance="@style/CustomTabText"
                         android:text="Diabetic care"
-                        android:textColor="@color/purple_700"
                         android:textFontWeight="400" />
                 </LinearLayout>
             </TableRow>

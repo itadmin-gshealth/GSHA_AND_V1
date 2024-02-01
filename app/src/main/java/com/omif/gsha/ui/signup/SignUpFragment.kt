@@ -130,8 +130,6 @@ class SignUpFragment : Fragment() {
     }
 
     private var imagePickerActivityResult: ActivityResultLauncher<Intent> =
-    // lambda expression to receive a result back, here we
-        // receive single item(photo) on selection
         registerForActivityResult( ActivityResultContracts.StartActivityForResult()) { result ->
             if (result != null) {
                 val imageUri: Uri? = result.data?.data

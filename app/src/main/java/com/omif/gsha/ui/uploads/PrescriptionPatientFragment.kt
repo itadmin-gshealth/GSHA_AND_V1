@@ -17,7 +17,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.omif.gsha.adapter.CustomizedExpandableListAdapter
 import com.omif.gsha.databinding.FragmentPrescriptionPatientBinding
+import com.omif.gsha.model.ExpandableEhr
 import com.omif.gsha.model.ExpandableListDataItems
+import com.omif.gsha.model.ExpandablePrescription
 
 
 class PrescriptionPatientFragment : Fragment() {
@@ -49,7 +51,7 @@ class PrescriptionPatientFragment : Fragment() {
         val root: View = binding.root
         expandableListViewExample = binding.expandableListViewSample
 
-        expandableDetailList = ExpandableListDataItems.getData()
+        expandableDetailList = ExpandablePrescription.getData()
         expandableTitleList = ArrayList<String>(expandableDetailList?.keys)
         expandableListAdapter =
             this@PrescriptionPatientFragment.context?.let { expandableTitleList?.let { it1 ->
@@ -63,23 +65,23 @@ class PrescriptionPatientFragment : Fragment() {
         expandableListViewExample!!.setAdapter(expandableListAdapter)
 
         expandableListViewExample!!.setOnGroupExpandListener(OnGroupExpandListener { groupPosition ->
-            Toast.makeText(
+           /* Toast.makeText(
                 this@PrescriptionPatientFragment.context,
                 expandableTitleList?.get(groupPosition) + " List Expanded.",
                 Toast.LENGTH_SHORT
-            ).show()
+            ).show()*/
         })
 
         expandableListViewExample!!.setOnGroupCollapseListener(OnGroupCollapseListener { groupPosition ->
-            Toast.makeText(
+           /* Toast.makeText(
                 this@PrescriptionPatientFragment.context,
                 expandableTitleList?.get(groupPosition) + " List Collapsed.",
                 Toast.LENGTH_SHORT
-            ).show()
+            ).show()*/
         })
 
         expandableListViewExample!!.setOnChildClickListener(OnChildClickListener { parent, v, groupPosition, childPosition, id ->
-            Toast.makeText(
+         /*   Toast.makeText(
                 this@PrescriptionPatientFragment.context, expandableTitleList?.get(groupPosition)
                         + " -> "
                         + expandableTitleList?.let {
@@ -89,7 +91,7 @@ class PrescriptionPatientFragment : Fragment() {
                         childPosition
                     )
                 }, Toast.LENGTH_SHORT
-            ).show()
+            ).show()*/
             false
         })
 

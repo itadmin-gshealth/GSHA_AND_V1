@@ -15,19 +15,44 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginTop="30dp">
 
-            <TextView
-                android:id="@+id/textBrowseHeader"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:layout_marginTop="30dp"
-                android:text="Health Records"
-                android:textColor="@color/purple_700"
-                android:textAppearance="@style/CustomTabText"
-                android:paddingLeft="20dp"/>
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/textBrowseHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:text="Health Records"
+                    android:textColor="@color/purple_700"
+                    android:textAppearance="@style/CustomTabText"
+                    android:paddingLeft="20dp"/>
 
-            <Button
+                <ImageView
+                    android:id="@+id/btnAddFiles"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:layout_marginLeft="5dp"
+                    android:src="@drawable/baseline_add_link_24"
+                    ></ImageView>
+
+            </LinearLayout>
+            <ExpandableListView
+                android:paddingTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_below="@id/btnAddFiles"
+                android:id="@+id/expandableListViewSample"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@android:color/darker_gray"
+                android:dividerHeight="0.5dp"
+                android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft" />
+
+
+           <!-- <Button
                 android:id="@+id/btnAddFiles"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -36,7 +61,7 @@
                 android:layout_marginLeft="33dp"
                 android:layout_marginTop="20dp"
                 android:text="ADD FILES"
-                android:textSize="20sp"></Button>
+                android:textSize="20sp"></Button>-->
 
             <Space
                 android:layout_width="match_parent"

@@ -39,7 +39,7 @@
         <EditText
             android:id="@+id/text_name"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:layout_below="@+id/text_account"
             android:layout_marginTop="20dp"
             android:layout_marginLeft="30dp"
@@ -53,7 +53,7 @@
         <EditText
             android:id="@+id/text_email"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:layout_below="@+id/text_name"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="30dp"
@@ -67,7 +67,7 @@
         <EditText
             android:id="@+id/text_password"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:layout_below="@+id/text_email"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="30dp"
@@ -81,7 +81,7 @@
         <EditText
             android:id="@+id/text_phonenumber"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:layout_below="@+id/text_password"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="30dp"
@@ -113,7 +113,7 @@
             <Spinner
                 android:id="@+id/ddlGender"
                 android:layout_width="100dp"
-                android:layout_height="50dp"
+                android:layout_height="40dp"
                 android:layout_marginLeft="15dp"
                 android:entries="@array/gender"
                 android:background="@drawable/account_background" />
@@ -121,7 +121,7 @@
             <EditText
                 android:id="@+id/txtAge"
                 android:layout_width="80dp"
-                android:layout_height="50dp"
+                android:layout_height="40dp"
                 android:background="@drawable/account_background"
                 android:layout_marginLeft="15dp"
                 android:paddingLeft="13dp"
@@ -181,9 +181,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/SignUp"
             android:text="SIGN UP DOCTOR"
-            android:layout_marginLeft="100dp"
+            android:layout_marginLeft="110dp"
             android:layout_centerHorizontal="true"
-            android:textSize="20sp">
+            android:textSize="16sp">
         </Button>
 
     </LinearLayout>
