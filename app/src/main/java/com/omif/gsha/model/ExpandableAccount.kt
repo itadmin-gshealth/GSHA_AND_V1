@@ -1,7 +1,7 @@
 package com.omif.gsha.model
 
 
-class ExpandableListDataItems {
+class ExpandableAccount {
     companion object {
         fun getData(): HashMap<String, List<String>>? {
             val expandableDetailList = HashMap<String, List<String>>()

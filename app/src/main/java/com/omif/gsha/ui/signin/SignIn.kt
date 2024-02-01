@@ -17,12 +17,11 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.omif.gsha.MainActivity
-import com.omif.gsha.adapter.CustomizedExpandableListAdapter
+import com.omif.gsha.adapter.ExpandableAdapter
 import com.omif.gsha.databinding.FragmentAccountBinding
 import com.omif.gsha.databinding.FragmentSigninBinding
-import com.omif.gsha.model.ExpandableListDataItems
+import com.omif.gsha.model.ExpandableAccount
 import com.omif.gsha.ui.account.AccountViewModel
-import com.omif.gsha.ui.members.AddMembersFragment
 import com.omif.gsha.ui.signup.SignUpFragment
 
 
@@ -146,12 +145,12 @@ class SignInFragment : Fragment() {
 
             expandableListViewExample = bindingAcc.expandableListViewSample
 
-            expandableDetailList = ExpandableListDataItems.getData()
+            expandableDetailList = ExpandableAccount.getData()
             expandableTitleList = ArrayList<String>(expandableDetailList?.keys)
             expandableListAdapter =
                 root.context?.let { expandableTitleList?.let { it1 ->
                     expandableDetailList?.let { it2 ->
-                        CustomizedExpandableListAdapter(it,
+                        ExpandableAdapter(it,
                             it1, it2
                         )
                     }

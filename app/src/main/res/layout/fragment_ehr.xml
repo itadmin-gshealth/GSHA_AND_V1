@@ -40,10 +40,31 @@
                     ></ImageView>
 
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp">
+                <TextView
+                    android:id="@+id/textSelectPatient"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Select Patient : "
+                    android:textColor="@color/purple_700"
+                    android:textSize="15sp"
+                    android:paddingLeft="20dp"
+                    android:textStyle="bold"/>
+
+                <Spinner
+                    android:id="@+id/ddlPatients"
+                    android:layout_width="wrap_content"
+                    android:textSize="15sp"
+                    android:layout_height="wrap_content"></Spinner>
+            </LinearLayout>
             <ExpandableListView
                 android:paddingTop="10dp"
                 android:layout_marginLeft="10dp"
-                android:layout_below="@id/btnAddFiles"
                 android:id="@+id/expandableListViewSample"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -1,6 +1,5 @@
 package com.omif.gsha.ui.uploads
 
-import android.R
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,13 +11,10 @@ import android.widget.ExpandableListView.OnChildClickListener
 import android.widget.ExpandableListView.OnGroupCollapseListener
 import android.widget.ExpandableListView.OnGroupExpandListener
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.omif.gsha.adapter.CustomizedExpandableListAdapter
+import com.omif.gsha.adapter.ExpandableAdapter
 import com.omif.gsha.databinding.FragmentPrescriptionPatientBinding
-import com.omif.gsha.model.ExpandableEhr
-import com.omif.gsha.model.ExpandableListDataItems
 import com.omif.gsha.model.ExpandablePrescription
 
 
@@ -56,7 +52,7 @@ class PrescriptionPatientFragment : Fragment() {
         expandableListAdapter =
             this@PrescriptionPatientFragment.context?.let { expandableTitleList?.let { it1 ->
                 expandableDetailList?.let { it2 ->
-                    CustomizedExpandableListAdapter(
+                    ExpandableAdapter(
                         it,
                         it1, it2,
                     )

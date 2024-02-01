@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.BaseExpandableListAdapter
 import android.widget.TextView
 
-class CustomizedExpandableListAdapter(
+class ExpandableAdapter(
     context: Context, expandableListTitle: List<String>,
     expandableListDetail: HashMap<String, List<String>>
 ) : BaseExpandableListAdapter() {

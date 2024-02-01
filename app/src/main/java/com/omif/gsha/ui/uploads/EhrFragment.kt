@@ -10,12 +10,11 @@ import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Button
 import android.widget.ExpandableListAdapter
 import android.widget.ExpandableListView
 import android.widget.ImageView
@@ -26,6 +25,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -33,24 +33,22 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.storage
-import com.omif.gsha.R
-import com.omif.gsha.adapter.CommonMethods
-import com.omif.gsha.adapter.CustomizedExpandableListAdapter
+import com.omif.gsha.adapter.ExpandableAdapter
 import com.omif.gsha.databinding.FragmentEhrBinding
-import com.omif.gsha.databinding.FragmentPharmaBinding
 import com.omif.gsha.model.EHRecord
 import com.omif.gsha.model.ExpandableEhr
-import com.omif.gsha.model.User
-import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
 import java.util.Date
+
 
 class EhrFragment : Fragment() {
     private val pickFromGallery:Int = 101
     private lateinit var storageRef: StorageReference
     private var _binding: FragmentEhrBinding? = null
     private lateinit var btnAttachFiles: ImageView
+    private lateinit var txtPatientSelect: TextView
     private lateinit var ddlDept: Spinner
+    private lateinit var ddlPatient: Spinner
     private lateinit var mdbRef: DatabaseReference
     private lateinit var mAuth: FirebaseAuth
     var dept = arrayOf(
@@ -74,6 +72,8 @@ class EhrFragment : Fragment() {
 
         _binding = FragmentEhrBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        ddlPatient = binding.ddlPatients
+        expandableListViewExample = binding.expandableListViewSample
         storageRef = Firebase.storage.reference
         mAuth = FirebaseAuth.getInstance()
         val preferences =
@@ -81,16 +81,73 @@ class EhrFragment : Fragment() {
         val uType = preferences?.getInt("uType",0)
 
         btnAttachFiles = binding.btnAddFiles
+        txtPatientSelect = binding.textSelectPatient
         if(uType == 2)
         {
             btnAttachFiles.isVisible = false
+            var pNames = preferences?.getString("patientNames", "").toString()
+            var pIds = preferences?.getString("patientUids", "").toString()
+            var pos = 0
+            var listPNames = listOf<String>()
+            if(!pNames.isNullOrBlank()) {
+                listPNames = pNames.split(",").map { it.trim() }
+                var pId = pIds.split(",").map { it.trim() }
+                listPNames = listOf(" ") + listPNames
+                var adapter = this@EhrFragment.context?.let {
+                    ArrayAdapter<String>(
+                        it, android.R.layout.simple_spinner_item, listPNames.dropLast(1)
+                    )
+                }
+                adapter?.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                ddlPatient.adapter = adapter
+
+                ddlPatient.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        parentView: AdapterView<*>?,
+                        selectedItemView: View?,
+                        position: Int,
+                        id: Long
+                    ) {
+                        if(!ddlPatient.selectedItem.toString().isNullOrBlank()) {
+                            expandableListViewExample?.isVisible = true
+                            loadExpandable(pId[pos+1])
+                        }
+                        else {
+                            expandableListViewExample?.isVisible = false
+                            Toast.makeText(
+                                this@EhrFragment.context,
+                                "Please select Patient",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+
+                    override fun onNothingSelected(parentView: AdapterView<*>?) {
+                        Toast.makeText(this@EhrFragment.context, "Please select Patient", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+            }
         }
         btnAttachFiles.setOnClickListener {
             showDialog()
         }
-        loadExpandable()
-        // Inflate the layout for this fragment
+        if(uType == 1 || uType == 3)
+        {
+            ddlPatient.isVisible = false
+            txtPatientSelect.isVisible = false
+            loadExpandable(mAuth.currentUser?.uid.toString())
+            expandableListViewExample!!.isVisible = true
+        }
         return root
+    }
+
+    private fun sendData() : Array<ArrayList<String>>
+    {
+        val arrayOfArray : Array<ArrayList<String>> = arrayOf()
+
+
+        return arrayOfArray
     }
 
     private fun showDialog() {
@@ -161,9 +218,10 @@ class EhrFragment : Fragment() {
                        // Picasso.get().load(it.toString()).into(userImg)
                         imageLink = it.toString()
                         mdbRef = FirebaseDatabase.getInstance().reference
-                        mdbRef.child("tblEHR").child(mAuth.currentUser?.uid.toString()).setValue(EHRecord(mAuth.currentUser?.uid.toString(), formatter.format(
+                        mdbRef.child("tblEHR").child(mAuth.currentUser?.uid.toString()).child(formatter.format(Date())).setValue(EHRecord(mAuth.currentUser?.uid.toString(), formatter.format(
                             Date()
                         ),imageLink, ddlDept.selectedItem.toString(),null))
+                        loadExpandable(mAuth.currentUser?.uid.toString())
                         Toast.makeText(this@EhrFragment.context,"File added successfully", Toast.LENGTH_SHORT).show()
                     }.addOnFailureListener {
                         Toast.makeText(this@EhrFragment.context, "Failed in downloading", Toast.LENGTH_SHORT).show();
@@ -190,15 +248,13 @@ class EhrFragment : Fragment() {
         return uri.path?.lastIndexOf('/')?.let { uri.path?.substring(it) }
     }
 
-    private fun loadExpandable(){
-        expandableListViewExample = binding.expandableListViewSample
-
-        expandableDetailList = ExpandableEhr.getData()
+    private fun loadExpandable(patientId: String){
+        expandableDetailList = ExpandableEhr.getData(patientId)
         expandableTitleList = ArrayList<String>(expandableDetailList?.keys)
         expandableListAdapter =
             this@EhrFragment.context?.let { expandableTitleList?.let { it1 ->
                 expandableDetailList?.let { it2 ->
-                    CustomizedExpandableListAdapter(
+                    ExpandableAdapter(
                         it,
                         it1, it2,
                     )
@@ -223,8 +279,8 @@ class EhrFragment : Fragment() {
         })
 
         expandableListViewExample!!.setOnChildClickListener(ExpandableListView.OnChildClickListener { parent, v, groupPosition, childPosition, id ->
-            /*   Toast.makeText(
-                   this@PrescriptionPatientFragment.context, expandableTitleList?.get(groupPosition)
+              /* Toast.makeText(
+                   this@EhrFragment.context, expandableTitleList?.get(groupPosition)
                            + " -> "
                            + expandableTitleList?.let {
                        expandableDetailList?.get(
@@ -234,6 +290,15 @@ class EhrFragment : Fragment() {
                        )
                    }, Toast.LENGTH_SHORT
                ).show()*/
+            val link = expandableTitleList?.let {
+                expandableDetailList?.get(
+                    it[groupPosition]
+                )?.get(
+                    childPosition
+                )
+            }
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(link))
+            startActivity(browserIntent)
             false
         })
 
