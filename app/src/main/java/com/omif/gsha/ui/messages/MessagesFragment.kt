@@ -146,7 +146,7 @@ class MessagesFragment : Fragment() {
                             }
                         })
 
-                    if(loggedInUser.uType == 1) {
+                    if(loggedInUser.uType == 1 || loggedInUser.uType == 3) {
                         mDbRef.child("tblDoctor").addValueEventListener(object : ValueEventListener {
                             override fun onDataChange(snapshot: DataSnapshot) {
                                 userList.clear()

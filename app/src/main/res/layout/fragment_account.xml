@@ -37,30 +37,90 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/SignOut"
+        <TextView
+            android:id="@+id/text_phone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/text_account"
-            android:text="SIGN OUT"
-            android:layout_marginLeft="130dp"
-            android:layout_centerHorizontal="true"
-            android:textSize="20sp"
-            android:layout_marginTop="10dp">
-        </Button>
-
-        <Button
-            android:id="@+id/AddMembers"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            android:textColor="@color/grey"
+            android:textFontWeight="@integer/material_motion_duration_long_2"
+            android:layout_gravity="center_horizontal"
+            android:layout_below="@+id/text_account" />
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/SignOut"
-            android:text="ADD MEMBERS"
-            android:layout_marginLeft="100dp"
+            android:layout_below="@+id/text_phone"
+            android:layout_marginLeft="10dp"
             android:layout_centerHorizontal="true"
-            android:textSize="20sp"
-            android:layout_marginTop="10dp">
-        </Button>
+            >
+            <Button
+                android:id="@+id/SignOut"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SIGN OUT"
+                android:layout_centerHorizontal="true"
+                android:textSize="14sp"
+                android:layout_marginTop="10dp">
+            </Button>
+
+            <Button
+                android:id="@+id/AddMembers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="ADD MEMBERS"
+                android:layout_centerHorizontal="true"
+                android:textSize="14sp"
+                android:layout_marginTop="10dp">
+            </Button>
+
+            <Button
+                android:id="@+id/SwitchUser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="SWITCH USER"
+                android:layout_centerHorizontal="true"
+                android:textSize="14sp"
+                android:layout_marginTop="10dp">
+            </Button>
+        </LinearLayout>
+
+
+        <ExpandableListView
+            android:paddingTop="10dp"
+            android:id="@+id/expandableListViewSample"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@android:color/darker_gray"
+            android:dividerHeight="0.5dp"
+            android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft" />
+
+        <ImageView
+            android:id="@+id/iv_logo"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_below="@+id/expandableListViewSample"
+            android:src="@drawable/ic_logo_new" />
+
+        <TextView
+            android:id="@+id/text_gsha"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            android:text="A Good Shepherd Health Initiative"
+            android:textColor="@color/purple_700"
+            android:textFontWeight="@integer/material_motion_duration_long_2"
+            android:layout_gravity="center_horizontal"
+            android:layout_below="@+id/iv_logo" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="30dp"></Space>
+
 
     </LinearLayout>
     </ScrollView>

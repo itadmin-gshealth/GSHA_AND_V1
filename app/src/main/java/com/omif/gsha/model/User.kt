@@ -12,10 +12,11 @@ class User {
     var qual: String? =null
     var imageLink: String? = null
     var uType: Int = 0
+    var parentId: String? = null
 
     constructor(){}
 
-    constructor(name: String?, email:String?, uid: String?,phoneNumber:String?, department:String?, gender:String?, age:Int, qual: String?, imageLink: String?, uType: Int){
+    constructor(name: String?, email:String?, uid: String?,phoneNumber:String?, department:String?, gender:String?, age:Int, qual: String?, imageLink: String?, uType: Int, parentId: String?){
         this.name = name
         this.email = email
         this.uid = uid
@@ -26,6 +27,7 @@ class User {
         this.qual = qual
         this.imageLink = imageLink
         this.uType = uType
+        this.parentId = parentId
     }
 
 }

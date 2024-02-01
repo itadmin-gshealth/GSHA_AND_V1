@@ -63,10 +63,10 @@ class VitalsFragment : Fragment() {
             uType = preferences?.getInt("uType",0)!!
         }
 
-        val textView: TextView = binding.txtVitals
+        /*val textView: TextView = binding.txtVitals
         vitalsViewModel.text.observe(viewLifecycleOwner) {
                 textView.text = it
-        }
+        }*/
 
         btnSave.setOnClickListener{
             val formatter = SimpleDateFormat("yyyy-MM-dd hh:mm:ss")

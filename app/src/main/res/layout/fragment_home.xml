@@ -31,8 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:textAlignment="center"
-                android:textSize="30sp"
-                android:textStyle="bold"
+                android:textAppearance="@style/CustomTabText"
                 android:textColor="@color/teal_700"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -45,10 +44,9 @@
                 android:layout_height="32dp"
                 android:layout_marginTop="5dp"
                 android:text="Take Online Doctor Consultation"
-                android:textColor="@color/teal_700"
-                android:textSize="25sp"
-                android:paddingLeft="20dp"
-                android:textStyle="bold"
+                android:textColor="@color/red"
+                android:textAppearance="@style/CustomTabText"
+                android:paddingLeft="65dp"
                 android:tooltipText="Browse Doctor's prescription"/>
 
             <HorizontalScrollView
@@ -189,9 +187,8 @@
                 android:layout_marginTop="20dp"
                 android:text="How it works"
                 android:textColor="@color/purple_700"
-                android:textSize="25sp"
-                android:paddingLeft="20dp"
-                android:textStyle="bold"/>
+                android:textAppearance="@style/CustomTabText"
+                android:paddingLeft="20dp"/>
 
 
             <androidx.cardview.widget.CardView
@@ -223,9 +220,8 @@
                 android:layout_marginTop="20dp"
                 android:text="Our Services"
                 android:textColor="@color/purple_700"
-                android:textSize="25sp"
-                android:paddingLeft="20dp"
-                android:textStyle="bold"/>
+                android:textAppearance="@style/CustomTabText"
+                android:paddingLeft="20dp"/>
 
 
             <HorizontalScrollView

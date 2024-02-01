@@ -1,5 +1,6 @@
 package com.omif.gsha.ui.signin
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ExpandableListAdapter
+import android.widget.ExpandableListView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -14,9 +17,12 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.omif.gsha.MainActivity
+import com.omif.gsha.adapter.CustomizedExpandableListAdapter
 import com.omif.gsha.databinding.FragmentAccountBinding
 import com.omif.gsha.databinding.FragmentSigninBinding
+import com.omif.gsha.model.ExpandableListDataItems
 import com.omif.gsha.ui.account.AccountViewModel
+import com.omif.gsha.ui.members.AddMembersFragment
 import com.omif.gsha.ui.signup.SignUpFragment
 
 
@@ -38,8 +44,15 @@ class SignInFragment : Fragment() {
     private lateinit var txtPassword: EditText
     private lateinit var btnLogIn: Button
     private lateinit var btnSignUp: Button
-
+    private lateinit var btnAddMem: Button
     private lateinit var btnSignOut: Button
+    private lateinit var btnSwitchUser: Button
+    private lateinit var txtPhone: TextView
+
+    var expandableListViewExample: ExpandableListView? = null
+    var expandableListAdapter: ExpandableListAdapter? = null
+    var expandableTitleList: List<String>? = null
+    var expandableDetailList: HashMap<String, List<String>>? = null
 
 
     override fun onCreateView(
@@ -89,19 +102,98 @@ class SignInFragment : Fragment() {
             _bindingAcc = FragmentAccountBinding.inflate(inflater, container, false)
 
             val root: View = bindingAcc.root
+            val preferences = activity?.getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
+
+            val name = preferences?.getString("uName","")
+            val type = preferences?.getInt("uType",0)
+            val email = preferences?.getString("uEmail","")
+            val phone = preferences?.getString("uPhone","")
 
             val textView: TextView = bindingAcc.textAccount
             accountViewModel.text.observe(viewLifecycleOwner) {
-                textView.text = it
+                textView.text = it + name
             }
 
+            txtPhone = bindingAcc.textPhone
+            txtPhone.text  = phone + " | " + email
             btnSignOut = bindingAcc.SignOut
+            btnSwitchUser= bindingAcc.SwitchUser
+            btnAddMem = bindingAcc.AddMembers
+            btnAddMem.setOnClickListener{
+                if(type == 1) {
+                    var fragment: Fragment? = null
+                    fragment = SignUpFragment()
+                    replaceFragment(fragment)
+                }
+                else
+                {
+                    Toast.makeText(root.context, "Permission denied", Toast.LENGTH_SHORT).show()
+                }
+            }
 
             btnSignOut.setOnClickListener{
                 mAuth.signOut()
                 val intent = Intent(this@SignInFragment.context, MainActivity::class.java)
                 startActivity(intent)
             }
+
+            btnSwitchUser.setOnClickListener{
+                mAuth.signOut()
+                var fragment: Fragment? = null
+                fragment = SignInFragment()
+                replaceFragment(fragment)
+            }
+
+            expandableListViewExample = bindingAcc.expandableListViewSample
+
+            expandableDetailList = ExpandableListDataItems.getData()
+            expandableTitleList = ArrayList<String>(expandableDetailList?.keys)
+            expandableListAdapter =
+                root.context?.let { expandableTitleList?.let { it1 ->
+                    expandableDetailList?.let { it2 ->
+                        CustomizedExpandableListAdapter(it,
+                            it1, it2
+                        )
+                    }
+                } }
+            expandableListViewExample!!.setAdapter(expandableListAdapter)
+
+            expandableListViewExample!!.setOnGroupExpandListener(ExpandableListView.OnGroupExpandListener { groupPosition ->
+                Toast.makeText(
+                    root.context,
+                    expandableTitleList?.get(groupPosition) + " List Expanded.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            })
+
+            expandableListViewExample!!.setOnGroupCollapseListener(ExpandableListView.OnGroupCollapseListener { groupPosition ->
+                Toast.makeText(
+                    root.context,
+                    expandableTitleList?.get(groupPosition) + " List Collapsed.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            })
+
+            expandableListViewExample!!.setOnChildClickListener(ExpandableListView.OnChildClickListener { parent, v, groupPosition, childPosition, id ->
+                Toast.makeText(
+                    root.context,
+                    expandableTitleList?.get(groupPosition)
+                            + " -> "
+                            + expandableTitleList?.let {
+                        expandableDetailList?.get(
+                            it[groupPosition]
+                        )?.get(
+                            childPosition
+                        )
+                    },
+                    Toast.LENGTH_SHORT
+                ).show()
+                false
+            })
+
+
+
+
 
             return root
         }

@@ -28,11 +28,9 @@ class PagerAdapter(fragmentActivity: UploadsFragment, uType: Int):FragmentStateA
                 0 -> {
                     EhrFragment()
                 }
-
                 1 -> {
                     PrescriptionFragment()
                 }
-
                 else -> {
                     throw NotFoundException("Position not found")
                 }
@@ -42,7 +40,6 @@ class PagerAdapter(fragmentActivity: UploadsFragment, uType: Int):FragmentStateA
             0 -> {
                 VitalsFragment()
             }
-
             1 -> {
                 EhrFragment()
             }
@@ -50,11 +47,10 @@ class PagerAdapter(fragmentActivity: UploadsFragment, uType: Int):FragmentStateA
             2 -> {
                 PrescriptionPatientFragment()
             }
-
             else -> {
                 throw NotFoundException("Position not found")
             }
         }
     }
-        }
+    }
     }

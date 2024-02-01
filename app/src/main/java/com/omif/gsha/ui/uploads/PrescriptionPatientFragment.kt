@@ -1,31 +1,24 @@
 package com.omif.gsha.ui.uploads
 
 import android.R
-import android.app.AlertDialog
-import android.content.Context
-import android.content.DialogInterface
-import android.content.Intent
-import android.graphics.Color
-import android.graphics.Typeface
 import android.os.Bundle
-import android.text.InputType
-import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.Spinner
+import android.widget.ExpandableListAdapter
+import android.widget.ExpandableListView
+import android.widget.ExpandableListView.OnChildClickListener
+import android.widget.ExpandableListView.OnGroupCollapseListener
+import android.widget.ExpandableListView.OnGroupExpandListener
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
-import com.omif.gsha.adapter.CommonMethods
+import com.omif.gsha.adapter.CustomizedExpandableListAdapter
 import com.omif.gsha.databinding.FragmentPrescriptionPatientBinding
-import com.omif.gsha.ui.pharma.PharmaFragment
+import com.omif.gsha.model.ExpandableListDataItems
+
 
 class PrescriptionPatientFragment : Fragment() {
 
@@ -39,6 +32,11 @@ class PrescriptionPatientFragment : Fragment() {
 
     private lateinit var viewModel: PrescriptionPatientViewModel
 
+    var expandableListViewExample: ExpandableListView? = null
+    var expandableListAdapter: ExpandableListAdapter? = null
+    var expandableTitleList: List<String>? = null
+    var expandableDetailList: HashMap<String, List<String>>? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -47,30 +45,55 @@ class PrescriptionPatientFragment : Fragment() {
         val prescriptionPatientViewModel =
             ViewModelProvider(this).get(PrescriptionPatientViewModel::class.java)
 
-        val preferences = activity?.getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
-
         _binding = FragmentPrescriptionPatientBinding.inflate(inflater, container, false)
-        txtRegNo = binding.regNo
-        txtDept = binding.dept
-        btnGetMedicine = binding.btnGetMedicine
-        btnDownload = binding.btnDownload
-        btnDownload.setOnClickListener{
-            Toast.makeText(this@PrescriptionPatientFragment.context, "Download complete",Toast.LENGTH_SHORT).show()
-        }
-        btnGetMedicine.setOnClickListener{
-            this@PrescriptionPatientFragment.context?.let { it1 ->
-                CommonMethods.showDialog(
-                    it1, txtMeds.text.toString()
-                )
-            }
-        }
-
-        txtMeds.text = ""
-
-        txtDept.text = preferences?.getString("dept", "").toString()
-        txtMeds.movementMethod = ScrollingMovementMethod()
-        txtRegNo.text ="414/DM&HO/MED/2008"
         val root: View = binding.root
+        expandableListViewExample = binding.expandableListViewSample
+
+        expandableDetailList = ExpandableListDataItems.getData()
+        expandableTitleList = ArrayList<String>(expandableDetailList?.keys)
+        expandableListAdapter =
+            this@PrescriptionPatientFragment.context?.let { expandableTitleList?.let { it1 ->
+                expandableDetailList?.let { it2 ->
+                    CustomizedExpandableListAdapter(
+                        it,
+                        it1, it2,
+                    )
+                }
+            } }
+        expandableListViewExample!!.setAdapter(expandableListAdapter)
+
+        expandableListViewExample!!.setOnGroupExpandListener(OnGroupExpandListener { groupPosition ->
+            Toast.makeText(
+                this@PrescriptionPatientFragment.context,
+                expandableTitleList?.get(groupPosition) + " List Expanded.",
+                Toast.LENGTH_SHORT
+            ).show()
+        })
+
+        expandableListViewExample!!.setOnGroupCollapseListener(OnGroupCollapseListener { groupPosition ->
+            Toast.makeText(
+                this@PrescriptionPatientFragment.context,
+                expandableTitleList?.get(groupPosition) + " List Collapsed.",
+                Toast.LENGTH_SHORT
+            ).show()
+        })
+
+        expandableListViewExample!!.setOnChildClickListener(OnChildClickListener { parent, v, groupPosition, childPosition, id ->
+            Toast.makeText(
+                this@PrescriptionPatientFragment.context, expandableTitleList?.get(groupPosition)
+                        + " -> "
+                        + expandableTitleList?.let {
+                    expandableDetailList?.get(
+                        it[groupPosition]
+                    )?.get(
+                        childPosition
+                    )
+                }, Toast.LENGTH_SHORT
+            ).show()
+            false
+        })
+
+
         return root
     }
 

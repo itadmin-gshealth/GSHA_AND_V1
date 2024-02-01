@@ -65,6 +65,7 @@ class HomeFragment : Fragment() {
                            var editor = preferences?.edit()
                            editor?.putString("uName",user.name)
                            editor?.putString("uEmail",user.email)
+                           editor?.putString("uPhone",user.phoneNumber)
                            editor?.putInt("uType",user.uType)
                            if(user.uType == 2)
                            {
