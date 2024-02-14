@@ -67,6 +67,7 @@ class HomeFragment : Fragment() {
                            editor?.putString("uEmail",user.email)
                            editor?.putString("uPhone",user.phoneNumber)
                            editor?.putInt("uType",user.uType)
+                           editor?.putInt("uInternal",user.internal)
                            if(user.uType == 2)
                            {
                                editor?.putString("dept",user.department)

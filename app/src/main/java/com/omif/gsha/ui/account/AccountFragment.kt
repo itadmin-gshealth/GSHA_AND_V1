@@ -22,7 +22,6 @@ class AccountFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
-
     private lateinit var btnSignOut: Button
     private lateinit var btnAddMem: Button
     private lateinit var txtMessage: TextView
@@ -45,6 +44,7 @@ class AccountFragment : Fragment() {
 
         btnSignOut = binding.SignOut
         btnAddMem = binding.AddMembers
+
         mAuth = FirebaseAuth.getInstance()
 
         btnSignOut.setOnClickListener{

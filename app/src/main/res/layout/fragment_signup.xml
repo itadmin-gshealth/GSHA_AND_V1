@@ -175,16 +175,24 @@
             android:textSize="16sp">
         </Button>
 
-        <Button
+       <!-- <Button
             android:id="@+id/SignUpDoctor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/SignUp"
             android:text="SIGN UP DOCTOR"
-            android:layout_marginLeft="110dp"
             android:layout_centerHorizontal="true"
             android:textSize="16sp">
         </Button>
+
+        <Button
+            android:id="@+id/SignUpHealth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="SIGN UP HW"
+            android:layout_centerHorizontal="true"
+            android:textSize="16sp">
+        </Button>-->
 
     </LinearLayout>
     </ScrollView>

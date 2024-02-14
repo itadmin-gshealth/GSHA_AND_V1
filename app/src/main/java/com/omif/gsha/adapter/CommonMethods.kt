@@ -9,19 +9,26 @@ import android.content.Intent.createChooser
 import android.graphics.Color
 import android.graphics.Typeface
 import android.text.InputType
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.Spinner
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.omif.gsha.BuildConfig
+import com.omif.gsha.MainActivity
+import com.omif.gsha.model.User
 import javax.mail.Message
 import javax.mail.MessagingException
 import javax.mail.PasswordAuthentication
@@ -45,7 +52,13 @@ class CommonMethods(val context: Context){
     companion object {
         private lateinit var appExecutors: AppExecutors
         private lateinit var mAuth: FirebaseAuth
+        private lateinit var mdbRef: DatabaseReference
+        private lateinit var ddlDept: Spinner
+        var selectedDept = ""
         var i = 0
+        var dept = arrayOf(
+            "Department","Gynecology ", "Paediatrics", "Dentistry ", "General", "Dermatology ", "Psychiatrist"
+        )
         private var pins = arrayOf(
             "500010","500011 ", "500012"
         )
@@ -227,6 +240,119 @@ class CommonMethods(val context: Context){
                }
            }
        }
+
+
+        private fun signUp(context: Context, email:String, password: String, phoneNumber: String, gender: String, age:Int, imageLink:String?, uType: Int, internal: Int, name: String, parentId: String)
+        {
+            if(!mAuth.currentUser?.uid.toString().isNullOrBlank())
+                mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener {task->
+                    if(task.isSuccessful) {
+                        mAuth.uid?.let { if(selectedDept == "" ){
+                            addPatienttoDatabase(name, email, it, phoneNumber,"OutPatient", gender, age,"",imageLink, uType, parentId, internal)
+                            addUsertoDatabase(name, email, it, phoneNumber,"OutPatient",gender, age,"",imageLink, uType, parentId, internal)
+                            Toast.makeText(context, "User Created Successfully", Toast.LENGTH_SHORT).show()}
+                        else{ if(selectedDept == "Department"){
+                            Toast.makeText(context, "Please select Department", Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            addDoctortoDatabase(name, email, it, phoneNumber, selectedDept, gender, age, "MBBS",imageLink, uType, internal)}}
+                            addUsertoDatabase(name, email, it, phoneNumber, selectedDept, gender, age,"",imageLink, uType, parentId, internal)
+                            Toast.makeText(context, "User Created Successfully", Toast.LENGTH_SHORT).show()}
+                       /* val intent = Intent(context, MainActivity::class.java)
+                        startActivity(intent)*/
+                    }
+                    else{
+                        Toast.makeText(context, task.exception?.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+        }
+
+        private fun addPatienttoDatabase(name: String, email: String, uid: String, phoneNumber: String,department:String, gender: String, age:Int, qual: String?, imageLink: String?, uType: Int, parentId: String?, internal: Int) {
+            mdbRef = FirebaseDatabase.getInstance().reference
+            if(parentId == "null")
+                mdbRef.child("tblPatient").child(uid).setValue(User(name, email, uid,phoneNumber, department, gender, age, qual, imageLink, uType, "", internal))
+            else
+                mdbRef.child("tblPatient").child(uid).setValue(User(name, email, uid,phoneNumber, department, gender, age, qual, imageLink, 3, parentId,internal))
+        }
+
+        private fun addDoctortoDatabase(name: String, email: String, uid: String, phoneNumber: String, department: String, gender:String, age:Int, qual:String?, imageLink: String?, uType: Int, internal: Int) {
+            mdbRef = FirebaseDatabase.getInstance().reference
+            mdbRef.child("tblDoctor").child(uid).setValue(User(name, email, uid,phoneNumber, department, gender, age,qual, imageLink, uType, "", internal))
+        }
+
+        private fun addUsertoDatabase(name: String, email: String, uid: String, phoneNumber: String, department: String, gender:String, age:Int,qual:String?, imageLink: String?, uType: Int, parentId: String?, internal: Int) {
+            mdbRef = FirebaseDatabase.getInstance().reference
+            if(parentId=="null")
+                mdbRef.child("tblUserWithType").child(uid).setValue(User(name, email, uid,phoneNumber, department, gender, age, qual, imageLink, uType, "", internal))
+            else
+                mdbRef.child("tblUserWithType").child(uid).setValue(User(name, email, uid,phoneNumber, department, gender, age, qual, imageLink, 3, parentId, internal))
+        }
+
+
+        public fun showDialog(context: Context?) {
+
+            ddlDept = Spinner(context)
+            val adapter: ArrayAdapter<String>? =
+                context?.let { ArrayAdapter<String>(it, R.layout.simple_spinner_item, dept) }
+
+            adapter?.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
+            ddlDept.adapter = adapter
+
+            val textView = TextView(context)
+            textView.apply {
+                text = "Select Department"
+                setPadding(20, 30, 20, 30)
+                textSize = 20f
+                setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))
+                setTextColor(Color.WHITE)
+                typeface = Typeface.DEFAULT_BOLD;
+            }
+            val builder: AlertDialog.Builder = AlertDialog.Builder(context)
+            builder
+                .setView(ddlDept)
+                .setCustomTitle(textView)
+                .setPositiveButton("Ok") { dialog, which ->
+                    selectedDept = ddlDept.selectedItem.toString()
+                    if(selectedDept == "Department")
+                    {
+                        Toast.makeText(context, "Please select Department", Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                    {
+                       /* signUp(
+                            txtName.text.toString(),
+                            txtEmail.text.toString(),
+                            txtPassword.text.toString(),
+                            txtPhoneNumber.text.toString(),
+                            ddlgender.selectedItem.toString(),
+                            txtAge.text.toString().toInt(),
+                            imageLink,
+                            2,
+                            1,
+
+                        )*/
+                    }
+                }
+
+            val params = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            params.setMargins(20, 0, 0, 0)
+
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
+            dialog.apply {
+                getButton(DialogInterface.BUTTON_POSITIVE).apply {
+                    setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))
+                    setTextColor(Color.WHITE)
+                    typeface = Typeface.DEFAULT_BOLD;
+                    layoutParams = params;
+                }
+            }
+        }
+
+
     }
 
 

@@ -12,6 +12,8 @@ import android.widget.ExpandableListAdapter
 import android.widget.ExpandableListView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.isVisible
+import androidx.core.view.marginLeft
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
@@ -44,9 +46,12 @@ class SignInFragment : Fragment() {
     private lateinit var btnLogIn: Button
     private lateinit var btnSignUp: Button
     private lateinit var btnAddMem: Button
+    private lateinit var btnChangeStatus: Button
     private lateinit var btnSignOut: Button
     private lateinit var btnSwitchUser: Button
     private lateinit var txtPhone: TextView
+    private lateinit var btnSignUpDoctor: Button
+    private lateinit var btnSignUpHW: Button
 
     var expandableListViewExample: ExpandableListView? = null
     var expandableListAdapter: ExpandableListAdapter? = null
@@ -72,6 +77,7 @@ class SignInFragment : Fragment() {
             signInViewModel.text.observe(viewLifecycleOwner) {
                 textView.text = it
             }
+
 
             txtEmail=bindingSignIn.textEmail
             txtPassword = bindingSignIn.textPassword
@@ -105,6 +111,7 @@ class SignInFragment : Fragment() {
 
             val name = preferences?.getString("uName","")
             val type = preferences?.getInt("uType",0)
+            val internal = preferences?.getInt("uInternal",0)
             val email = preferences?.getString("uEmail","")
             val phone = preferences?.getString("uPhone","")
 
@@ -116,21 +123,85 @@ class SignInFragment : Fragment() {
             txtPhone = bindingAcc.textPhone
             txtPhone.text  = phone + " | " + email
             btnSignOut = bindingAcc.SignOut
+            btnChangeStatus = bindingAcc.changeStatus
             btnSwitchUser= bindingAcc.SwitchUser
             btnAddMem = bindingAcc.AddMembers
+            btnSignUpDoctor = bindingAcc.SignUpDoctor
+            btnSignUpHW = bindingAcc.SignUpHealth
+            btnSignUpHW.isVisible = false
+            btnSignUpDoctor.isVisible = false
+
+            if(name =="admin")
+            {
+                btnAddMem.isVisible = false
+                btnChangeStatus.isVisible = false
+                btnSwitchUser.isVisible = false
+                btnSignUpHW.isVisible = true
+                btnSignUpDoctor.isVisible = true
+
+            }
+            else if(type == 2)
+            {
+                btnAddMem.isVisible = false
+                btnChangeStatus.isVisible = true
+                btnSwitchUser.isVisible = false
+                val param = btnSignOut.layoutParams as ViewGroup.MarginLayoutParams
+                param.setMargins(220,35,0,0)
+                btnSignOut.layoutParams = param
+            }
+            else if(type == 3)
+            {
+                btnAddMem.isVisible = false
+                btnChangeStatus.isVisible = false
+                btnSwitchUser.isVisible = true
+                val param = btnSignOut.layoutParams as ViewGroup.MarginLayoutParams
+                param.setMargins(240,35,0,0)
+                btnSignOut.layoutParams = param
+            }
+            else
+            {
+                btnChangeStatus.isVisible = false
+            }
             btnAddMem.setOnClickListener{
-                if(type == 1) {
-                    var fragment: Fragment? = null
-                    fragment = SignUpFragment()
-                    replaceFragment(fragment)
-                }
-                else
-                {
-                    Toast.makeText(root.context, "Permission denied", Toast.LENGTH_SHORT).show()
-                }
+                var editor = preferences?.edit()
+                editor?.putInt("memberType",3)
+                if(type == 1 && internal == 0)
+                    editor?.putInt("memberInternal",0)
+                else if(type == 1 && internal == 1)
+                    editor?.putInt("memberInternal",1)
+                editor?.commit()
+
+                var fragment: Fragment? = null
+                fragment = SignUpFragment()
+                replaceFragment(fragment)
+            }
+
+            btnSignUpHW.setOnClickListener{
+                var editor = preferences?.edit()
+                editor?.putInt("memberType",1)
+                editor?.putInt("memberInternal",0)
+
+                editor?.commit()
+
+                var fragment: Fragment? = null
+                fragment = SignUpFragment()
+                replaceFragment(fragment)
+            }
+
+            btnSignUpDoctor.setOnClickListener{
+                var editor = preferences?.edit()
+                editor?.putInt("memberType",2)
+                editor?.commit()
+
+                var fragment: Fragment? = null
+                fragment = SignUpFragment()
+                replaceFragment(fragment)
             }
 
             btnSignOut.setOnClickListener{
+                var editor = preferences?.edit()
+                editor?.clear()
+                editor?.apply()
                 mAuth.signOut()
                 val intent = Intent(this@SignInFragment.context, MainActivity::class.java)
                 startActivity(intent)
@@ -189,10 +260,6 @@ class SignInFragment : Fragment() {
                 ).show()
                 false
             })
-
-
-
-
 
             return root
         }

@@ -47,9 +47,6 @@ import kotlinx.coroutines.selects.select
 class SignUpFragment : Fragment() {
 
     private var _binding: FragmentSignupBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
     private lateinit var mAuth: FirebaseAuth
     private lateinit var storageRef: StorageReference
@@ -61,14 +58,16 @@ class SignUpFragment : Fragment() {
     private lateinit var btnAddImage: Button
     private lateinit var btnSignUp: Button
     private lateinit var btnSignUpDoctor: Button
+    private lateinit var btnSignUpHW: Button
     private lateinit var ddlDept: Spinner
     private lateinit var ddlgender: Spinner
     private lateinit var txtAge: EditText
     private lateinit var userImg: de.hdodenhof.circleimageview.CircleImageView
 
+
+
     var isEmailRegistered = false
     var parentId = ""
-
 
     var dept = arrayOf(
         "Department","Gynecology ", "Paediatrics", "Dentistry ", "General", "Dermatology ", "Psychiatrist"
@@ -98,17 +97,45 @@ class SignUpFragment : Fragment() {
         txtPhoneNumber = binding.textPhonenumber
         btnAddImage = binding.AddImage
         btnSignUp = binding.SignUp
-        btnSignUpDoctor = binding.SignUpDoctor
         ddlgender = binding.ddlGender
         txtAge = binding.txtAge
         userImg = binding.userImg
 
         mAuth = FirebaseAuth.getInstance()
         storageRef = Firebase.storage.reference
+        parentId = mAuth.currentUser?.uid.toString()
 
         btnSignUp.setOnClickListener(){
             if(CheckAllFields()) {
-                signUp(txtName.text.toString(),txtEmail.text.toString(), txtPassword.text.toString(), txtPhoneNumber.text.toString(),ddlgender.selectedItem.toString(),txtAge.text.toString().toInt(), imageLink, 1)
+                val preferences = activity?.getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
+                var memType = preferences?.getInt("memberType",0)
+                var memInternal = preferences?.getInt("memberInternal",0)
+
+                //for first time new outside patient
+                if(memType == null)
+                    memType = 1
+                if(memInternal == null)
+                    memInternal = 1
+
+                if(memType == 2)
+                {showDialog(memType, memInternal)}
+                else{signUp(
+                    txtName.text.toString(),
+                    txtEmail.text.toString(),
+                    txtPassword.text.toString(),
+                    txtPhoneNumber.text.toString(),
+                    ddlgender.selectedItem.toString(),
+                    txtAge.text.toString().toInt(),
+                    imageLink,
+                    memType!!,
+                    memInternal!!
+                )}
+                }
+        }
+
+       /* btnSignUpHW.setOnClickListener(){
+            if(CheckAllFields()) {
+                signUp(txtName.text.toString(),txtEmail.text.toString(), txtPassword.text.toString(), txtPhoneNumber.text.toString(),ddlgender.selectedItem.toString(),txtAge.text.toString().toInt(), imageLink, 1, 0)
             }
         }
 
@@ -118,7 +145,7 @@ class SignUpFragment : Fragment() {
             if (CheckAllFields()) {
                 showDialog()
             }
-        }
+        }*/
 
         btnAddImage.setOnClickListener {
             val intent = Intent()
@@ -164,7 +191,7 @@ class SignUpFragment : Fragment() {
         return uri.path?.lastIndexOf('/')?.let { uri.path?.substring(it) }
     }
 
-    private fun showDialog() {
+    private fun showDialog(memType:Int, memInternal:Int) {
 
         ddlDept = Spinner(this@SignUpFragment.context)
         val adapter: ArrayAdapter<String>? = this@SignUpFragment.context?.let {
@@ -202,7 +229,8 @@ class SignUpFragment : Fragment() {
                         ddlgender.selectedItem.toString(),
                         txtAge.text.toString().toInt(),
                         imageLink,
-                        2
+                        memType!!,
+                        memInternal!!
                     )
                 }
             }
@@ -226,22 +254,21 @@ class SignUpFragment : Fragment() {
     }
 
 
-    private fun signUp(name: String, email:String, password: String, phoneNumber: String, gender: String, age:Int, imageLink:String?, uType: Int)
+    private fun signUp(name: String, email:String, password: String, phoneNumber: String, gender: String, age:Int, imageLink:String?, uType: Int, internal: Int)
     {
         if(!mAuth.currentUser?.uid.toString().isNullOrBlank())
-            parentId = mAuth.currentUser?.uid.toString()
         mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener {task->
             if(task.isSuccessful) {
                 mAuth.uid?.let { if(selectedDept == "" ){
-                    addPatienttoDatabase(name, email, it, phoneNumber,"OutPatient", gender, age,"",imageLink, uType, parentId)
-                    addUsertoDatabase(name, email, it, phoneNumber,"OutPatient",gender, age,"",imageLink, uType, parentId)
+                    addPatienttoDatabase(name, email, it, phoneNumber,"OutPatient", gender, age,"",imageLink, uType, parentId, internal)
+                    addUsertoDatabase(name, email, it, phoneNumber,"OutPatient",gender, age,"",imageLink, uType, parentId, internal)
                     Toast.makeText(this@SignUpFragment.context, "User Created Successfully", Toast.LENGTH_SHORT).show()}
                 else{ if(selectedDept == "Department"){
                     Toast.makeText(this@SignUpFragment.context, "Please select Department", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    addDoctortoDatabase(name, email, it, phoneNumber, selectedDept, gender, age, "MBBS",imageLink, uType)}}
-                    addUsertoDatabase(name, email, it, phoneNumber, selectedDept, gender, age,"",imageLink, uType, parentId)
+                    addDoctortoDatabase(name, email, it, phoneNumber, selectedDept, gender, age, "MBBS",imageLink, uType, internal)}}
+                    addUsertoDatabase(name, email, it, phoneNumber, selectedDept, gender, age,"",imageLink, uType, parentId, internal)
                     Toast.makeText(this@SignUpFragment.context, "User Created Successfully", Toast.LENGTH_SHORT).show()}
                 val intent = Intent(this@SignUpFragment.context, MainActivity::class.java)
                 startActivity(intent)
@@ -252,25 +279,25 @@ class SignUpFragment : Fragment() {
         }
     }
 
-    private fun addPatienttoDatabase(name: String, email: String, uid: String, phoneNumber: String,department:String, gender: String, age:Int, qual: String?, imageLink: String?, uType: Int, parentId: String?) {
+    private fun addPatienttoDatabase(name: String, email: String, uid: String, phoneNumber: String,department:String, gender: String, age:Int, qual: String?, imageLink: String?, uType: Int, parentId: String?, internal: Int) {
         mdbRef = FirebaseDatabase.getInstance().reference
-        if(mAuth.currentUser?.uid.isNullOrBlank())
-            mdbRef.child("tblPatient").child(uid).setValue(User(name, email, uid,phoneNumber, department, gender, age, qual, imageLink, uType, parentId))
-        else
-            mdbRef.child("tblPatient").child(uid).setValue(User(name, email, uid,phoneNumber, department, gender, age, qual, imageLink, 3, mAuth.currentUser?.uid.toString()))
+       /* if(parentId == "null")
+            mdbRef.child("tblPatient").child(uid).setValue(User(name, email, uid,phoneNumber, department, gender, age, qual, imageLink, uType, "", internal))
+        else*/
+            mdbRef.child("tblPatient").child(uid).setValue(User(name, email, uid,phoneNumber, department, gender, age, qual, imageLink, uType, parentId,internal))
     }
 
-    private fun addDoctortoDatabase(name: String, email: String, uid: String, phoneNumber: String, department: String, gender:String, age:Int, qual:String?, imageLink: String?, uType: Int) {
+    private fun addDoctortoDatabase(name: String, email: String, uid: String, phoneNumber: String, department: String, gender:String, age:Int, qual:String?, imageLink: String?, uType: Int, internal: Int) {
         mdbRef = FirebaseDatabase.getInstance().reference
-        mdbRef.child("tblDoctor").child(uid).setValue(User(name, email, uid,phoneNumber, department, gender, age,qual, imageLink, uType, uid))
+        mdbRef.child("tblDoctor").child(uid).setValue(User(name, email, uid,phoneNumber, department, gender, age,qual, imageLink, uType, "", internal))
     }
 
-    private fun addUsertoDatabase(name: String, email: String, uid: String, phoneNumber: String, department: String, gender:String, age:Int,qual:String?, imageLink: String?, uType: Int, parentId: String?) {
+    private fun addUsertoDatabase(name: String, email: String, uid: String, phoneNumber: String, department: String, gender:String, age:Int,qual:String?, imageLink: String?, uType: Int, parentId: String?, internal: Int) {
         mdbRef = FirebaseDatabase.getInstance().reference
-        if(mAuth.currentUser?.uid.isNullOrBlank())
-            mdbRef.child("tblUserWithType").child(uid).setValue(User(name, email, uid,phoneNumber, department, gender, age, qual, imageLink, uType, parentId))
-        else
-            mdbRef.child("tblUserWithType").child(uid).setValue(User(name, email, uid,phoneNumber, department, gender, age, qual, imageLink, 3, mAuth.currentUser?.uid.toString()))
+        /*if(parentId=="null")
+            mdbRef.child("tblUserWithType").child(uid).setValue(User(name, email, uid,phoneNumber, department, gender, age, qual, imageLink, uType, "", internal))
+        else*/
+            mdbRef.child("tblUserWithType").child(uid).setValue(User(name, email, uid,phoneNumber, department, gender, age, qual, imageLink, uType, parentId, internal))
     }
     private fun CheckAllFields(): Boolean {
 
