@@ -317,34 +317,6 @@ class ChatActivity : AppCompatActivity() {
         }
     }
 
-    private fun showDialog() {
-        val builderSingle = AlertDialog.Builder(this)
-        builderSingle.setTitle("Select One Name:-")
 
-        val arrayAdapter = ArrayAdapter<String>(this, android.R.layout.select_dialog_singlechoice)
-            arrayAdapter.add("Hardik")
-            arrayAdapter.add("Archit")
-            arrayAdapter.add("Jignesh")
-            arrayAdapter.add("Umang")
-            arrayAdapter.add("Gatti")
-
-        builderSingle.setNegativeButton(
-            "cancel"
-        ) { dialog, which -> dialog.dismiss() }
-
-        builderSingle.setAdapter(
-            arrayAdapter
-        ) { dialog, which ->
-            val strName = arrayAdapter.getItem(which)
-            val builderInner = AlertDialog.Builder(this)
-            builderInner.setMessage(strName)
-            builderInner.setTitle("Your Selected Item is")
-            builderInner.setPositiveButton(
-                "Ok"
-            ) { dialog, which -> dialog.dismiss() }
-            builderInner.show()
-        }
-        builderSingle.show()
-    }
 
 }

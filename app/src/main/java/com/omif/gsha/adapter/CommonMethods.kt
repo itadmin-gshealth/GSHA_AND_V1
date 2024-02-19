@@ -18,17 +18,10 @@ import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.omif.gsha.BuildConfig
-import com.omif.gsha.MainActivity
-import com.omif.gsha.model.User
 import javax.mail.Message
 import javax.mail.MessagingException
 import javax.mail.PasswordAuthentication
@@ -241,109 +234,96 @@ class CommonMethods(val context: Context){
            }
        }
 
-
-        private fun signUp(context: Context, email:String, password: String, phoneNumber: String, gender: String, age:Int, imageLink:String?, uType: Int, internal: Int, name: String, parentId: String)
-        {
-            if(!mAuth.currentUser?.uid.toString().isNullOrBlank())
-                mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener {task->
-                    if(task.isSuccessful) {
-                        mAuth.uid?.let { if(selectedDept == "" ){
-                            addPatienttoDatabase(name, email, it, phoneNumber,"OutPatient", gender, age,"",imageLink, uType, parentId, internal)
-                            addUsertoDatabase(name, email, it, phoneNumber,"OutPatient",gender, age,"",imageLink, uType, parentId, internal)
-                            Toast.makeText(context, "User Created Successfully", Toast.LENGTH_SHORT).show()}
-                        else{ if(selectedDept == "Department"){
-                            Toast.makeText(context, "Please select Department", Toast.LENGTH_SHORT).show();
-                        }
-                        else{
-                            addDoctortoDatabase(name, email, it, phoneNumber, selectedDept, gender, age, "MBBS",imageLink, uType, internal)}}
-                            addUsertoDatabase(name, email, it, phoneNumber, selectedDept, gender, age,"",imageLink, uType, parentId, internal)
-                            Toast.makeText(context, "User Created Successfully", Toast.LENGTH_SHORT).show()}
-                       /* val intent = Intent(context, MainActivity::class.java)
-                        startActivity(intent)*/
-                    }
-                    else{
-                        Toast.makeText(context, task.exception?.message, Toast.LENGTH_SHORT).show()
-                    }
-                }
+        private fun updateDoctorStatus(status: String) {
+            mdbRef = FirebaseDatabase.getInstance().reference
+            val key = FirebaseAuth.getInstance().currentUser!!.uid
+            val map: HashMap<String, Int> = HashMap<String, Int>()
+            map["status"] = castStatus(status)
+            mdbRef.child("tblDoctor").child(key).updateChildren(map as Map<String, Int>);
+            mdbRef.child("tblUserWithType").child(key).updateChildren(map as Map<String, Int>);
         }
 
-        private fun addPatienttoDatabase(name: String, email: String, uid: String, phoneNumber: String,department:String, gender: String, age:Int, qual: String?, imageLink: String?, uType: Int, parentId: String?, internal: Int) {
-            mdbRef = FirebaseDatabase.getInstance().reference
-            if(parentId == "null")
-                mdbRef.child("tblPatient").child(uid).setValue(User(name, email, uid,phoneNumber, department, gender, age, qual, imageLink, uType, "", internal))
+        private fun castStatus(status: String) : Int {
+            return if(status == "Offline")
+                0
+            else if(status == "Available in 30 minutes")
+                2
+            else if(status == "Available tomorrow")
+                3
+            else if(status == "Available in an hour")
+                4
             else
-                mdbRef.child("tblPatient").child(uid).setValue(User(name, email, uid,phoneNumber, department, gender, age, qual, imageLink, 3, parentId,internal))
+                1
         }
 
-        private fun addDoctortoDatabase(name: String, email: String, uid: String, phoneNumber: String, department: String, gender:String, age:Int, qual:String?, imageLink: String?, uType: Int, internal: Int) {
-            mdbRef = FirebaseDatabase.getInstance().reference
-            mdbRef.child("tblDoctor").child(uid).setValue(User(name, email, uid,phoneNumber, department, gender, age,qual, imageLink, uType, "", internal))
-        }
-
-        private fun addUsertoDatabase(name: String, email: String, uid: String, phoneNumber: String, department: String, gender:String, age:Int,qual:String?, imageLink: String?, uType: Int, parentId: String?, internal: Int) {
-            mdbRef = FirebaseDatabase.getInstance().reference
-            if(parentId=="null")
-                mdbRef.child("tblUserWithType").child(uid).setValue(User(name, email, uid,phoneNumber, department, gender, age, qual, imageLink, uType, "", internal))
-            else
-                mdbRef.child("tblUserWithType").child(uid).setValue(User(name, email, uid,phoneNumber, department, gender, age, qual, imageLink, 3, parentId, internal))
-        }
-
-
-        public fun showDialog(context: Context?) {
-
-            ddlDept = Spinner(context)
-            val adapter: ArrayAdapter<String>? =
-                context?.let { ArrayAdapter<String>(it, R.layout.simple_spinner_item, dept) }
-
-            adapter?.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
-            ddlDept.adapter = adapter
-
-            val textView = TextView(context)
-            textView.apply {
-                text = "Select Department"
-                setPadding(20, 30, 20, 30)
-                textSize = 20f
-                setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))
-                setTextColor(Color.WHITE)
-                typeface = Typeface.DEFAULT_BOLD;
-            }
-            val builder: AlertDialog.Builder = AlertDialog.Builder(context)
-            builder
-                .setView(ddlDept)
-                .setCustomTitle(textView)
-                .setPositiveButton("Ok") { dialog, which ->
-                    selectedDept = ddlDept.selectedItem.toString()
-                    if(selectedDept == "Department")
-                    {
-                        Toast.makeText(context, "Please select Department", Toast.LENGTH_SHORT).show();
-                    }
-                    else
-                    {
-                       /* signUp(
-                            txtName.text.toString(),
-                            txtEmail.text.toString(),
-                            txtPassword.text.toString(),
-                            txtPhoneNumber.text.toString(),
-                            ddlgender.selectedItem.toString(),
-                            txtAge.text.toString().toInt(),
-                            imageLink,
-                            2,
-                            1,
-
-                        )*/
-                    }
-                }
-
+        fun showDialog(context: Context) {
             val params = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
             params.setMargins(20, 0, 0, 0)
 
-            val dialog: AlertDialog = builder.create()
+            val builderSingle = AlertDialog.Builder(context)
+            val textView = TextView(context)
+            textView.apply {
+                text = "Select Status"
+                setPadding(20, 30, 20, 30)
+                textSize = 20f
+                setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))
+                setTextColor(Color.WHITE)
+                typeface = Typeface.DEFAULT_BOLD;
+            }
+            builderSingle.setCustomTitle(textView)
+
+            var status = ""
+            val arrayAdapter = ArrayAdapter<String>(context, android.R.layout.select_dialog_singlechoice)
+            arrayAdapter.add("Online")
+            arrayAdapter.add("Available in 30 minutes")
+            arrayAdapter.add("Available tomorrow")
+            arrayAdapter.add("Available in an hour")
+            arrayAdapter.add("Offline")
+
+            builderSingle.setNegativeButton(
+                "cancel"
+            ) { dialog, which -> dialog.dismiss() }
+            builderSingle.setAdapter(
+                arrayAdapter
+            ) { dialog, which ->
+                val strName = arrayAdapter.getItem(which)
+                if (strName != null) {
+                    status = strName
+                }
+                val builderInner = AlertDialog.Builder(context)
+                builderInner.setMessage(strName)
+                builderInner.setPositiveButton(
+                    "Ok"
+                ) { dialog, which -> updateDoctorStatus(status) }
+
+                val textView = TextView(context)
+                textView.apply {
+                    text = "Change Status to"
+                    setPadding(20, 30, 20, 30)
+                    textSize = 20f
+                    setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))
+                    setTextColor(Color.WHITE)
+                    typeface = Typeface.DEFAULT_BOLD;
+                }
+                builderInner.setCustomTitle(textView)
+                val dialog: AlertDialog = builderInner.create()
+                dialog.show()
+                dialog.apply {
+                    getButton(DialogInterface.BUTTON_POSITIVE).apply {
+                        setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))
+                        setTextColor(Color.WHITE)
+                        typeface = Typeface.DEFAULT_BOLD;
+                        layoutParams = params;
+                    }
+                }
+            }
+            val dialog: AlertDialog = builderSingle.create()
             dialog.show()
             dialog.apply {
-                getButton(DialogInterface.BUTTON_POSITIVE).apply {
+                getButton(DialogInterface.BUTTON_NEGATIVE).apply {
                     setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))
                     setTextColor(Color.WHITE)
                     typeface = Typeface.DEFAULT_BOLD;
@@ -351,9 +331,5 @@ class CommonMethods(val context: Context){
                 }
             }
         }
-
-
     }
-
-
 }

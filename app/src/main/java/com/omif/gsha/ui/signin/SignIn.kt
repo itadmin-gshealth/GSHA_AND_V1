@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.omif.gsha.MainActivity
+import com.omif.gsha.adapter.CommonMethods
 import com.omif.gsha.adapter.ExpandableAdapter
 import com.omif.gsha.databinding.FragmentAccountBinding
 import com.omif.gsha.databinding.FragmentSigninBinding
@@ -208,10 +209,17 @@ class SignInFragment : Fragment() {
             }
 
             btnSwitchUser.setOnClickListener{
+                var editor = preferences?.edit()
+                editor?.clear()
+                editor?.apply()
                 mAuth.signOut()
                 var fragment: Fragment? = null
                 fragment = SignInFragment()
                 replaceFragment(fragment)
+            }
+
+            btnChangeStatus.setOnClickListener {
+                this@SignInFragment.context?.let { it1 -> CommonMethods.showDialog(it1) }
             }
 
             expandableListViewExample = bindingAcc.expandableListViewSample
