@@ -7,11 +7,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
@@ -32,7 +34,9 @@ class PrescriptionFragment : Fragment() {
     private lateinit var viewModel: PrescriptionViewModel
     private lateinit var btnSave: Button
     private lateinit var ddlPatients: Spinner
+    private lateinit var ddlDiagnosis: Spinner
     private lateinit var txtRegNo: TextView
+    private lateinit var txtDocRegNo: TextView
     private lateinit var txtDept: TextView
     private lateinit var txtMedicine: TextView
 
@@ -43,6 +47,10 @@ class PrescriptionFragment : Fragment() {
     lateinit var scaledbmp: Bitmap
 
     var PERMISSION_CODE = 101
+
+    var diag = arrayOf(
+        " ","Tuberclosis ", "Eczema", "Mumps ", "Dengue", "Malaria ", "Alzheimer's", "Parkinson","Typhoid", "Arthritis", "Viral Fever"
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,13 +67,16 @@ class PrescriptionFragment : Fragment() {
         var adapter: ArrayAdapter<String>?
         btnSave = binding.btnSavePrescription
         ddlPatients = binding.ddlPatients
+        ddlDiagnosis = binding.ddlDiagnosis
         txtRegNo = binding.regNo
+        txtDocRegNo = binding.docRegNo
         txtDept = binding.dept
         txtMedicine = binding.meds
         txtDept.text = preferences?.getString("dept", "").toString()
         txtRegNo.text ="414/DM&HO/MED/2008"
         var pNames = preferences?.getString("patientNames", "").toString()
         var pIds = preferences?.getString("patientUids", "").toString()
+        txtDocRegNo.text = preferences?.getString("regNo", "").toString()
         var pos = 0
         var listPNames = listOf<String>()
         if(!pNames.isNullOrBlank()) {
@@ -79,6 +90,22 @@ class PrescriptionFragment : Fragment() {
             adapter?.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
             ddlPatients.setAdapter(adapter)
 
+            ddlPatients.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parentView: AdapterView<*>?,
+                    selectedItemView: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    ddlDiagnosis.setSelection(0,true);
+                    }
+
+                override fun onNothingSelected(parentView: AdapterView<*>?) {
+                    Toast.makeText(this@PrescriptionFragment.context, "Please select Patient", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+            loadDiagnosis()
         }
         else{
             Toast.makeText(this@PrescriptionFragment.context, "Please visit waiting area to check on the patients", Toast.LENGTH_SHORT).show()
@@ -108,6 +135,7 @@ class PrescriptionFragment : Fragment() {
                             pid,
                             preferences?.getString("dept", "").toString(),
                             "",
+                            "",
                             formatter.format(Date())
                         )
                     )
@@ -122,6 +150,17 @@ class PrescriptionFragment : Fragment() {
             }
         }
         return root   }
+
+    private fun loadDiagnosis()
+    {
+        var adapterDiag: ArrayAdapter<String>? = this@PrescriptionFragment.context?.let {
+            ArrayAdapter<String>(
+                it, R.layout.simple_spinner_item, diag
+            )
+        }
+        adapterDiag?.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
+        ddlDiagnosis.adapter = adapterDiag
+    }
 
     private fun checkAllFields(): Boolean {
         if (ddlPatients.selectedItem.toString().isNullOrBlank()) {

@@ -11,6 +11,7 @@ import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,8 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Spinner
+import android.widget.TableLayout
+import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -37,6 +40,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.storage
 import com.omif.gsha.MainActivity
+import com.omif.gsha.adapter.CommonMethods
 import com.omif.gsha.adapter.OnEmailCheckListener
 import com.omif.gsha.databinding.FragmentSignupBinding
 import com.omif.gsha.model.User
@@ -60,6 +64,7 @@ class SignUpFragment : Fragment() {
     private lateinit var btnSignUpDoctor: Button
     private lateinit var btnSignUpHW: Button
     private lateinit var ddlDept: Spinner
+    private lateinit var ddlType: Spinner
     private lateinit var ddlgender: Spinner
     private lateinit var txtAge: EditText
     private lateinit var userImg: de.hdodenhof.circleimageview.CircleImageView
@@ -68,9 +73,16 @@ class SignUpFragment : Fragment() {
     var parentId = ""
 
     var dept = arrayOf(
-        "Department","Gynecology ", "Paediatrics", "Dentistry ", "General", "Dermatology ", "Psychiatrist"
+        "Department","Gynecology", "Paediatrics", "Dentistry", "General", "Dermatology", "Psychiatrist"
+    )
+
+    var docType = arrayOf(
+        "Internal","External"
     )
     var selectedDept = ""
+    var regNo = ""
+    var qual = ""
+    var type = 0
     var imageLink : String? = ""
 
     override fun onCreateView(
@@ -115,7 +127,9 @@ class SignUpFragment : Fragment() {
                     memInternal = 1
 
                 if(memType == 2)
-                {showDialog(memType, memInternal)}
+                {
+                   showDocDialog(memType, memInternal)
+                }
                 else{signUp(
                     txtName.text.toString(),
                     txtEmail.text.toString(),
@@ -189,6 +203,193 @@ class SignUpFragment : Fragment() {
         return uri.path?.lastIndexOf('/')?.let { uri.path?.substring(it) }
     }
 
+    private fun showDocDialog(memType:Int, memInternal:Int) {
+
+        ddlDept = Spinner(context)
+        ddlType = Spinner(context)
+        val adapter: ArrayAdapter<String>? = context?.let {
+            ArrayAdapter<String>(
+                it, android.R.layout.simple_spinner_item, dept
+            )
+        }
+        adapter?.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        ddlDept.adapter = adapter
+
+        val adapterType: ArrayAdapter<String>? = context?.let {
+            ArrayAdapter<String>(
+                it, android.R.layout.simple_spinner_item, docType
+            )
+        }
+        adapterType?.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        ddlType.adapter = adapterType
+
+        val tableLayout = TableLayout(context)
+        val tableRow = TableRow(context)
+        val tableRowAdd = TableRow(context)
+        val tableRow3 = TableRow(context)
+        val tableRow2 = TableRow(context)
+
+        val params = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        val txtDept = TextView(context)
+        txtDept.apply {
+            setPadding(20, 30, 20, 30)
+            text="Department "
+            textSize = 15f
+            setBackgroundColor(Color.WHITE)
+            setTextColor(Color.BLACK)
+            typeface = Typeface.DEFAULT_BOLD;
+        }
+        tableRowAdd.addView(txtDept)
+        val textViewAddValue = EditText(context)
+        textViewAddValue.apply {
+            setPadding(20, 30, 20, 30)
+            width = 100
+            height = 200
+            textSize = 15f
+            setBackgroundColor(Color.WHITE)
+            setBackgroundResource(R.drawable.edit_text)
+            setTextColor(Color.BLACK)
+            typeface = Typeface.DEFAULT_BOLD;
+        }
+        tableRowAdd.addView(ddlDept)
+
+        val txtType = TextView(context)
+        txtType.apply {
+            setPadding(20, 30, 20, 30)
+            text="Type "
+            textSize = 15f
+            setBackgroundColor(Color.WHITE)
+            setTextColor(Color.BLACK)
+            typeface = Typeface.DEFAULT_BOLD;
+        }
+        tableRow2.addView(txtType)
+        tableRow2.addView(ddlType)
+
+        val txtQual = TextView(context)
+        txtQual.apply {
+            setPadding(20, 30, 20, 30)
+            text="Qualification "
+            textSize = 15f
+            setBackgroundColor(Color.WHITE)
+            setTextColor(Color.BLACK)
+            typeface = Typeface.DEFAULT_BOLD;
+        }
+        tableRow.addView(txtQual)
+
+        val textViewDesign = EditText(context)
+        textViewDesign.apply {
+            setPadding(20, 30, 20, 30)
+            width = 250
+            textSize = 15f
+            setBackgroundColor(Color.CYAN)
+            setBackgroundResource(R.drawable.edit_text)
+            setTextColor(Color.BLACK)
+            typeface = Typeface.DEFAULT_BOLD;
+            inputType = InputType.TYPE_CLASS_TEXT
+        }
+        tableRow.addView(textViewDesign)
+
+        val txtRegNo = TextView(context)
+        txtRegNo.apply {
+            setPadding(20, 30, 20, 30)
+            text="Registration No "
+            textSize = 15f
+            setBackgroundColor(Color.WHITE)
+            setTextColor(Color.BLACK)
+            typeface = Typeface.DEFAULT_BOLD;
+        }
+        tableRow3.addView(txtRegNo)
+
+        val textViewRegNo = EditText(context)
+        textViewRegNo.apply {
+            setPadding(20, 30, 20, 30)
+            width = 250
+            textSize = 15f
+            setBackgroundColor(Color.CYAN)
+            setBackgroundResource(R.drawable.edit_text)
+            setTextColor(Color.BLACK)
+            typeface = Typeface.DEFAULT_BOLD;
+            inputType = InputType.TYPE_CLASS_TEXT
+        }
+        tableRow3.addView(textViewRegNo)
+
+        tableLayout.addView(tableRowAdd)
+        tableLayout.addView(tableRow2)
+        tableLayout.addView(tableRow)
+        tableLayout.addView(tableRow3)
+
+        tableLayout.apply {
+            setPadding(120, 50, 20, 30)
+        }
+
+        val textView = TextView(context)
+        textView.apply {
+            text = "Enter Doctor's Data"
+            setPadding(20, 30, 20, 30)
+            textSize = 20f
+            setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))
+            setTextColor(Color.WHITE)
+            typeface = Typeface.DEFAULT_BOLD;
+        }
+
+        val builder: AlertDialog.Builder = AlertDialog.Builder(context)
+        builder
+            .setView(tableLayout)
+            .setCustomTitle(textView)
+            .setPositiveButton("Ok") { dialog, which ->
+                selectedDept = ddlDept.selectedItem.toString()
+                regNo = textViewRegNo.text.toString()
+                qual = textViewDesign.text.toString()
+                type = if(ddlType.selectedItem == "Internal")
+                    0
+                else 1
+                if(selectedDept == "Department")
+                {
+                    Toast.makeText(this@SignUpFragment.context, "Please select Department", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    signUp(
+                        txtName.text.toString(),
+                        txtEmail.text.toString(),
+                        txtPassword.text.toString(),
+                        txtPhoneNumber.text.toString(),
+                        ddlgender.selectedItem.toString(),
+                        txtAge.text.toString().toInt(),
+                        imageLink,
+                        memType!!,
+                        type,
+                        1
+                    )
+                }
+            }
+            .setNegativeButton("CLOSE"){dialog, which-> dialog.dismiss()}
+
+        params.setMargins(20, 0, 0, 0)
+
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+        dialog.apply {
+            getButton(DialogInterface.BUTTON_POSITIVE).apply {
+                setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))
+                setTextColor(Color.WHITE)
+                typeface = Typeface.DEFAULT_BOLD;
+                layoutParams = params;
+            }
+            getButton(DialogInterface.BUTTON_NEGATIVE).apply {
+                setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))
+                setTextColor(Color.WHITE)
+                typeface = Typeface.DEFAULT_BOLD;
+                layoutParams = params;
+            }
+        }
+    }
+
+/*
+
     private fun showDialog(memType:Int, memInternal:Int) {
 
         ddlDept = Spinner(this@SignUpFragment.context)
@@ -211,6 +412,7 @@ class SignUpFragment : Fragment() {
         builder
             .setView(ddlDept)
             .setCustomTitle(textView)
+            .setNegativeButton("CLOSE") { dialog, which -> dialog.dismiss()}
             .setPositiveButton("Ok") { dialog, which ->
                 selectedDept = ddlDept.selectedItem.toString()
                 if(selectedDept == "Department")
@@ -249,9 +451,16 @@ class SignUpFragment : Fragment() {
                 typeface = Typeface.DEFAULT_BOLD;
                 layoutParams = params;
             }
+            getButton(DialogInterface.BUTTON_NEGATIVE).apply {
+                setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))
+                setTextColor(Color.WHITE)
+                typeface = Typeface.DEFAULT_BOLD;
+                layoutParams = params;
+            }
         }
     }
 
+*/
 
     private fun signUp(name: String, email:String, password: String, phoneNumber: String, gender: String, age:Int, imageLink:String?, uType: Int, internal: Int, status: Int)
     {
@@ -259,15 +468,15 @@ class SignUpFragment : Fragment() {
         mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener {task->
             if(task.isSuccessful) {
                 mAuth.uid?.let { if(selectedDept == "" ){
-                    addPatienttoDatabase(name, email, it, phoneNumber,"OutPatient", gender, age,"",imageLink, uType, parentId, internal, status)
-                    addUsertoDatabase(name, email, it, phoneNumber,"OutPatient",gender, age,"",imageLink, uType, parentId, internal, status)
+                    addPatienttoDatabase(name, email, it, phoneNumber,"OutPatient", regNo, gender, age,qual,imageLink, uType, parentId, internal, status)
+                    addUsertoDatabase(name, email, it, phoneNumber,"OutPatient",regNo, gender, age,qual,imageLink, uType, parentId, internal, status)
                     Toast.makeText(this@SignUpFragment.context, "User Created Successfully", Toast.LENGTH_SHORT).show()}
                 else{ if(selectedDept == "Department"){
                     Toast.makeText(this@SignUpFragment.context, "Please select Department", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    addDoctortoDatabase(name, email, it, phoneNumber, selectedDept, gender, age, "MBBS",imageLink, uType, internal, status)}}
-                    addUsertoDatabase(name, email, it, phoneNumber, selectedDept, gender, age,"",imageLink, uType, parentId, internal, status)
+                    addDoctortoDatabase(name, email, it, phoneNumber, selectedDept, regNo, gender, age, qual,imageLink, uType, internal, status)}}
+                    addUsertoDatabase(name, email, it, phoneNumber, selectedDept, regNo, gender, age,qual,imageLink, uType, parentId, internal, status)
                     Toast.makeText(this@SignUpFragment.context, "User Created Successfully", Toast.LENGTH_SHORT).show()}
                 val intent = Intent(this@SignUpFragment.context, MainActivity::class.java)
                 startActivity(intent)
@@ -278,25 +487,25 @@ class SignUpFragment : Fragment() {
         }
     }
 
-    private fun addPatienttoDatabase(name: String, email: String, uid: String, phoneNumber: String,department:String, gender: String, age:Int, qual: String?, imageLink: String?, uType: Int, parentId: String?, internal: Int, status:Int) {
+    private fun addPatienttoDatabase(name: String, email: String, uid: String, phoneNumber: String,department:String, regNo:String?, gender: String, age:Int, qual: String?, imageLink: String?, uType: Int, parentId: String?, internal: Int, status:Int) {
         mdbRef = FirebaseDatabase.getInstance().reference
        /* if(parentId == "null")
-            mdbRef.child("tblPatient").child(uid).setValue(User(name, email, uid,phoneNumber, department, gender, age, qual, imageLink, uType, "", internal))
+            mdbRef.child("tblPatient").child(uid).setValue(User(name, email, uid,phoneNumber, department,regNo, gender, age, qual, imageLink, uType, "", internal))
         else*/
-            mdbRef.child("tblPatient").child(uid).setValue(User(name, email, uid,phoneNumber, department, gender, age, qual, imageLink, uType, parentId,internal, status))
+            mdbRef.child("tblPatient").child(uid).setValue(User(name, email, uid,phoneNumber, department, regNo, gender, age, qual, imageLink, uType, parentId,internal, status))
     }
 
-    private fun addDoctortoDatabase(name: String, email: String, uid: String, phoneNumber: String, department: String, gender:String, age:Int, qual:String?, imageLink: String?, uType: Int, internal: Int, status:Int) {
+    private fun addDoctortoDatabase(name: String, email: String, uid: String, phoneNumber: String, department: String, regNo:String?,gender:String, age:Int, qual:String?, imageLink: String?, uType: Int, internal: Int, status:Int) {
         mdbRef = FirebaseDatabase.getInstance().reference
-        mdbRef.child("tblDoctor").child(uid).setValue(User(name, email, uid,phoneNumber, department, gender, age,qual, imageLink, uType, "", internal, status))
+        mdbRef.child("tblDoctor").child(uid).setValue(User(name, email, uid,phoneNumber, department,regNo, gender, age,qual, imageLink, uType, "", internal, status))
     }
 
-    private fun addUsertoDatabase(name: String, email: String, uid: String, phoneNumber: String, department: String, gender:String, age:Int,qual:String?, imageLink: String?, uType: Int, parentId: String?, internal: Int, status:Int) {
+    private fun addUsertoDatabase(name: String, email: String, uid: String, phoneNumber: String, department: String, regNo:String?, gender:String, age:Int,qual:String?, imageLink: String?, uType: Int, parentId: String?, internal: Int, status:Int) {
         mdbRef = FirebaseDatabase.getInstance().reference
         /*if(parentId=="null")
-            mdbRef.child("tblUserWithType").child(uid).setValue(User(name, email, uid,phoneNumber, department, gender, age, qual, imageLink, uType, "", internal))
+            mdbRef.child("tblUserWithType").child(uid).setValue(User(name, email, uid,phoneNumber, department, regNo, gender, age, qual, imageLink, uType, "", internal))
         else*/
-            mdbRef.child("tblUserWithType").child(uid).setValue(User(name, email, uid,phoneNumber, department, gender, age, qual, imageLink, uType, parentId, internal, status))
+            mdbRef.child("tblUserWithType").child(uid).setValue(User(name, email, uid,phoneNumber, department, regNo, gender, age, qual, imageLink, uType, parentId, internal, status))
     }
     private fun CheckAllFields(): Boolean {
 

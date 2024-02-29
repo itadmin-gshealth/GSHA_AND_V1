@@ -31,20 +31,37 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_gravity="center"
+            android:layout_gravity="left"
+            android:paddingLeft="20dp"
             android:layout_marginTop="5dp">
             <TextView
                 android:id="@+id/textSelectPatient"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Select Patient : "
+                android:text="Patient : "
                 android:textColor="@color/purple_700"
                 android:textSize="15sp"
-                android:paddingLeft="20dp"
+                android:paddingLeft="5dp"
                 android:textStyle="bold"/>
 
             <Spinner
                 android:id="@+id/ddlPatients"
+                android:layout_width="wrap_content"
+                android:textSize="15sp"
+                android:layout_height="wrap_content"></Spinner>
+
+            <TextView
+                android:id="@+id/textSelectDiagnosis"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Diagnosis : "
+                android:textColor="@color/purple_700"
+                android:textSize="15sp"
+                android:paddingLeft="5dp"
+                android:textStyle="bold"/>
+
+            <Spinner
+                android:id="@+id/ddlDiagnosis"
                 android:layout_width="wrap_content"
                 android:textSize="15sp"
                 android:layout_height="wrap_content"></Spinner>

@@ -59,6 +59,19 @@
             android:textSize="15sp"
             android:textStyle="bold"></TextView>
 
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="158dp"
+            android:layout_below="@+id/designation"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center_horizontal"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="90dp"
+            android:layout_marginBottom="20dp"
+            android:text="status"
+            android:textColor="@color/teal_700"
+            android:textSize="15sp"
+            android:textStyle="bold"></TextView>
     </androidx.cardview.widget.CardView>
 
 

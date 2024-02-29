@@ -1,6 +1,7 @@
 package com.omif.gsha.adapter
 
 import android.R
+import android.adservices.common.AdTechIdentifier
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
@@ -18,10 +19,12 @@ import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.omif.gsha.BuildConfig
+import com.omif.gsha.ui.signin.SignInFragment
 import javax.mail.Message
 import javax.mail.MessagingException
 import javax.mail.PasswordAuthentication
@@ -50,9 +53,10 @@ class CommonMethods(val context: Context){
         var selectedDept = ""
         var i = 0
         var dept = arrayOf(
-            "Department","Gynecology ", "Paediatrics", "Dentistry ", "General", "Dermatology ", "Psychiatrist"
+            " ","Gynecology ", "Paediatrics", "Dentistry ", "General", "Dermatology ", "Psychiatrist"
         )
         private var pins = arrayOf(
+            "500010","500011 ", "500012",
             "500010","500011 ", "500012"
         )
         fun sendEmail(subject: String, message: String) {
@@ -94,6 +98,50 @@ class CommonMethods(val context: Context){
 
                 } catch (e: MessagingException) {
                     e.printStackTrace()
+                }
+            }
+        }
+
+        fun showDialog(context:Context, message: String, identifier: Int) {
+            val textView = TextView(context)
+            textView.apply {
+                text = "GSHA Says"
+                setPadding(20, 30, 20, 30)
+                textSize = 20f
+                setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))
+                setTextColor(Color.WHITE)
+                typeface = Typeface.DEFAULT_BOLD;
+            }
+
+            val textView1 = TextView(context)
+            textView1.text = "You will be notified when the Doctor comes online"
+            textView1.setPadding(20, 30, 20, 30)
+            textView1.textSize = 20f
+            textView1.setBackgroundColor(Color.WHITE)
+            textView1.setTextColor(Color.BLACK)
+            textView1.typeface = Typeface.DEFAULT_BOLD;
+            val builder: AlertDialog.Builder = AlertDialog.Builder(context)
+            builder
+                .setView(textView1)
+                .setCustomTitle(textView)
+                .setPositiveButton("Ok") { dialog, which ->
+                    sendEmail("Notify Doctor",message)
+                }
+
+            val params = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            params.setMargins(20, 0, 0, 0)
+
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
+            dialog.apply {
+                getButton(DialogInterface.BUTTON_POSITIVE).apply {
+                    setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))
+                    setTextColor(Color.WHITE)
+                    typeface = Typeface.DEFAULT_BOLD;
+                    layoutParams = params;
                 }
             }
         }
@@ -206,6 +254,7 @@ class CommonMethods(val context: Context){
             }
         }
 
+
         private fun checkAllFields(pin: String, address: String, context: Context): Boolean {
             if (address.length === 0) {
                 Toast.makeText(context, "Enter the Address", Toast.LENGTH_SHORT).show()
@@ -234,12 +283,21 @@ class CommonMethods(val context: Context){
            }
        }
 
-        private fun updateDoctorStatus(status: String) {
+        fun updateDoctorStatus(status: String) {
             mdbRef = FirebaseDatabase.getInstance().reference
             val key = FirebaseAuth.getInstance().currentUser!!.uid
             val map: HashMap<String, Int> = HashMap<String, Int>()
             map["status"] = castStatus(status)
             mdbRef.child("tblDoctor").child(key).updateChildren(map as Map<String, Int>);
+            mdbRef.child("tblUserWithType").child(key).updateChildren(map as Map<String, Int>);
+        }
+
+        fun updatePatientStatus(status: String) {
+            mdbRef = FirebaseDatabase.getInstance().reference
+            val key = FirebaseAuth.getInstance().currentUser!!.uid
+            val map: HashMap<String, Int> = HashMap<String, Int>()
+            map["status"] = castStatus(status)
+            mdbRef.child("tblPatient").child(key).updateChildren(map as Map<String, Int>);
             mdbRef.child("tblUserWithType").child(key).updateChildren(map as Map<String, Int>);
         }
 
@@ -254,6 +312,19 @@ class CommonMethods(val context: Context){
                 4
             else
                 1
+        }
+
+        fun getStatus(status: Int) : String {
+            return if(status == 0)
+                "Offline"
+            else if(status == 2)
+                "Available in 30 minutes"
+            else if(status == 3)
+                "Available tomorrow"
+            else if(status == 4)
+                "Available in an hour"
+            else
+                "Online"
         }
 
         fun showDialog(context: Context) {

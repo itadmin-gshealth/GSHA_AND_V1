@@ -18,6 +18,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.omif.gsha.adapter.CommonMethods
 import com.omif.gsha.databinding.FragmentHomeBinding
 import com.omif.gsha.model.User
 
@@ -71,9 +72,15 @@ class HomeFragment : Fragment() {
                            if(user.uType == 2)
                            {
                                editor?.putString("dept",user.department)
+                               editor?.putString("regNo",user.regNo)
+                               CommonMethods.updateDoctorStatus("Online")
+                           }
+                           else{
+                               CommonMethods.updatePatientStatus("Online")
                            }
                            editor?.commit()
                        }
+
                    }
                }
                override fun onCancelled(error: DatabaseError) {

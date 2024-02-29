@@ -89,9 +89,10 @@ class EhrFragment : Fragment() {
             var pIds = preferences?.getString("patientUids", "").toString()
             var pos = 0
             var listPNames = listOf<String>()
+            var pId = listOf<String>()
             if(!pNames.isNullOrBlank()) {
                 listPNames = pNames.split(",").map { it.trim() }
-                var pId = pIds.split(",").map { it.trim() }
+                pId = pIds.split(",").map { it.trim() }
                 listPNames = listOf(" ") + listPNames
                 var adapter = this@EhrFragment.context?.let {
                     ArrayAdapter<String>(
@@ -110,7 +111,7 @@ class EhrFragment : Fragment() {
                     ) {
                         if(!ddlPatient.selectedItem.toString().isNullOrBlank()) {
                             expandableListViewExample?.isVisible = true
-                            loadExpandable(pId[pos+1])
+                            loadExpandable(pId[position-1])
                         }
                         else {
                             expandableListViewExample?.isVisible = false
@@ -172,6 +173,7 @@ class EhrFragment : Fragment() {
         builder
             .setView(ddlDept)
             .setCustomTitle(textView)
+            .setNegativeButton("CLOSE") { dialog, which -> dialog.dismiss()}
             .setPositiveButton("Ok") { dialog, which ->
                 selectedDept = ddlDept.selectedItem.toString()
                 if(selectedDept == "Department")
@@ -198,6 +200,12 @@ class EhrFragment : Fragment() {
         dialog.show()
         dialog.apply {
             getButton(DialogInterface.BUTTON_POSITIVE).apply {
+                setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))
+                setTextColor(Color.WHITE)
+                typeface = Typeface.DEFAULT_BOLD;
+                layoutParams = params;
+            }
+            getButton(DialogInterface.BUTTON_NEGATIVE).apply {
                 setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))
                 setTextColor(Color.WHITE)
                 typeface = Typeface.DEFAULT_BOLD;

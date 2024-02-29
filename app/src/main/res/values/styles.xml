@@ -1,15 +1,5 @@
 <resources>
 
-    <style name="Widget.GSHA.AppWidget.Container" parent="android:Widget">
-        <item name="android:id">@android:id/background</item>
-        <item name="android:background">?android:attr/colorBackground</item>
-    </style>
-
-    <style name="Widget.GSHA.AppWidget.InnerView" parent="android:Widget">
-        <item name="android:background">?android:attr/colorBackground</item>
-        <item name="android:textColor">?android:attr/textColorPrimary</item>
-    </style>
-
     <style name="CustomTabText" parent="TextAppearance.AppCompat.Title">
         <item name="android:textStyle">bold</item>
     </style>
