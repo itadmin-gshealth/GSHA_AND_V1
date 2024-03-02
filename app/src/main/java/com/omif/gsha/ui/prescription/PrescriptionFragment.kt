@@ -28,7 +28,7 @@ import java.util.Date
 
 class PrescriptionFragment : Fragment() {
 
-    private var _binding: FragmentPrescriptionBinding? = null
+    var _binding: FragmentPrescriptionBinding? = null
     private lateinit var mAuth: FirebaseAuth
     private val binding get() = _binding!!
     private lateinit var mdbRef: DatabaseReference
@@ -137,6 +137,7 @@ class PrescriptionFragment : Fragment() {
                         Prescription(
                             txtMedicine.text.toString(),
                             preferences?.getString("uName", "").toString(),
+                            txtDocRegNo.text.toString(),
                             mAuth.currentUser?.uid.toString(),
                             ddlPatients.selectedItem.toString(),
                             pid,

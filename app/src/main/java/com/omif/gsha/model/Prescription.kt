@@ -5,6 +5,7 @@ import java.util.Date
 class Prescription {
     var medicine: String? = null
     var doctorName: String? = null
+    var doctorRegNo: String? = null
     var doctorId: String? = null
     var patientName: String? = null
     var patientId: String? = null
@@ -16,9 +17,10 @@ class Prescription {
 
     constructor(){}
 
-    constructor(medicine: String?, doctorName: String?,doctorId: String?, patientName: String?, patientId: String?,department:String?, diagnosis:String?, followUpReq:Boolean, url:String?, date: String?){
+    constructor(medicine: String?, doctorName: String?, doctorRegNo: String?,doctorId: String?, patientName: String?, patientId: String?,department:String?, diagnosis:String?, followUpReq:Boolean, url:String?, date: String?){
         this.medicine = medicine
         this.doctorName = doctorName
+        this.doctorRegNo = doctorRegNo
         this.doctorId = doctorId
         this.patientName = patientName
         this.patientId = patientId

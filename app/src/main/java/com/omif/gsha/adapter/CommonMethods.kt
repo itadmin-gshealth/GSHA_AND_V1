@@ -10,6 +10,8 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.text.InputType
 import android.view.ContextThemeWrapper
+import android.view.LayoutInflater
+import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
@@ -20,6 +22,9 @@ import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -27,6 +32,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.omif.gsha.BuildConfig
+import com.omif.gsha.model.Prescription
 import com.omif.gsha.model.User
 import javax.mail.Message
 import javax.mail.MessagingException
@@ -422,6 +428,106 @@ class CommonMethods(val context: Context){
             }
         }
 
+
+        fun showPresDialog(context: Context, parentFragmentManager: FragmentManager, date: String?) {
+            mAuth = FirebaseAuth.getInstance()
+            val inflater = LayoutInflater.from(context)
+            val customLayout: View = inflater.inflate(com.omif.gsha.R.layout.prescription_listview, null)
+            val dept = customLayout.findViewById<TextView>(com.omif.gsha.R.id.dept)
+            val docName = customLayout.findViewById<TextView>(com.omif.gsha.R.id.docName)
+            val docRegNo = customLayout.findViewById<TextView>(com.omif.gsha.R.id.docRegNo)
+            val regNo = customLayout.findViewById<TextView>(com.omif.gsha.R.id.regNo)
+            val medicine = customLayout.findViewById<TextView>(com.omif.gsha.R.id.meds)
+
+            mdbRef.child("tblPrescription").child(mAuth.currentUser?.uid.toString()).child(date.toString()).addValueEventListener(object :
+                ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    //for (postSnapshot in snapshot.children) {
+                        val prescription = snapshot.getValue(Prescription::class.java)
+                        /*if (mAuth.currentUser?.uid.toString() == currentUser?.patientId.toString() ) {
+                        }*/
+                        dept.text = prescription?.department.toString()
+                        docName.text = prescription?.doctorName.toString()
+                        docRegNo.text = prescription?.doctorRegNo.toString()
+                        regNo.text = "414/DM&HO/MED/2008"
+                        medicine.text = prescription?.medicine.toString()
+                    //}
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(context, error.message, Toast.LENGTH_LONG).show()
+                }
+            })
+
+            val textView = TextView(context)
+            textView.apply {
+                text = "Prescription"
+                setPadding(20, 30, 20, 30)
+                textSize = 20f
+                setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))
+                setTextColor(Color.WHITE)
+                typeface = Typeface.DEFAULT_BOLD;
+            }
+
+            val builder: AlertDialog.Builder = AlertDialog.Builder(context)
+            builder
+                .setView(customLayout)
+                .setCustomTitle(textView)
+                .setPositiveButton("DOWNLOAD") { dialog, which ->
+                   dialog.dismiss()
+                }
+                .setNeutralButton("CLOSE") { dialog, which ->
+                    dialog.dismiss()
+                }
+                .setNegativeButton("E-PHARMACY") { dialog, which ->
+                    dialog.dismiss()
+                  /*  var fragment: Fragment? = null
+                    fragment = ServicesFragment()
+                    replaceFragment(fragment, parentFragmentManager)*/
+                }
+
+            val params = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            params.setMargins(20, 0, 0, 0)
+
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
+            dialog.apply {
+                getButton(DialogInterface.BUTTON_POSITIVE).apply {
+                    setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))
+                    setTextColor(Color.WHITE)
+                    typeface = Typeface.DEFAULT_BOLD;
+                    layoutParams = params;
+                }
+            }
+            dialog.apply {
+                getButton(DialogInterface.BUTTON_NEGATIVE).apply {
+                    setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))
+                    setTextColor(Color.WHITE)
+                    typeface = Typeface.DEFAULT_BOLD;
+                    layoutParams = params;
+                }
+            }
+            dialog.apply {
+                getButton(DialogInterface.BUTTON_NEUTRAL).apply {
+                    setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))
+                    setTextColor(Color.WHITE)
+                    typeface = Typeface.DEFAULT_BOLD;
+                    layoutParams = params;
+                }
+            }
+        }
+
+        private fun replaceFragment(someFragment: Fragment?, fragmentManager: FragmentManager) {
+            val transaction: FragmentTransaction = fragmentManager.beginTransaction()
+            if (someFragment != null) {
+                transaction.replace(com.omif.gsha.R.id.nav_host_fragment_activity_main, someFragment)
+            }
+            transaction.setReorderingAllowed(true)
+            transaction.commit()
+        }
         public fun getChildren(context: Context):ArrayList<User>
         {
             mAuth = FirebaseAuth.getInstance()

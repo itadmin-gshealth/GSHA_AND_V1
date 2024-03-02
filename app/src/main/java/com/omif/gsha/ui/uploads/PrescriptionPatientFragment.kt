@@ -11,8 +11,12 @@ import android.widget.ExpandableListView.OnChildClickListener
 import android.widget.ExpandableListView.OnGroupCollapseListener
 import android.widget.ExpandableListView.OnGroupExpandListener
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
+import com.google.firebase.auth.FirebaseAuth
+import com.omif.gsha.adapter.CommonMethods
 import com.omif.gsha.adapter.ExpandableAdapter
 import com.omif.gsha.databinding.FragmentPrescriptionPatientBinding
 import com.omif.gsha.model.ExpandablePrescription
@@ -25,6 +29,7 @@ class PrescriptionPatientFragment : Fragment() {
     private lateinit var txtDept: TextView
     private lateinit var btnGetMedicine: Button
     private lateinit var btnDownload: Button
+    private lateinit var mAuth: FirebaseAuth
     private var _binding: FragmentPrescriptionPatientBinding? = null
     private val binding get() = _binding!!
 
@@ -42,12 +47,13 @@ class PrescriptionPatientFragment : Fragment() {
 
         val prescriptionPatientViewModel =
             ViewModelProvider(this).get(PrescriptionPatientViewModel::class.java)
+        mAuth = FirebaseAuth.getInstance()
 
         _binding = FragmentPrescriptionPatientBinding.inflate(inflater, container, false)
         val root: View = binding.root
         expandableListViewExample = binding.expandableListViewSample
 
-        expandableDetailList = ExpandablePrescription.getData()
+        expandableDetailList = ExpandablePrescription.getData(mAuth.currentUser?.uid.toString())
         expandableTitleList = ArrayList<String>(expandableDetailList?.keys)
         expandableListAdapter =
             this@PrescriptionPatientFragment.context?.let { expandableTitleList?.let { it1 ->
@@ -77,7 +83,18 @@ class PrescriptionPatientFragment : Fragment() {
         })
 
         expandableListViewExample!!.setOnChildClickListener(OnChildClickListener { parent, v, groupPosition, childPosition, id ->
-         /*   Toast.makeText(
+            var fragmentManager: FragmentManager? = null
+            fragmentManager = parentFragmentManager
+            val date = expandableTitleList?.let {
+                expandableDetailList?.get(
+                    it[groupPosition]
+                )?.get(
+                    childPosition
+                )
+            }
+            this@PrescriptionPatientFragment.context?.let { CommonMethods.showPresDialog(it, fragmentManager, date ) }
+
+           /* Toast.makeText(
                 this@PrescriptionPatientFragment.context, expandableTitleList?.get(groupPosition)
                         + " -> "
                         + expandableTitleList?.let {

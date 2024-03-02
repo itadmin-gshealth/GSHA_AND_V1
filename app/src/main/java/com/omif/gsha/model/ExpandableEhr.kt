@@ -21,8 +21,6 @@ class ExpandableEhr {
             val dermatology: MutableList<String> = ArrayList()
             val dentistry: MutableList<String> = ArrayList()
 
-            paediatrics
-
             mdbRef = FirebaseDatabase.getInstance().reference
             mdbRef.child("tblEHR").child(patientId).addValueEventListener(object :
                 ValueEventListener {

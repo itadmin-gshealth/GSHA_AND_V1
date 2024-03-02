@@ -197,7 +197,7 @@ class MessagesFragment : Fragment() {
         val textView1 = TextView(context)
         textView1.text = "Sign-Up/Log-In to connect with a Doctor"
         textView1.setPadding(20, 30, 20, 30)
-        textView1.textSize = 20f
+        textView1.textSize = 15f
         textView1.setBackgroundColor(Color.WHITE)
         textView1.setTextColor(Color.BLACK)
         textView1.typeface = Typeface.DEFAULT_BOLD;
