@@ -18,12 +18,18 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.omif.gsha.MainActivity
 import com.omif.gsha.adapter.CommonMethods
 import com.omif.gsha.adapter.ExpandableAdapter
 import com.omif.gsha.databinding.FragmentAccountBinding
 import com.omif.gsha.databinding.FragmentSigninBinding
 import com.omif.gsha.model.ExpandableAccount
+import com.omif.gsha.model.User
 import com.omif.gsha.ui.account.AccountViewModel
 import com.omif.gsha.ui.signup.SignUpFragment
 
@@ -34,13 +40,12 @@ class SignInFragment : Fragment() {
     private var _bindingAcc: FragmentAccountBinding? = null
 
     private lateinit var mAuth: FirebaseAuth
-
+    private lateinit var mDbRef: DatabaseReference
 
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val bindingSignIn get() = _bindingSignIn!!
     private val bindingAcc get() = _bindingAcc!!
-
 
     private lateinit var txtEmail: EditText
     private lateinit var txtPassword: EditText
@@ -132,6 +137,7 @@ class SignInFragment : Fragment() {
             btnSignUpHW.isVisible = false
             btnSignUpDoctor.isVisible = false
 
+
             if(name =="admin")
             {
                 btnAddMem.isVisible = false
@@ -209,13 +215,52 @@ class SignInFragment : Fragment() {
             }
 
             btnSwitchUser.setOnClickListener{
-                var editor = preferences?.edit()
-                editor?.clear()
-                editor?.apply()
-                mAuth.signOut()
-                var fragment: Fragment? = null
-                fragment = SignInFragment()
-                replaceFragment(fragment)
+                val nameList = ArrayList<String>()
+                val ageList = ArrayList<Int>()
+                val imageUrlList = ArrayList<String>()
+
+                val children = ArrayList<User>()
+                mDbRef = FirebaseDatabase.getInstance().reference
+                mDbRef.child("tblPatient").addValueEventListener(object :
+                        ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            for (postSnapshot in snapshot.children) {
+                                val currentUser = postSnapshot.getValue(User::class.java)
+                                if (mAuth.currentUser?.uid.toString() == currentUser?.parentId.toString() ) {
+                                    children.add(currentUser!!)
+                                }
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            Toast.makeText(context, error.message, Toast.LENGTH_LONG).show()
+                        }
+                    })
+                if (children?.size != 0) {
+                    if (children != null) {
+                        for(child in children) {
+                            nameList.add(child.name.toString())
+                            ageList.add(child.age.toInt())
+                            imageUrlList.add(child.imageLink.toString())
+                        }
+                    }
+                    var editor = preferences?.edit()
+                    editor?.clear()
+                    editor?.apply()
+                    this@SignInFragment.context?.let { it1 -> CommonMethods.showDependantDialog(it1, nameList, ageList,imageUrlList) }
+                    mAuth.signOut()
+                    var fragment: Fragment? = null
+                    fragment = SignInFragment()
+                    replaceFragment(fragment)
+                }
+                else
+                {
+                    Toast.makeText(
+                        root.context,
+                        "No other user is available. Log out to exit from the application.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
 
             btnChangeStatus.setOnClickListener {

@@ -73,7 +73,7 @@ class HomeFragment : Fragment() {
                            {
                                editor?.putString("dept",user.department)
                                editor?.putString("regNo",user.regNo)
-                               CommonMethods.updateDoctorStatus("Online")
+                               //CommonMethods.updateDoctorStatus("Online")
                            }
                            else{
                                CommonMethods.updatePatientStatus("Online")

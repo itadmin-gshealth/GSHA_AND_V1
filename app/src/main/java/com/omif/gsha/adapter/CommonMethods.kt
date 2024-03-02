@@ -1,7 +1,6 @@
 package com.omif.gsha.adapter
 
 import android.R
-import android.adservices.common.AdTechIdentifier
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
@@ -10,21 +9,25 @@ import android.content.Intent.createChooser
 import android.graphics.Color
 import android.graphics.Typeface
 import android.text.InputType
+import android.view.ContextThemeWrapper
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.ListView
 import android.widget.Spinner
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.omif.gsha.BuildConfig
-import com.omif.gsha.ui.signin.SignInFragment
+import com.omif.gsha.model.User
 import javax.mail.Message
 import javax.mail.MessagingException
 import javax.mail.PasswordAuthentication
@@ -116,7 +119,7 @@ class CommonMethods(val context: Context){
             val textView1 = TextView(context)
             textView1.text = "You will be notified when the Doctor comes online"
             textView1.setPadding(20, 30, 20, 30)
-            textView1.textSize = 20f
+            textView1.textSize = 15f
             textView1.setBackgroundColor(Color.WHITE)
             textView1.setTextColor(Color.BLACK)
             textView1.typeface = Typeface.DEFAULT_BOLD;
@@ -126,6 +129,9 @@ class CommonMethods(val context: Context){
                 .setCustomTitle(textView)
                 .setPositiveButton("Ok") { dialog, which ->
                     sendEmail("Notify Doctor",message)
+                }
+                .setNegativeButton("CANCEL") { dialog, which ->
+                   dialog.dismiss()
                 }
 
             val params = LinearLayout.LayoutParams(
@@ -138,6 +144,14 @@ class CommonMethods(val context: Context){
             dialog.show()
             dialog.apply {
                 getButton(DialogInterface.BUTTON_POSITIVE).apply {
+                    setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))
+                    setTextColor(Color.WHITE)
+                    typeface = Typeface.DEFAULT_BOLD;
+                    layoutParams = params;
+                }
+            }
+            dialog.apply {
+                getButton(DialogInterface.BUTTON_NEGATIVE).apply {
                     setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))
                     setTextColor(Color.WHITE)
                     typeface = Typeface.DEFAULT_BOLD;
@@ -269,6 +283,10 @@ class CommonMethods(val context: Context){
             return true
         }
 
+        fun buildTable() {
+
+        }
+
        private fun checkPin(pin: String,address: String, context: Context) {
            if(checkAllFields(pin,address, context))
            {
@@ -334,6 +352,7 @@ class CommonMethods(val context: Context){
             )
             params.setMargins(20, 0, 0, 0)
 
+            val cw = ContextThemeWrapper(context, com.omif.gsha.R.style.AlertDialogTheme)
             val builderSingle = AlertDialog.Builder(context)
             val textView = TextView(context)
             textView.apply {
@@ -347,7 +366,7 @@ class CommonMethods(val context: Context){
             builderSingle.setCustomTitle(textView)
 
             var status = ""
-            val arrayAdapter = ArrayAdapter<String>(context, android.R.layout.select_dialog_singlechoice)
+            val arrayAdapter = ArrayAdapter<String>(cw, android.R.layout.select_dialog_singlechoice)
             arrayAdapter.add("Online")
             arrayAdapter.add("Available in 30 minutes")
             arrayAdapter.add("Available tomorrow")
@@ -402,5 +421,108 @@ class CommonMethods(val context: Context){
                 }
             }
         }
+
+        public fun getChildren(context: Context):ArrayList<User>
+        {
+            mAuth = FirebaseAuth.getInstance()
+            val userList = ArrayList<User>()
+            mdbRef.child("tblPatient").addValueEventListener(object :
+                ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (postSnapshot in snapshot.children) {
+                        val currentUser = postSnapshot.getValue(User::class.java)
+                        if (mAuth.currentUser?.uid.toString() == currentUser?.parentId.toString() ) {
+                            userList.add(currentUser!!)
+                        }
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(context, error.message, Toast.LENGTH_LONG).show()
+                }
+            })
+            return userList
+        }
+        fun showDependantDialog(context: Context, nameList: List<String>, ageList:List<Int>, imageUrlList:List<String>) {
+            val params = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            params.setMargins(20, 0, 0, 0)
+
+            val builderSingle = AlertDialog.Builder(context)
+           val lstView = ListView(context)
+
+            val arrayList: ArrayList<dependantView> = ArrayList<dependantView>()
+
+            for (i in 0 until nameList.count()) {
+                arrayList.add(dependantView(com.omif.gsha.R.drawable.avatar, nameList[i].toString(), ageList[i].toString()))
+            }
+
+            val numbersArrayAdapter = dependantViewAdapter(context, arrayList)
+            lstView.adapter = numbersArrayAdapter
+
+            val textView = TextView(context)
+            textView.apply {
+                text = "Select Status"
+                setPadding(20, 30, 20, 30)
+                textSize = 20f
+                setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))
+                setTextColor(Color.WHITE)
+                typeface = Typeface.DEFAULT_BOLD;
+            }
+            builderSingle.setCustomTitle(textView)
+
+            var status = ""
+
+            builderSingle.setNegativeButton(
+                "cancel"
+            ) { dialog, which -> dialog.dismiss() }
+            builderSingle.setAdapter(
+                numbersArrayAdapter
+            ) { dialog, which ->
+                val strName = numbersArrayAdapter.getItem(which)
+                if (strName != null) {
+                    status = strName.toString()
+                }
+                val builderInner = AlertDialog.Builder(context)
+                builderInner.setMessage(strName.toString())
+                builderInner.setPositiveButton(
+                    "Ok"
+                ) { dialog, which -> updateDoctorStatus(status) }
+
+                val textView = TextView(context)
+                textView.apply {
+                    text = "Change Status to"
+                    setPadding(20, 30, 20, 30)
+                    textSize = 20f
+                    setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))
+                    setTextColor(Color.WHITE)
+                    typeface = Typeface.DEFAULT_BOLD;
+                }
+                builderInner.setCustomTitle(textView)
+                val dialog: AlertDialog = builderInner.create()
+                dialog.show()
+                dialog.apply {
+                    getButton(DialogInterface.BUTTON_POSITIVE).apply {
+                        setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))
+                        setTextColor(Color.WHITE)
+                        typeface = Typeface.DEFAULT_BOLD;
+                        layoutParams = params;
+                    }
+                }
+            }
+            val dialog: AlertDialog = builderSingle.create()
+            dialog.show()
+            dialog.apply {
+                getButton(DialogInterface.BUTTON_NEGATIVE).apply {
+                    setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))
+                    setTextColor(Color.WHITE)
+                    typeface = Typeface.DEFAULT_BOLD;
+                    layoutParams = params;
+                }
+            }
+        }
+
     }
 }

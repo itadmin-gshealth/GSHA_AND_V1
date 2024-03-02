@@ -36,7 +36,10 @@ class UserAdapter(val context: Context, private val userList:ArrayList<User>):
         if(!currentUser.imageLink.isNullOrBlank())
         Picasso.get().load(currentUser.imageLink).into(holder.img)
         holder.itemView.setOnClickListener{
-            if(currentUser.internal == 0) {//Remove when external Doctors are integrated
+            val preferences =
+                context.getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
+            val uInternal = preferences.getInt("uInternal",0)
+            if(uInternal == 0) {//Remove when external Doctors are integrated
                 if (currentUser.status == 1) {
                     val intent = Intent(context, ChatActivity::class.java)
                     intent.putExtra("name", currentUser.name)

@@ -10,12 +10,13 @@ class Prescription {
     var patientId: String? = null
     var department: String? = null
     var diagnosis: String? = null
+    var followUpReq: Boolean? = false
     var url: String? = null
     var date: String? = null
 
     constructor(){}
 
-    constructor(medicine: String?, doctorName: String?,doctorId: String?, patientName: String?, patientId: String?,department:String?, diagnosis:String?, url:String?, date: String?){
+    constructor(medicine: String?, doctorName: String?,doctorId: String?, patientName: String?, patientId: String?,department:String?, diagnosis:String?, followUpReq:Boolean, url:String?, date: String?){
         this.medicine = medicine
         this.doctorName = doctorName
         this.doctorId = doctorId
@@ -23,6 +24,7 @@ class Prescription {
         this.patientId = patientId
         this.department = department
         this.diagnosis = diagnosis
+        this.followUpReq = followUpReq
         this.url = url
         this.date = date
     }

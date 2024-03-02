@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
@@ -39,6 +40,9 @@ class PrescriptionFragment : Fragment() {
     private lateinit var txtDocRegNo: TextView
     private lateinit var txtDept: TextView
     private lateinit var txtMedicine: TextView
+    private lateinit var txtDocName: TextView
+    private lateinit var chkFollowUpReq: CheckBox
+
 
     var pageHeight = 1120
     var pageWidth = 792
@@ -72,11 +76,14 @@ class PrescriptionFragment : Fragment() {
         txtDocRegNo = binding.docRegNo
         txtDept = binding.dept
         txtMedicine = binding.meds
+        txtDocName = binding.docName
+        chkFollowUpReq = binding.chkFollowUpReq
         txtDept.text = preferences?.getString("dept", "").toString()
         txtRegNo.text ="414/DM&HO/MED/2008"
         var pNames = preferences?.getString("patientNames", "").toString()
         var pIds = preferences?.getString("patientUids", "").toString()
         txtDocRegNo.text = preferences?.getString("regNo", "").toString()
+        txtDocName.text = preferences?.getString("uName", "").toString()
         var pos = 0
         var listPNames = listOf<String>()
         if(!pNames.isNullOrBlank()) {
@@ -134,7 +141,8 @@ class PrescriptionFragment : Fragment() {
                             ddlPatients.selectedItem.toString(),
                             pid,
                             preferences?.getString("dept", "").toString(),
-                            "",
+                            ddlDiagnosis.selectedItem.toString(),
+                            chkFollowUpReq.isChecked,
                             "",
                             formatter.format(Date())
                         )
@@ -144,6 +152,10 @@ class PrescriptionFragment : Fragment() {
                     "Prescription saved successfully",
                     Toast.LENGTH_SHORT
                 ).show()
+                chkFollowUpReq.isChecked = false
+                txtMedicine.text = ""
+                ddlPatients.setSelection(0, true)
+                ddlDiagnosis.setSelection(0, true)
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
                     //generatePDF()
                 }
