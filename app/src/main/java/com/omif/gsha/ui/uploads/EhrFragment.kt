@@ -29,14 +29,19 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.storage
+import com.omif.gsha.adapter.CommonMethods
 import com.omif.gsha.adapter.ExpandableAdapter
 import com.omif.gsha.databinding.FragmentEhrBinding
 import com.omif.gsha.model.EHRecord
 import com.omif.gsha.model.ExpandableEhr
+import com.omif.gsha.model.Prescription
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -305,6 +310,7 @@ class EhrFragment : Fragment() {
                     childPosition
                 )
             }
+
             val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(link))
             startActivity(browserIntent)
             false

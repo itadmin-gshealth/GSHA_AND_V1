@@ -81,6 +81,50 @@
                     android:textSize="12sp"
                     android:textStyle="bold"></TextView>
 
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_below="@+id/regNo"
+                    android:layout_gravity="top|center_horizontal"
+                    android:layout_marginTop="50dp"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="20dp">
+
+                    <TextView
+                        android:id="@+id/patientName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top|center_horizontal"
+                        android:text="Name"
+                        android:textColor="@color/purple_700"
+                        android:textSize="12sp"
+                        android:paddingTop="10dp"
+                        android:textStyle="bold"></TextView>
+                    <TextView
+                        android:id="@+id/patientAge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top|center_horizontal"
+                        android:layout_marginLeft="5dp"
+                        android:text="Age"
+                        android:textColor="@color/purple_700"
+                        android:textSize="12sp"
+                        android:paddingTop="10dp"
+                        android:textStyle="bold"></TextView>
+                    <TextView
+                        android:id="@+id/patientGender"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top|center_horizontal"
+                        android:layout_marginLeft="5dp"
+                        android:text="Reg No"
+                        android:textColor="@color/purple_700"
+                        android:textSize="12sp"
+                        android:paddingTop="10dp"
+                        android:textStyle="bold"></TextView>
+                </LinearLayout>
+
                 <TextView
                     android:id="@+id/meds"
                     android:inputType="textMultiLine"

@@ -1,6 +1,8 @@
 package com.omif.gsha.ui.uploads
 
+import android.content.Context
 import android.os.Bundle
+import android.text.LoginFilter.UsernameFilterGeneric
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -48,7 +50,11 @@ class PrescriptionPatientFragment : Fragment() {
         val prescriptionPatientViewModel =
             ViewModelProvider(this).get(PrescriptionPatientViewModel::class.java)
         mAuth = FirebaseAuth.getInstance()
-
+        val preferences =
+            activity?.getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
+        val uName = preferences?.getString("uName", "").toString()
+        val uGender = preferences?.getString("uGender", "").toString()
+        val uAge = preferences?.getInt("uAge",0)!!
         _binding = FragmentPrescriptionPatientBinding.inflate(inflater, container, false)
         val root: View = binding.root
         expandableListViewExample = binding.expandableListViewSample
@@ -92,7 +98,7 @@ class PrescriptionPatientFragment : Fragment() {
                     childPosition
                 )
             }
-            this@PrescriptionPatientFragment.context?.let { CommonMethods.showPresDialog(it, fragmentManager, date ) }
+            this@PrescriptionPatientFragment.context?.let { CommonMethods.showPresDialog(it, fragmentManager, date, uName, uAge, uGender ) }
 
            /* Toast.makeText(
                 this@PrescriptionPatientFragment.context, expandableTitleList?.get(groupPosition)

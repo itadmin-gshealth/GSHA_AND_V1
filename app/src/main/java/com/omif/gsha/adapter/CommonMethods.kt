@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.LinearLayout.LayoutParams
 import android.widget.ListView
 import android.widget.Spinner
 import android.widget.TableLayout
@@ -32,6 +33,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.omif.gsha.BuildConfig
+import com.omif.gsha.model.EHRecord
 import com.omif.gsha.model.Prescription
 import com.omif.gsha.model.User
 import javax.mail.Message
@@ -428,8 +430,7 @@ class CommonMethods(val context: Context){
             }
         }
 
-
-        fun showPresDialog(context: Context, parentFragmentManager: FragmentManager, date: String?) {
+        fun showPresDialog(context: Context, parentFragmentManager: FragmentManager, date: String?, name:String, age:Int, gender:String) {
             mAuth = FirebaseAuth.getInstance()
             val inflater = LayoutInflater.from(context)
             val customLayout: View = inflater.inflate(com.omif.gsha.R.layout.prescription_listview, null)
@@ -438,20 +439,22 @@ class CommonMethods(val context: Context){
             val docRegNo = customLayout.findViewById<TextView>(com.omif.gsha.R.id.docRegNo)
             val regNo = customLayout.findViewById<TextView>(com.omif.gsha.R.id.regNo)
             val medicine = customLayout.findViewById<TextView>(com.omif.gsha.R.id.meds)
+            val patientName = customLayout.findViewById<TextView>(com.omif.gsha.R.id.patientName)
+            val patientAge = customLayout.findViewById<TextView>(com.omif.gsha.R.id.patientAge)
+            val patientGender = customLayout.findViewById<TextView>(com.omif.gsha.R.id.patientGender)
 
             mdbRef.child("tblPrescription").child(mAuth.currentUser?.uid.toString()).child(date.toString()).addValueEventListener(object :
                 ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    //for (postSnapshot in snapshot.children) {
                         val prescription = snapshot.getValue(Prescription::class.java)
-                        /*if (mAuth.currentUser?.uid.toString() == currentUser?.patientId.toString() ) {
-                        }*/
                         dept.text = prescription?.department.toString()
                         docName.text = prescription?.doctorName.toString()
                         docRegNo.text = prescription?.doctorRegNo.toString()
                         regNo.text = "414/DM&HO/MED/2008"
                         medicine.text = prescription?.medicine.toString()
-                    //}
+                        patientAge.text = age.toString() + " years"
+                        patientName.text = name
+                        patientGender.text = gender
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -468,29 +471,25 @@ class CommonMethods(val context: Context){
                 setTextColor(Color.WHITE)
                 typeface = Typeface.DEFAULT_BOLD;
             }
+            val params = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            params.setMargins(20, 0, 0, 0)
 
             val builder: AlertDialog.Builder = AlertDialog.Builder(context)
             builder
                 .setView(customLayout)
                 .setCustomTitle(textView)
                 .setPositiveButton("DOWNLOAD") { dialog, which ->
-                   dialog.dismiss()
+                    innerDialog(context, params, "Under construction")
                 }
                 .setNeutralButton("CLOSE") { dialog, which ->
                     dialog.dismiss()
                 }
                 .setNegativeButton("E-PHARMACY") { dialog, which ->
-                    dialog.dismiss()
-                  /*  var fragment: Fragment? = null
-                    fragment = ServicesFragment()
-                    replaceFragment(fragment, parentFragmentManager)*/
+                    innerDialog(context, params, "Under construction")
                 }
-
-            val params = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-            params.setMargins(20, 0, 0, 0)
 
             val dialog: AlertDialog = builder.create()
             dialog.show()
@@ -512,6 +511,36 @@ class CommonMethods(val context: Context){
             }
             dialog.apply {
                 getButton(DialogInterface.BUTTON_NEUTRAL).apply {
+                    setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))
+                    setTextColor(Color.WHITE)
+                    typeface = Typeface.DEFAULT_BOLD;
+                    layoutParams = params;
+                }
+            }
+        }
+
+        private fun innerDialog(context: Context, params:LayoutParams, message:String)
+        {
+            val builderInner = AlertDialog.Builder(context)
+            builderInner.setMessage(message)
+            builderInner.setPositiveButton(
+                "Ok"
+            ) { dialog, which -> dialog.dismiss() }
+
+            val textView = TextView(context)
+            textView.apply {
+                text = "GSHA Says"
+                setPadding(20, 30, 20, 30)
+                textSize = 20f
+                setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))
+                setTextColor(Color.WHITE)
+                typeface = Typeface.DEFAULT_BOLD;
+            }
+            builderInner.setCustomTitle(textView)
+            val dialog: AlertDialog = builderInner.create()
+            dialog.show()
+            dialog.apply {
+                getButton(DialogInterface.BUTTON_POSITIVE).apply {
                     setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))
                     setTextColor(Color.WHITE)
                     typeface = Typeface.DEFAULT_BOLD;

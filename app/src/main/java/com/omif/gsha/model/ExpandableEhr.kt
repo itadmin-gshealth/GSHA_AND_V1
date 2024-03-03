@@ -36,7 +36,7 @@ class ExpandableEhr {
                             {
                                 general.add(ehr.link.toString())
                             }
-                            if(ehr?.dept?.trim() =="General")
+                            if(ehr?.dept?.trim() =="Paediatrics")
                             {
                                 paediatrics.add(ehr.link.toString())
                             }
