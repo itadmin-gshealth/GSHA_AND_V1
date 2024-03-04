@@ -23,6 +23,7 @@ import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
@@ -33,6 +34,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.omif.gsha.BuildConfig
+import com.omif.gsha.MainActivity
 import com.omif.gsha.model.EHRecord
 import com.omif.gsha.model.Prescription
 import com.omif.gsha.model.User
@@ -142,9 +144,9 @@ class CommonMethods(val context: Context){
                    dialog.dismiss()
                 }
 
-            val params = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
+            val params = LayoutParams(
+                LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT
             )
             params.setMargins(20, 0, 0, 0)
 
@@ -173,9 +175,9 @@ class CommonMethods(val context: Context){
             val tableRow = TableRow(context)
             val tableRowAdd = TableRow(context)
 
-            val params = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
+            val params = LayoutParams(
+                LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT
             )
             val txtAddress = TextView(context)
             txtAddress.apply {
@@ -276,7 +278,6 @@ class CommonMethods(val context: Context){
             }
         }
 
-
         private fun checkAllFields(pin: String, address: String, context: Context): Boolean {
             if (address.length === 0) {
                 Toast.makeText(context, "Enter the Address", Toast.LENGTH_SHORT).show()
@@ -289,10 +290,6 @@ class CommonMethods(val context: Context){
             }
             i = 1
             return true
-        }
-
-        fun buildTable() {
-
         }
 
        private fun checkPin(pin: String,address: String, context: Context) {
@@ -354,9 +351,9 @@ class CommonMethods(val context: Context){
         }
 
         fun showDialog(context: Context) {
-            val params = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
+            val params = LayoutParams(
+                LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT
             )
             params.setMargins(20, 0, 0, 0)
 
@@ -471,9 +468,9 @@ class CommonMethods(val context: Context){
                 setTextColor(Color.WHITE)
                 typeface = Typeface.DEFAULT_BOLD;
             }
-            val params = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
+            val params = LayoutParams(
+                LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT
             )
             params.setMargins(20, 0, 0, 0)
 
@@ -549,7 +546,7 @@ class CommonMethods(val context: Context){
             }
         }
 
-        private fun replaceFragment(someFragment: Fragment?, fragmentManager: FragmentManager) {
+        fun replaceFragment(someFragment: Fragment?, fragmentManager: FragmentManager) {
             val transaction: FragmentTransaction = fragmentManager.beginTransaction()
             if (someFragment != null) {
                 transaction.replace(com.omif.gsha.R.id.nav_host_fragment_activity_main, someFragment)
@@ -557,8 +554,11 @@ class CommonMethods(val context: Context){
             transaction.setReorderingAllowed(true)
             transaction.commit()
         }
-        public fun getChildren(context: Context):ArrayList<User>
+        fun getChildren(context: Context):ArrayList<User>
         {
+            val preferences = context.getSharedPreferences("PREFERENCE_NAME",Context.MODE_PRIVATE)
+            val parentId = preferences?.getString("uParentId","")
+
             mAuth = FirebaseAuth.getInstance()
             val userList = ArrayList<User>()
             mdbRef.child("tblPatient").addValueEventListener(object :
@@ -566,7 +566,7 @@ class CommonMethods(val context: Context){
                 override fun onDataChange(snapshot: DataSnapshot) {
                     for (postSnapshot in snapshot.children) {
                         val currentUser = postSnapshot.getValue(User::class.java)
-                        if (mAuth.currentUser?.uid.toString() == currentUser?.parentId.toString() ) {
+                        if ((mAuth.currentUser?.uid.toString() == currentUser?.parentId.toString() || currentUser?.parentId.toString() == parentId || mAuth.currentUser?.uid.toString() == parentId) && currentUser?.name.toString() != "admin") {
                             userList.add(currentUser!!)
                         }
                     }
@@ -578,20 +578,21 @@ class CommonMethods(val context: Context){
             })
             return userList
         }
-        fun showDependantDialog(context: Context, nameList: List<String>, ageList:List<Int>, imageUrlList:List<String>) {
-            val params = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
+        fun showDependantDialog(context: Context, nameList: List<String>, ageList:List<Int>, imageUrlList:List<String>, uidList:List<String>) {
+            val params = LayoutParams(
+                LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT
             )
             params.setMargins(20, 0, 0, 0)
 
             val builderSingle = AlertDialog.Builder(context)
-           val lstView = ListView(context)
+            val lstView = ListView(context)
 
             val arrayList: ArrayList<dependantView> = ArrayList<dependantView>()
+            mdbRef = FirebaseDatabase.getInstance().reference
 
-            for (i in 0 until nameList.count()) {
-                arrayList.add(dependantView(com.omif.gsha.R.drawable.avatar, nameList[i].toString(), ageList[i].toString()))
+            for (i in 0 until nameList.size) {
+                arrayList.add(dependantView(com.omif.gsha.R.drawable.avatar, nameList[i], ageList[i].toString()+" years"))
             }
 
             val numbersArrayAdapter = dependantViewAdapter(context, arrayList)
@@ -599,7 +600,7 @@ class CommonMethods(val context: Context){
 
             val textView = TextView(context)
             textView.apply {
-                text = "Select Status"
+                text = "Select dependant"
                 setPadding(20, 30, 20, 30)
                 textSize = 20f
                 setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))
@@ -618,17 +619,27 @@ class CommonMethods(val context: Context){
             ) { dialog, which ->
                 val strName = numbersArrayAdapter.getItem(which)
                 if (strName != null) {
-                    status = strName.toString()
+                    status = strName.numberInDigit.toString()
                 }
                 val builderInner = AlertDialog.Builder(context)
-                builderInner.setMessage(strName.toString())
+                builderInner.setMessage(status)
                 builderInner.setPositiveButton(
                     "Ok"
-                ) { dialog, which -> updateDoctorStatus(status) }
+                ) { dialog, which ->
+                    mAuth.signInWithEmailAndPassword("hpatient1@gmail.com","hpatient123").addOnCompleteListener { task->
+                        if(task.isSuccessful){
+                            val intent = Intent(context, MainActivity::class.java)
+                            context.startActivity(intent)
+                        }
+                        else{
+                            Toast.makeText(context, "Error logging-in, Contact system administrator", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
 
                 val textView = TextView(context)
                 textView.apply {
-                    text = "Change Status to"
+                    text = "Sign-In as : "
                     setPadding(20, 30, 20, 30)
                     textSize = 20f
                     setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))

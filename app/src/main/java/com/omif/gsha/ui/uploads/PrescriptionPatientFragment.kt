@@ -59,6 +59,7 @@ class PrescriptionPatientFragment : Fragment() {
         val root: View = binding.root
         expandableListViewExample = binding.expandableListViewSample
 
+
         expandableDetailList = ExpandablePrescription.getData(mAuth.currentUser?.uid.toString())
         expandableTitleList = ArrayList<String>(expandableDetailList?.keys)
         expandableListAdapter =

@@ -29,6 +29,7 @@ import com.omif.gsha.adapter.ExpandableAdapter
 import com.omif.gsha.databinding.FragmentAccountBinding
 import com.omif.gsha.databinding.FragmentSigninBinding
 import com.omif.gsha.model.ExpandableAccount
+import com.omif.gsha.model.Prescription
 import com.omif.gsha.model.User
 import com.omif.gsha.ui.account.AccountViewModel
 import com.omif.gsha.ui.signup.SignUpFragment
@@ -214,53 +215,29 @@ class SignInFragment : Fragment() {
                 startActivity(intent)
             }
 
+            val nameList = ArrayList<String>()
+            val ageList = ArrayList<Int>()
+            val imageUrlList = ArrayList<String>()
+            val uidList = ArrayList<String>()
+            val userList =
+            this@SignInFragment.context?.let { CommonMethods.getChildren(it) }
             btnSwitchUser.setOnClickListener{
-                val nameList = ArrayList<String>()
-                val ageList = ArrayList<Int>()
-                val imageUrlList = ArrayList<String>()
-
-                val children = ArrayList<User>()
-                mDbRef = FirebaseDatabase.getInstance().reference
-                mDbRef.child("tblPatient").addValueEventListener(object :
-                        ValueEventListener {
-                        override fun onDataChange(snapshot: DataSnapshot) {
-                            for (postSnapshot in snapshot.children) {
-                                val currentUser = postSnapshot.getValue(User::class.java)
-                                if (mAuth.currentUser?.uid.toString() == currentUser?.parentId.toString() ) {
-                                    children.add(currentUser!!)
-                                }
-                            }
-                        }
-
-                        override fun onCancelled(error: DatabaseError) {
-                            Toast.makeText(context, error.message, Toast.LENGTH_LONG).show()
-                        }
-                    })
-                if (children?.size != 0) {
-                    if (children != null) {
-                        for(child in children) {
-                            nameList.add(child.name.toString())
-                            ageList.add(child.age.toInt())
-                            imageUrlList.add(child.imageLink.toString())
-                        }
-                    }
-                    var editor = preferences?.edit()
-                    editor?.clear()
-                    editor?.apply()
-                    this@SignInFragment.context?.let { it1 -> CommonMethods.showDependantDialog(it1, nameList, ageList,imageUrlList) }
-                    mAuth.signOut()
-                    var fragment: Fragment? = null
-                    fragment = SignInFragment()
-                    replaceFragment(fragment)
+                if (userList != null && userList.size >0) {
+                   for(i in 0 until userList.size)
+                   {
+                       if(!nameList.contains(userList[i].name)) {
+                           userList[i].name?.let { it1 -> nameList.add(it1) }
+                           userList[i].age?.let { it1 -> ageList.add(it1) }
+                           userList[i].imageLink?.let { it1 -> imageUrlList.add(it1) }
+                           userList[i].uid?.let { it1 -> uidList.add(it1) }
+                       }
+                   }
                 }
                 else
                 {
-                    Toast.makeText(
-                        root.context,
-                        "No other user is available. Log out to exit from the application.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+
                 }
+                this@SignInFragment.context?.let { it1 -> CommonMethods.showDependantDialog(it1, nameList, ageList, imageUrlList, uidList) }
             }
 
             btnChangeStatus.setOnClickListener {

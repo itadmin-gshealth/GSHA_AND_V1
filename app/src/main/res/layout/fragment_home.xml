@@ -60,13 +60,9 @@
                     android:orientation="horizontal">
 
                     <androidx.cardview.widget.CardView
-                        android:layout_width="310dp"
+                        android:layout_width="350dp"
                         android:layout_height="200dp"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginEnd="5dp"
-                        android:layout_marginBottom="5dp"
-                        app:cardBackgroundColor="@color/white"
+                        app:cardBackgroundColor="@color/sendTextColor"
                         app:cardCornerRadius="20dp"
                         app:cardElevation="10dp"
                         app:cardMaxElevation="12dp"
@@ -75,23 +71,23 @@
 
                         <ImageView
                             android:id="@+id/img"
-                            android:layout_width="100dp"
-                            android:layout_height="100dp"
+                            android:layout_width="150dp"
+                            android:layout_height="150dp"
                             android:layout_gravity="left"
-                            android:layout_margin="28dp"
+                            android:layout_margin="10dp"
                             android:layout_marginLeft="10dp"
-                            android:src="@drawable/roundcorner" />
+                            android:layout_marginBottom="20dp"
+                            android:src="@drawable/dr_anita" />
 
                         <TextView
                             android:id="@+id/designation"
-                            android:layout_width="158dp"
+                            android:layout_width="wrap_content"
                             android:layout_below="@+id/name"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="top|center_horizontal"
-                            android:layout_marginLeft="80dp"
-                            android:layout_marginTop="110dp"
+                            android:layout_gravity="bottom|right|end"
                             android:layout_marginBottom="20dp"
-                            android:text="Know More"
+                            android:layout_marginRight="20dp"
+                            android:text="know More"
                             android:textColor="@color/black"
                             android:textSize="15sp"
                             android:textStyle="bold"></TextView>
@@ -99,13 +95,9 @@
                     </androidx.cardview.widget.CardView>
 
                     <androidx.cardview.widget.CardView
-                        android:layout_width="310dp"
+                        android:layout_width="350dp"
                         android:layout_height="200dp"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginEnd="5dp"
-                        android:layout_marginBottom="5dp"
-                        app:cardBackgroundColor="@color/white"
+                        app:cardBackgroundColor="@color/sendTextColor"
                         app:cardCornerRadius="20dp"
                         app:cardElevation="10dp"
                         app:cardMaxElevation="12dp"
@@ -114,23 +106,23 @@
 
                         <ImageView
                             android:id="@+id/img1"
-                            android:layout_width="100dp"
-                            android:layout_height="100dp"
+                            android:layout_width="150dp"
+                            android:layout_height="150dp"
                             android:layout_gravity="left"
-                            android:layout_margin="28dp"
+                            android:layout_margin="10dp"
                             android:layout_marginLeft="10dp"
-                            android:src="@drawable/roundcorner" />
+                            android:layout_marginBottom="20dp"
+                            android:src="@drawable/dr_beryl" />
 
                         <TextView
                             android:id="@+id/designation1"
-                            android:layout_width="158dp"
+                            android:layout_width="wrap_content"
                             android:layout_below="@+id/name"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="top|center_horizontal"
-                            android:layout_marginLeft="80dp"
-                            android:layout_marginTop="110dp"
+                            android:layout_gravity="bottom|right|end"
                             android:layout_marginBottom="20dp"
-                            android:text="Know More"
+                            android:layout_marginRight="20dp"
+                            android:text="know More"
                             android:textColor="@color/black"
                             android:textSize="15sp"
                             android:textStyle="bold"></TextView>
@@ -138,13 +130,9 @@
                     </androidx.cardview.widget.CardView>
 
                     <androidx.cardview.widget.CardView
-                        android:layout_width="310dp"
+                        android:layout_width="350dp"
                         android:layout_height="200dp"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginEnd="5dp"
-                        android:layout_marginBottom="5dp"
-                        app:cardBackgroundColor="@color/white"
+                        app:cardBackgroundColor="@color/sendTextColor"
                         app:cardCornerRadius="20dp"
                         app:cardElevation="10dp"
                         app:cardMaxElevation="12dp"
@@ -153,23 +141,58 @@
 
                         <ImageView
                             android:id="@+id/img2"
-                            android:layout_width="100dp"
-                            android:layout_height="100dp"
+                            android:layout_width="150dp"
+                            android:layout_height="150dp"
                             android:layout_gravity="left"
-                            android:layout_margin="28dp"
+                            android:layout_margin="10dp"
                             android:layout_marginLeft="10dp"
-                            android:src="@drawable/roundcorner" />
+                            android:layout_marginBottom="20dp"
+                            android:src="@drawable/dr_vijay" />
 
                         <TextView
                             android:id="@+id/designation3"
-                            android:layout_width="158dp"
+                            android:layout_width="wrap_content"
                             android:layout_below="@+id/name"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="top|center_horizontal"
-                            android:layout_marginLeft="80dp"
-                            android:layout_marginTop="110dp"
+                            android:layout_gravity="bottom|right|end"
                             android:layout_marginBottom="20dp"
-                            android:text="Know More"
+                            android:layout_marginRight="20dp"
+                            android:text="know More"
+                            android:textColor="@color/black"
+                            android:textSize="15sp"
+                            android:textStyle="bold"></TextView>
+
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="350dp"
+                        android:layout_height="200dp"
+                        app:cardBackgroundColor="@color/sendTextColor"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="10dp"
+                        app:cardMaxElevation="12dp"
+                        app:cardPreventCornerOverlap="true"
+                        app:cardUseCompatPadding="true">
+
+                        <ImageView
+                            android:id="@+id/img3"
+                            android:layout_width="150dp"
+                            android:layout_height="150dp"
+                            android:layout_gravity="left"
+                            android:layout_margin="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginBottom="20dp"
+                            android:src="@drawable/dr_beryl_1" />
+
+                        <TextView
+                            android:id="@+id/designation4"
+                            android:layout_width="wrap_content"
+                            android:layout_below="@+id/name"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom|right|end"
+                            android:layout_marginBottom="20dp"
+                            android:layout_marginRight="20dp"
+                            android:text="know More"
                             android:textColor="@color/black"
                             android:textSize="15sp"
                             android:textStyle="bold"></TextView>
@@ -179,7 +202,7 @@
                 </LinearLayout>
 
             </HorizontalScrollView>
-
+<!--
             <TextView
                 android:id="@+id/textBrowseHeader1"
                 android:layout_width="wrap_content"
@@ -211,25 +234,61 @@
                     android:layout_gravity="center"
                     android:src="@drawable/workmodel" />
 
+            </androidx.cardview.widget.CardView>-->
+
+            <TextView
+                android:id="@+id/textBrowseHeader2"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginTop="20dp"
+                android:text="How it works"
+                android:textColor="@color/purple_700"
+                android:textAppearance="@style/CustomTabText"
+                android:paddingLeft="20dp"/>
+
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="10dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="10dp"
+                app:cardMaxElevation="12dp"
+                app:cardPreventCornerOverlap="true"
+                app:cardUseCompatPadding="true">
+
+                <ImageView
+                    android:id="@+id/img4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/workmodel" />
+
             </androidx.cardview.widget.CardView>
 
             <TextView
                 android:id="@+id/textBrowseHeader3"
                 android:layout_width="wrap_content"
                 android:layout_height="32dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:text="Our Services"
                 android:textColor="@color/purple_700"
                 android:textAppearance="@style/CustomTabText"
                 android:paddingLeft="20dp"/>
 
 
-            <HorizontalScrollView
-                android:layout_width="350dp"
+
+        <!--    <HorizontalScrollView
+                android:id="@+id/hsv"
+                android:layout_width="400dp"
                 android:layout_height="200dp"
-                android:paddingLeft="20dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginTop="20dp"
+                android:paddingLeft="10dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginTop="300dp"
+                android:layout_below="@+id/video"
                 android:background="@color/white">
 
                 <LinearLayout
@@ -281,35 +340,35 @@
 
                 </LinearLayout>
 
-            </HorizontalScrollView>
+            </HorizontalScrollView>-->
 
-            <HorizontalScrollView
+<!--
+              <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:layout_marginStart="25dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginTop="45dp"
-                android:background="@color/purple_700">
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginTop="20dp">-->
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="80dp"
                     android:orientation="horizontal">
-
                     <VideoView
-                        android:id="@+id/video_ad2"
+                        android:id="@+id/video"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/textBrowseHeader3"
                         android:keepScreenOn="true">
-
                     </VideoView>
                 </LinearLayout>
-            </HorizontalScrollView>
 
 
-
+           <!-- </HorizontalScrollView>-->
         </LinearLayout>
 
     </ScrollView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

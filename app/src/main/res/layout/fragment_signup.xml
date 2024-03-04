@@ -163,17 +163,32 @@
             android:layout_marginTop="25dp">
         </Button>
         </LinearLayout>
-
-        <Button
-            android:id="@+id/SignUp"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/llgender"
-            android:text="SIGN UP"
-            android:layout_marginLeft="144dp"
-            android:layout_centerHorizontal="true"
-            android:textSize="16sp">
-        </Button>
+            android:layout_below="@+id/llImg"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/SignUp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SIGN UP"
+                android:layout_marginLeft="100dp"
+                android:layout_centerHorizontal="true"
+                android:textSize="16sp">
+            </Button>
+
+            <Button
+                android:id="@+id/cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CANCEL"
+                android:layout_marginLeft="5dp"
+                android:layout_centerHorizontal="true"
+                android:textSize="16sp">
+            </Button>
+        </LinearLayout>
 
        <!-- <Button
             android:id="@+id/SignUpDoctor"

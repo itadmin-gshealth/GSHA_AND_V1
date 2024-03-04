@@ -1,15 +1,18 @@
 package com.omif.gsha.ui.home
 
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.MediaController
 import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
+import android.widget.VideoView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
@@ -32,13 +35,19 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var mAuth: FirebaseAuth
     private lateinit var mDbRef: DatabaseReference
+    var simpleVideoView: VideoView? = null
 
+    // declaring a null variable for MediaController
+    var mediaControls: MediaController? = null
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View {
+// declaring a null variable for VideoView
+
+
 
         val homeViewModel =
                 ViewModelProvider(this).get(HomeViewModel::class.java)
@@ -71,6 +80,10 @@ class HomeFragment : Fragment() {
                            editor?.putString("uGender",user.gender)
                            editor?.putInt("uType",user.uType)
                            editor?.putInt("uInternal",user.internal)
+                           if(user.parentId.isNullOrBlank())
+                           {
+                               editor?.putString("uParentId",user.parentId)
+                           }
                            if(user.uType == 2)
                            {
                                editor?.putString("dept",user.department)
@@ -110,6 +123,43 @@ class HomeFragment : Fragment() {
             videoView.requestFocus()
          videoView.start()
         }*/
+
+
+        // assigning id of VideoView from
+        // activity_main.xml layout file
+        simpleVideoView =binding.video
+
+        if (mediaControls == null) {
+            // creating an object of media controller class
+            mediaControls = MediaController(this@HomeFragment.context)
+
+            // set the anchor view for the video view
+            mediaControls!!.setAnchorView(this.simpleVideoView)
+        }
+
+        // set the media controller for video view
+        simpleVideoView!!.setMediaController(mediaControls)
+
+        val rawId = resources.getIdentifier("gsha_ad", "raw", activity?.packageName ?: "gsha_ad")
+        val path = "android.resource://" + (activity?.packageName ?: "gsha_ad") + "/" + rawId
+
+
+        // set the absolute path of the video file which is going to be played
+        simpleVideoView!!.setVideoURI(
+            Uri.parse(path))
+
+        simpleVideoView!!.requestFocus()
+
+        // starting the video
+        simpleVideoView!!.start()
+
+        // display a toast message
+        // after the video is completed
+        simpleVideoView!!.setOnCompletionListener {
+            Toast.makeText(this@HomeFragment.context, "Video completed",
+                Toast.LENGTH_LONG).show()
+            true
+        }
         return root
     }
 

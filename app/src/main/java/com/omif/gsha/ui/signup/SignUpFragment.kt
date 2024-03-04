@@ -18,7 +18,6 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TableLayout
@@ -28,15 +27,15 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.gms.auth.api.signin.internal.Storage
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.SignInMethodQueryResult
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.storage
 import com.omif.gsha.MainActivity
@@ -44,8 +43,9 @@ import com.omif.gsha.adapter.CommonMethods
 import com.omif.gsha.adapter.OnEmailCheckListener
 import com.omif.gsha.databinding.FragmentSignupBinding
 import com.omif.gsha.model.User
+import com.omif.gsha.ui.home.HomeFragment
+import com.omif.gsha.ui.signin.SignInFragment
 import com.squareup.picasso.Picasso
-import kotlinx.coroutines.selects.select
 
 
 class SignUpFragment : Fragment() {
@@ -59,6 +59,7 @@ class SignUpFragment : Fragment() {
     private lateinit var txtEmail: EditText
     private lateinit var txtPassword: EditText
     private lateinit var txtPhoneNumber: EditText
+    private lateinit var btnCancel: Button
     private lateinit var btnAddImage: Button
     private lateinit var btnSignUp: Button
     private lateinit var btnSignUpDoctor: Button
@@ -107,6 +108,7 @@ class SignUpFragment : Fragment() {
         txtPhoneNumber = binding.textPhonenumber
         btnAddImage = binding.AddImage
         btnSignUp = binding.SignUp
+        btnCancel = binding.cancel
         ddlgender = binding.ddlGender
         txtAge = binding.txtAge
         userImg = binding.userImg
@@ -145,19 +147,12 @@ class SignUpFragment : Fragment() {
                 }
         }
 
-       /* btnSignUpHW.setOnClickListener(){
-            if(CheckAllFields()) {
-                signUp(txtName.text.toString(),txtEmail.text.toString(), txtPassword.text.toString(), txtPhoneNumber.text.toString(),ddlgender.selectedItem.toString(),txtAge.text.toString().toInt(), imageLink, 1, 0)
-            }
+        btnCancel.setOnClickListener {
+            var fragment: Fragment? = null
+            fragment = SignInFragment()
+            var fragmentManager: FragmentManager = parentFragmentManager
+           replaceFragment(fragment )
         }
-
-        btnSignUpDoctor.visibility = View.VISIBLE
-
-        btnSignUpDoctor.setOnClickListener() {
-            if (CheckAllFields()) {
-                showDialog()
-            }
-        }*/
 
         btnAddImage.setOnClickListener {
             val intent = Intent()
@@ -166,6 +161,15 @@ class SignUpFragment : Fragment() {
             imagePickerActivityResult.launch(intent)
         }
         return root
+    }
+
+    private fun replaceFragment(someFragment: Fragment?) {
+        val transaction: FragmentTransaction = requireFragmentManager().beginTransaction()
+        if (someFragment != null) {
+            transaction.replace(com.omif.gsha.R.id.nav_host_fragment_activity_main, someFragment)
+        }
+        transaction.setReorderingAllowed(true)
+        transaction.commit()
     }
 
     private var imagePickerActivityResult: ActivityResultLauncher<Intent> =

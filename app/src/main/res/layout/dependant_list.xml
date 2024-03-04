@@ -21,11 +21,10 @@
             android:id="@+id/depTxtView1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="16dp"
-            android:gravity="bottom|left"
-            android:textColor="@android:color/black"
-            android:textSize="18sp"
+            android:layout_marginLeft="70dp"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/purple_700"
+            android:textSize="15sp"
             android:textAppearance="@style/CustomTabText"
             android:textStyle="bold"
             tools:ignore="RtlHardcoded" />
@@ -34,12 +33,11 @@
             android:id="@+id/depTxtView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="70dp"
             android:layout_marginBottom="16dp"
-            android:gravity="top|left"
-            android:textColor="@android:color/black"
+            android:textColor="@color/purple_700"
             android:textAppearance="@style/CustomTabText"
-            android:textSize="14sp"
+            android:textSize="15sp"
             tools:ignore="RtlHardcoded" />
 
     </LinearLayout>
