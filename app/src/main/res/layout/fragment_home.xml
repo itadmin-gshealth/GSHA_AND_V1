@@ -26,28 +26,15 @@
                 android:background="@color/purple_700"/>
 
             <TextView
-                android:id="@+id/text_home"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:textAlignment="center"
-                android:textAppearance="@style/CustomTabText"
-                android:textColor="@color/teal_700"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/textBrowseHeader"
+                android:id="@+id/textBrowseHeader4"
                 android:layout_width="wrap_content"
                 android:layout_height="32dp"
-                android:layout_marginTop="5dp"
-                android:text="Take Online Doctor Consultation"
-                android:textColor="@color/red"
+                android:layout_marginTop="20dp"
+                android:text="Featured Services"
+                android:textColor="@color/purple_700"
                 android:textAppearance="@style/CustomTabText"
-                android:paddingLeft="65dp"
-                android:tooltipText="Browse Doctor's prescription"/>
+                android:paddingLeft="20dp"/>
+
 
             <HorizontalScrollView
                 android:layout_width="wrap_content"
@@ -62,7 +49,7 @@
                     <androidx.cardview.widget.CardView
                         android:layout_width="350dp"
                         android:layout_height="200dp"
-                        app:cardBackgroundColor="@color/sendTextColor"
+                        app:cardBackgroundColor="@color/white"
                         app:cardCornerRadius="20dp"
                         app:cardElevation="10dp"
                         app:cardMaxElevation="12dp"
@@ -97,7 +84,7 @@
                     <androidx.cardview.widget.CardView
                         android:layout_width="350dp"
                         android:layout_height="200dp"
-                        app:cardBackgroundColor="@color/sendTextColor"
+                        app:cardBackgroundColor="@color/white"
                         app:cardCornerRadius="20dp"
                         app:cardElevation="10dp"
                         app:cardMaxElevation="12dp"
@@ -132,7 +119,7 @@
                     <androidx.cardview.widget.CardView
                         android:layout_width="350dp"
                         android:layout_height="200dp"
-                        app:cardBackgroundColor="@color/sendTextColor"
+                        app:cardBackgroundColor="@color/white"
                         app:cardCornerRadius="20dp"
                         app:cardElevation="10dp"
                         app:cardMaxElevation="12dp"
@@ -167,7 +154,7 @@
                     <androidx.cardview.widget.CardView
                         android:layout_width="350dp"
                         android:layout_height="200dp"
-                        app:cardBackgroundColor="@color/sendTextColor"
+                        app:cardBackgroundColor="@color/white"
                         app:cardCornerRadius="20dp"
                         app:cardElevation="10dp"
                         app:cardMaxElevation="12dp"

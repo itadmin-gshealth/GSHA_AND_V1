@@ -86,6 +86,7 @@ class SignUpFragment : Fragment() {
     var type = 0
     var imageLink : String? = ""
 
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -116,13 +117,19 @@ class SignUpFragment : Fragment() {
         mAuth = FirebaseAuth.getInstance()
         storageRef = Firebase.storage.reference
         parentId = mAuth.currentUser?.uid.toString()
+        val preferences = activity?.getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
+        var memType = preferences?.getInt("memberType",0)
+        var memInternal = preferences?.getInt("memberInternal",0)
+        var isMember = preferences?.getBoolean("isMember",false)
+
+        if(isMember == true)
+        {
+            txtEmail.isEnabled = false
+            txtPassword.isEnabled = false
+        }
 
         btnSignUp.setOnClickListener(){
-            if(CheckAllFields()) {
-                val preferences = activity?.getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
-                var memType = preferences?.getInt("memberType",0)
-                var memInternal = preferences?.getInt("memberInternal",0)
-
+            if(CheckAllFields(isMember!!)) {
                 //for first time new outside patient
                 if(memType == null || memType == 0)
                     memType = 1
@@ -130,20 +137,45 @@ class SignUpFragment : Fragment() {
 
                 if(memType == 2)
                 {
-                   showDocDialog(memType, memInternal)
+                   showDocDialog(memType!!, memInternal!!)
                 }
-                else{signUp(
-                    txtName.text.toString(),
-                    txtEmail.text.toString(),
-                    txtPassword.text.toString(),
-                    txtPhoneNumber.text.toString(),
-                    ddlgender.selectedItem.toString(),
-                    txtAge.text.toString().toInt(),
-                    imageLink,
-                    memType!!,
-                    memInternal!!,
-                    1
-                )}
+                else {
+                    if (!isMember) {
+                        signUp(
+                            txtName.text.toString(),
+                            txtEmail.text.toString(),
+                            txtPassword.text.toString(),
+                            txtPhoneNumber.text.toString(),
+                            ddlgender.selectedItem.toString(),
+                            txtAge.text.toString().toInt(),
+                            imageLink,
+                            memType!!,
+                            memInternal!!,
+                            1
+                        )
+                    }
+                    else
+                    {
+                        var email = txtName.text.toString()
+                        email = email.replace(" ", "") + "@gmail.com"
+
+                        var pass = txtName.text.toString()
+                        pass = pass.replace(" ", "") + "123!"
+
+                        signUp(
+                            txtName.text.toString(),
+                            email,
+                            pass,
+                            txtPhoneNumber.text.toString(),
+                            ddlgender.selectedItem.toString(),
+                            txtAge.text.toString().toInt(),
+                            imageLink,
+                            memType!!,
+                            memInternal!!,
+                            1
+                        )
+                    }
+                }
                 }
         }
 
@@ -208,7 +240,6 @@ class SignUpFragment : Fragment() {
     }
 
     private fun showDocDialog(memType:Int, memInternal:Int) {
-
         ddlDept = Spinner(context)
         ddlType = Spinner(context)
         val adapter: ArrayAdapter<String>? = context?.let {
@@ -511,20 +542,20 @@ class SignUpFragment : Fragment() {
         else*/
             mdbRef.child("tblUserWithType").child(uid).setValue(User(name, email, uid,phoneNumber, department, regNo, gender, age, qual, imageLink, uType, parentId, internal, status))
     }
-    private fun CheckAllFields(): Boolean {
+    private fun CheckAllFields(isMember : Boolean): Boolean {
 
         if (txtName.text.length === 0) {
             txtName.error = "Email is required"
             return false
         }
-        if (txtEmail.text.length === 0) {
+        if (txtEmail.text.length === 0 && isMember == false) {
             txtEmail.error = "Email is required"
             return false
         }
-        if (txtPassword.text.length === 0) {
+        if (txtPassword.text.length === 0 && isMember == false) {
             txtPassword.error = "Password is required"
             return false
-        } else if (txtPassword.text.length < 8) {
+        } else if (txtPassword.text.length < 8 && isMember == false) {
             txtPassword.error = "Password must be minimum 8 characters"
             return false
         } else if (txtPhoneNumber.text.length < 10) {

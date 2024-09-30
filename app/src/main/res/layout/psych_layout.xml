@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/text_special"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textAlignment="textStart"
+                android:paddingLeft="30dp"
+                android:textAppearance="@style/CustomTabText"
+                android:text="Specialities"
+                android:textColor="@color/purple_700"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="25dp"></Space>
+            <TableRow android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+                <LinearLayout
+                    android:layout_width="100dp"
+                    android:layout_height="120dp"
+                    android:orientation="vertical">
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="95dp"
+                        android:layout_height="93dp"
+                        android:layout_centerInParent="true"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="2dp"
+                        android:src="@drawable/acne"
+                        app:civ_border_color="@color/purple_700"
+                        app:civ_border_width="2dp" />
+                    <TextView
+                        android:id="@+id/text_acne"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="center"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="15sp"
+                        android:textAppearance="@style/CustomTabText"
+                        android:text="Acne"
+                        android:clickable="true"
+                        android:textFontWeight="400" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="100dp"
+                    android:layout_height="120dp"
+                    android:layout_marginStart="20dp"
+                    android:orientation="vertical">
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="95dp"
+                        android:layout_height="93dp"
+                        android:layout_centerInParent="true"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="2dp"
+                        android:src="@drawable/albinism"
+                        app:civ_border_color="@color/purple_700"
+                        app:civ_border_width="2dp" />
+                    <TextView
+                        android:id="@+id/text_alb"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="center"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="15sp"
+                        android:textAppearance="@style/CustomTabText"
+                        android:text="Albinism"
+                        android:clickable="true"
+                        android:textFontWeight="400" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="100dp"
+                    android:layout_height="120dp"
+                    android:layout_marginStart="20dp"
+                    android:orientation="vertical">
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="95dp"
+                        android:layout_height="93dp"
+                        android:layout_centerInParent="true"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="2dp"
+                        android:src="@drawable/bald"
+                        app:civ_border_color="@color/purple_700"
+                        app:civ_border_width="2dp" />
+                    <TextView
+                        android:id="@+id/text_bald"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="center"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="15sp"
+                        android:textAppearance="@style/CustomTabText"
+                        android:text="Bald"
+                        android:textFontWeight="800" />
+                </LinearLayout>
+
+            </TableRow>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="25dp"></Space>
+            <TableRow android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+                <LinearLayout
+                    android:layout_width="100dp"
+                    android:layout_height="120dp"
+                    android:orientation="vertical">
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="95dp"
+                        android:layout_height="93dp"
+                        android:layout_centerInParent="true"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="2dp"
+                        android:src="@drawable/athletefoot"
+                        app:civ_border_color="@color/purple_700"
+                        app:civ_border_width="2dp" />
+                    <TextView
+                        android:id="@+id/text_athft"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="center"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="15sp"
+                        android:textAppearance="@style/CustomTabText"
+                        android:clickable="true"
+                        android:text="AthleteFoot"
+                        android:textFontWeight="400" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="100dp"
+                    android:layout_height="120dp"
+                    android:layout_marginStart="20dp"
+                    android:orientation="vertical">
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="95dp"
+                        android:layout_height="93dp"
+                        android:layout_centerInParent="true"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="2dp"
+                        android:src="@drawable/dandruff"
+                        app:civ_border_color="@color/purple_700"
+                        app:civ_border_width="2dp" />
+                    <TextView
+                        android:id="@+id/text_dandruff"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="center"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="15sp"
+                        android:textAppearance="@style/CustomTabText"
+                        android:clickable="true"
+                        android:text="Dandruff"
+                        android:textFontWeight="400" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="100dp"
+                    android:layout_height="120dp"
+                    android:layout_marginStart="20dp"
+                    android:orientation="vertical">
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="95dp"
+                        android:layout_height="93dp"
+                        android:layout_centerInParent="true"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="2dp"
+                        android:src="@drawable/corn"
+                        app:civ_border_color="@color/purple_700"
+                        app:civ_border_width="2dp" />
+                    <TextView
+                        android:id="@+id/text_corn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="center"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="15sp"
+                        android:textAppearance="@style/CustomTabText"
+                        android:clickable="true"
+                        android:text="Corn"
+                        android:textFontWeight="400" />
+                </LinearLayout>
+            </TableRow>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

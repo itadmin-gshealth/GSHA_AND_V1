@@ -153,9 +153,22 @@ class MessagesFragment : Fragment() {
                                 for (postSnapshot in snapshot.children) {
                                     val currentUser = postSnapshot.getValue(User::class.java)
                                     if (mAuth.currentUser?.uid != currentUser?.uid && currentUser?.uType == 2) {
-                                        userList.add(currentUser!!)
+                                        if(preferences?.getString("selectedDept","").isNullOrBlank())
+                                        {
+                                            userList.add(currentUser!!)
+                                        }
+                                        else
+                                        {
+                                            if(currentUser?.department == preferences?.getString("selectedDept",""))
+                                            {
+                                                userList.add(currentUser!!)
+                                            }
+                                        }
                                     }
                                 }
+                                var editor = preferences?.edit()
+                                editor?.putString("selectedDept","")
+                                editor?.commit()
                                 adapter.notifyDataSetChanged()
                             }
 
@@ -179,7 +192,7 @@ class MessagesFragment : Fragment() {
         val textView: TextView = binding.textMessages
         messagesViewModel.text.observe(viewLifecycleOwner) {
             if(uType == 2) textView.text ="WAITING AREA" else
-            textView.text = it
+            {textView.text = it}
         }
 
         return root

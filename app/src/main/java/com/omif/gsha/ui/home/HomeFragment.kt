@@ -45,9 +45,7 @@ class HomeFragment : Fragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View {
-// declaring a null variable for VideoView
-
-
+        // declaring a null variable for VideoView
 
         val homeViewModel =
                 ViewModelProvider(this).get(HomeViewModel::class.java)
@@ -55,10 +53,9 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textHome
+        //val textView: TextView = binding.textHome
         mAuth = FirebaseAuth.getInstance()
         mDbRef = FirebaseDatabase.getInstance().reference
-
         if(mAuth.currentUser != null)
        {
            val preferences = activity?.getSharedPreferences("PREFERENCE_NAME",Context.MODE_PRIVATE)
@@ -105,56 +102,22 @@ class HomeFragment : Fragment() {
        }
 
         homeViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+            //textView.text = it
         }
 
         val scrollView: ScrollView = binding.scrollView
         scrollView.smoothScrollTo(0, binding.root!!.top)
-
-        /*val videoView: VideoView = binding.videoAd
-        videoView.setVisibility(View.VISIBLE);
-        val mediaController = MediaController(this.context)
-        mediaController.setAnchorView(videoView)
-        videoView.setMediaController(mediaController)
-       val rawId = resources.getIdentifier("gsha_ad", "raw", activity?.packageName ?: "gsha_ad")
-        val path = "android.resource://" + (activity?.packageName ?: "gsha_ad") + "/" + rawId
-        videoView.setVideoURI(Uri.parse(path))
-        videoView.setOnPreparedListener {
-            videoView.requestFocus()
-         videoView.start()
-        }*/
-
-
-        // assigning id of VideoView from
-        // activity_main.xml layout file
         simpleVideoView =binding.video
-
         if (mediaControls == null) {
-            // creating an object of media controller class
             mediaControls = MediaController(this@HomeFragment.context)
-
-            // set the anchor view for the video view
             mediaControls!!.setAnchorView(this.simpleVideoView)
         }
-
-        // set the media controller for video view
         simpleVideoView!!.setMediaController(mediaControls)
-
         val rawId = resources.getIdentifier("gsha_ad", "raw", activity?.packageName ?: "gsha_ad")
         val path = "android.resource://" + (activity?.packageName ?: "gsha_ad") + "/" + rawId
-
-
-        // set the absolute path of the video file which is going to be played
-        simpleVideoView!!.setVideoURI(
-            Uri.parse(path))
-
+        simpleVideoView!!.setVideoURI(Uri.parse(path))
         simpleVideoView!!.requestFocus()
-
-        // starting the video
         simpleVideoView!!.start()
-
-        // display a toast message
-        // after the video is completed
         simpleVideoView!!.setOnCompletionListener {
             Toast.makeText(this@HomeFragment.context, "Video completed",
                 Toast.LENGTH_LONG).show()

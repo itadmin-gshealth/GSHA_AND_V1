@@ -38,6 +38,8 @@ import com.omif.gsha.MainActivity
 import com.omif.gsha.model.EHRecord
 import com.omif.gsha.model.Prescription
 import com.omif.gsha.model.User
+import com.omif.gsha.ui.appointment.AppointmentFragment
+import com.omif.gsha.ui.messages.MessagesFragment
 import javax.mail.Message
 import javax.mail.MessagingException
 import javax.mail.PasswordAuthentication
@@ -371,7 +373,7 @@ class CommonMethods(val context: Context){
             builderSingle.setCustomTitle(textView)
 
             var status = ""
-            val arrayAdapter = ArrayAdapter<String>(cw, android.R.layout.select_dialog_singlechoice)
+            val arrayAdapter = ArrayAdapter<String>(cw, R.layout.select_dialog_singlechoice)
             arrayAdapter.add("Online")
             arrayAdapter.add("Available in 30 minutes")
             arrayAdapter.add("Available tomorrow")
@@ -426,6 +428,75 @@ class CommonMethods(val context: Context){
                 }
             }
         }
+
+        fun showServicesDialog(context: Context, parentFragmentManager: FragmentManager, customLayout: View, dept:String) {
+            mAuth = FirebaseAuth.getInstance()
+            val textView = TextView(context)
+            textView.apply {
+                text = dept
+                setPadding(20, 30, 20, 30)
+                textSize = 20f
+                setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))
+                setTextColor(Color.WHITE)
+                typeface = Typeface.DEFAULT_BOLD;
+            }
+            val params = LayoutParams(
+                LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT
+            )
+            params.setMargins(20, 0, 0, 0)
+
+            val builder: AlertDialog.Builder = AlertDialog.Builder(context)
+            builder
+                .setView(customLayout)
+                .setCustomTitle(textView)
+                .setPositiveButton("CONSULT NOW") { dialog, which ->
+                    var fragment: Fragment? = null
+                    fragment = MessagesFragment()
+                    replaceFragment(fragment, parentFragmentManager)
+                    //innerDialog(context, params, "Under construction")
+                }
+                .setNeutralButton("CLOSE") { dialog, which ->
+                    dialog.dismiss()
+                }
+                .setNegativeButton("BOOK APPOINTMENT") { dialog, which ->
+                    //innerDialog(context, params, "Under construction")
+                    var fragment: Fragment? = null
+                    fragment = AppointmentFragment()
+                    replaceFragment(fragment, parentFragmentManager)
+                }
+
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
+            dialog.apply {
+                getButton(DialogInterface.BUTTON_POSITIVE).apply {
+                    setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))
+                    setTextColor(resources.getColor(com.omif.gsha.R.color.white))
+                    typeface = Typeface.DEFAULT_BOLD;
+                    layoutParams = params;
+                    textSize = 11f
+                }
+            }
+            dialog.apply {
+                getButton(DialogInterface.BUTTON_NEGATIVE).apply {
+                    setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))
+                    setTextColor(resources.getColor(com.omif.gsha.R.color.white))
+                    typeface = Typeface.DEFAULT_BOLD;
+                    layoutParams = params;
+                    textSize = 11f
+                }
+            }
+            dialog.apply {
+                getButton(DialogInterface.BUTTON_NEUTRAL).apply {
+                    setBackgroundColor(resources.getColor(com.omif.gsha.R.color.purple_700))
+                    setTextColor(resources.getColor(com.omif.gsha.R.color.white))
+                    typeface = Typeface.DEFAULT_BOLD;
+                    layoutParams = params;
+                    textSize = 11f
+                }
+            }
+        }
+
 
         fun showPresDialog(context: Context, parentFragmentManager: FragmentManager, date: String?, name:String, age:Int, gender:String) {
             mAuth = FirebaseAuth.getInstance()

@@ -38,29 +38,28 @@
                 android:textStyle="bold"></TextView>
 
             <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
+                android:layout_width="307dp"
+                android:layout_height="355dp"
+                android:layout_marginStart="50dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginEnd="5dp"
+                android:layout_marginEnd="50dp"
                 android:layout_marginBottom="5dp"
-                app:cardBackgroundColor="@color/lightblue"
+                app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="10dp"
                 app:cardMaxElevation="12dp"
                 app:cardPreventCornerOverlap="true"
                 app:cardUseCompatPadding="true">
 
-            <CalendarView
-                android:theme="@style/CustomCalendarMonth"
-                android:id="@+id/calendarView"
-                android:maxDate="31/12/2024"
-                android:minDate="01/01/2023"
-                android:layout_marginLeft="18dp"
-                android:weekDayTextAppearance="@style/CustomCalendarDay"
-                android:dateTextAppearance="@style/CustomCalendarWeek"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                <CalendarView
+                    android:id="@+id/calendarView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:dateTextAppearance="@style/CustomCalendarWeek"
+                    android:maxDate="31/12/2024"
+                    android:minDate="01/01/2023"
+                    android:theme="@style/CustomCalendarMonth"
+                    android:weekDayTextAppearance="@style/CustomCalendarDay" />
             </androidx.cardview.widget.CardView>
 
             <Button

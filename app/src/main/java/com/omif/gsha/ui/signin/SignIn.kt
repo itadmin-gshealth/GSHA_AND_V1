@@ -173,6 +173,7 @@ class SignInFragment : Fragment() {
             btnAddMem.setOnClickListener{
                 var editor = preferences?.edit()
                 editor?.putInt("memberType",3)
+                editor?.putBoolean("isMember",true)
                 if(type == 1 && internal == 0)
                     editor?.putInt("memberInternal",0)
                 else if(type == 1 && internal == 1)

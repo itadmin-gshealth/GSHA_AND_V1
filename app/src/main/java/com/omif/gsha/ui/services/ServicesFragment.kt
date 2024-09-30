@@ -12,9 +12,11 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.omif.gsha.R
+import com.omif.gsha.adapter.CommonMethods
 import com.omif.gsha.databinding.FragmentServicesBinding
 import com.omif.gsha.ui.appointment.AppointmentFragment
 import com.omif.gsha.ui.messages.MessagesFragment
@@ -55,6 +57,8 @@ class ServicesFragment : Fragment() {
     }
 
     private fun onClick() {
+        val preferences = activity?.getSharedPreferences("PREFERENCE_NAME",Context.MODE_PRIVATE)
+
         val textView = TextView(context)
         textView.text = "Select an option"
         textView.setPadding(20, 30, 20, 30)
@@ -69,6 +73,7 @@ class ServicesFragment : Fragment() {
                 val lw = (dialog as AlertDialog).listView
                 val checkedItem = lw.adapter.getItem(lw.checkedItemPosition)
                 if(checkedItem == "Consult Now") {
+
                     var fragment: Fragment? = null
                     fragment = MessagesFragment()
                     replaceFragment(fragment)
@@ -225,48 +230,61 @@ class ServicesFragment : Fragment() {
     {
         val preferences = activity?.getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
         var editor = preferences?.edit()
+        val inflater = LayoutInflater.from(this@ServicesFragment.context)
+        var fragmentManager: FragmentManager = parentFragmentManager
+
         binding.textDerm.setOnClickListener {
-            editor?.putString("dept","Dermatology")
+            editor?.putString("selectedDept","Dermatology")
             editor?.commit()
-            this.onClick() }
+            val customLayout: View = inflater.inflate(R.layout.derma_layout, null)
+            this@ServicesFragment.context?.let { it1 -> CommonMethods.showServicesDialog(it1, fragmentManager, customLayout, "Dermatology") }
+        }
         binding.textDent.setOnClickListener {
-            editor?.putString("dept","Dentistry")
+            editor?.putString("selectedDept","Dentistry")
             editor?.commit()
             this.onDentalClick() }
         binding.textDiag.setOnClickListener {
-            editor?.putString("dept","Lab")
+            editor?.putString("selectedDept","Lab")
             editor?.commit()
             this.onLabClick() }
         binding.textPaed.setOnClickListener {
-            editor?.putString("dept","Paediatrics")
+            editor?.putString("selectedDept","Paediatrics")
             editor?.commit()
-            this.onClick() }
+            val customLayout: View = inflater.inflate(R.layout.paeds_layout, null)
+            this@ServicesFragment.context?.let { it1 -> CommonMethods.showServicesDialog(it1, fragmentManager, customLayout, "Paediatrics") }
+        }
         binding.textPsy.setOnClickListener {
-            editor?.putString("dept","Psychiatrist")
+            editor?.putString("selectedDept","Psychiatrist")
             editor?.commit()
-            this.onClick() }
+            val customLayout: View = inflater.inflate(R.layout.psych_layout, null)
+            this@ServicesFragment.context?.let { it1 -> CommonMethods.showServicesDialog(it1, fragmentManager, customLayout, "Psychiatry") }
+        }
         binding.textGen.setOnClickListener {
-            editor?.putString("dept","General")
+            editor?.putString("selectedDept","General")
             editor?.commit()
-            this.onClick() }
+            val customLayout: View = inflater.inflate(R.layout.general_layout, null)
+            this@ServicesFragment.context?.let { it1 -> CommonMethods.showServicesDialog(it1, fragmentManager, customLayout, "General") }
+        }
         binding.textEld.setOnClickListener {
-            editor?.putString("dept","General")
+            editor?.putString("selectedDept","General")
             editor?.commit()
-            this.onClick() }
+            val customLayout: View = inflater.inflate(R.layout.general_layout, null)
+            this@ServicesFragment.context?.let { it1 -> CommonMethods.showServicesDialog(it1, fragmentManager, customLayout, "General") }
+        }
         binding.textDiab.setOnClickListener {
-            editor?.putString("dept","General")
+            editor?.putString("selectedDept","General")
             editor?.commit()
             this.onClick() }
         binding.textEmer.setOnClickListener {
-            editor?.putString("dept","General")
+            editor?.putString("selectedDept","General")
             editor?.commit()
             this.onClick() }
         binding.textIns.setOnClickListener{
-            editor?.putString("dept","General")
+            editor?.putString("selectedDept","General")
             editor?.commit()
             this.onClick()}
         binding.textPhar.setOnClickListener {
-            editor?.putString("dept","Pharma")
+            editor?.putString("selectedDept","Pharma")
             editor?.commit()
             var fragment: Fragment? = null
             fragment = PharmaFragment()
