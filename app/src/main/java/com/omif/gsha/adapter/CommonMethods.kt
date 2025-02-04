@@ -497,6 +497,26 @@ class CommonMethods(val context: Context){
             }
         }
 
+        fun getLink(date: String, patientId: String) : String
+        {
+            var link = ""
+            mAuth = FirebaseAuth.getInstance()
+            mdbRef.child("tblEHR").child(patientId).child(date).addValueEventListener(object :
+                ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                        val ehr = snapshot.getValue(EHRecord::class.java)
+                    if (ehr != null) {
+                        link = ehr.link.toString()
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    //Toast.makeText(context, error.message, Toast.LENGTH_LONG)
+                }
+            })
+            return link
+        }
+
 
         fun showPresDialog(context: Context, parentFragmentManager: FragmentManager, date: String?, name:String, age:Int, gender:String) {
             mAuth = FirebaseAuth.getInstance()
@@ -649,6 +669,34 @@ class CommonMethods(val context: Context){
             })
             return userList
         }
+
+        fun getParent(context: Context):ArrayList<User>
+        {
+            val preferences = context.getSharedPreferences("PREFERENCE_NAME",Context.MODE_PRIVATE)
+            val parentId = preferences?.getString("uParentId","")
+
+            mAuth = FirebaseAuth.getInstance()
+            val userList = ArrayList<User>()
+            mdbRef.child("tblPatient").addValueEventListener(object :
+                ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (postSnapshot in snapshot.children) {
+                        val currentUser = postSnapshot.getValue(User::class.java)
+                        if (currentUser?.uid.toString() == parentId && currentUser?.name.toString() != "admin") {
+                            userList.add(currentUser!!)
+                        }
+                    }
+                    var editor = preferences?.edit()
+                    editor?.putString("parentEmail",userList[0].email)
+                    editor?.commit()
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(context, error.message, Toast.LENGTH_LONG).show()
+                }
+            })
+            return userList
+        }
         fun showDependantDialog(context: Context, nameList: List<String>, ageList:List<Int>, imageUrlList:List<String>, uidList:List<String>) {
             val params = LayoutParams(
                 LayoutParams.WRAP_CONTENT,
@@ -681,6 +729,7 @@ class CommonMethods(val context: Context){
             builderSingle.setCustomTitle(textView)
 
             var status = ""
+            var email = ""
 
             builderSingle.setNegativeButton(
                 "cancel"
@@ -689,21 +738,28 @@ class CommonMethods(val context: Context){
                 numbersArrayAdapter
             ) { dialog, which ->
                 val strName = numbersArrayAdapter.getItem(which)
+                val preferences = context.getSharedPreferences("PREFERENCE_NAME",Context.MODE_PRIVATE)
+                var parentEmail = preferences?.getString("parentEmail","")
+                var type = preferences?.getInt("uType",0)
+
                 if (strName != null) {
                     status = strName.numberInDigit.toString()
                 }
+                val nameList: List<String> = status.split(" ")
+                if(type == 1){parentEmail = nameList[0]+"@gsha.com"}
                 val builderInner = AlertDialog.Builder(context)
                 builderInner.setMessage(status)
                 builderInner.setPositiveButton(
                     "Ok"
                 ) { dialog, which ->
-                    mAuth.signInWithEmailAndPassword("hpatient1@gmail.com","hpatient123").addOnCompleteListener { task->
-                        if(task.isSuccessful){
-                            val intent = Intent(context, MainActivity::class.java)
-                            context.startActivity(intent)
-                        }
-                        else{
-                            Toast.makeText(context, "Error logging-in, Contact system administrator", Toast.LENGTH_SHORT).show()
+                    if (parentEmail != null) {
+                        mAuth.signInWithEmailAndPassword(parentEmail.lowercase(), nameList[0].lowercase()+"123").addOnCompleteListener { task->
+                            if(task.isSuccessful){
+                                val intent = Intent(context, MainActivity::class.java)
+                                context.startActivity(intent)
+                            } else{
+                                Toast.makeText(context, "Error logging-in, Contact system administrator", Toast.LENGTH_SHORT).show()
+                            }
                         }
                     }
                 }

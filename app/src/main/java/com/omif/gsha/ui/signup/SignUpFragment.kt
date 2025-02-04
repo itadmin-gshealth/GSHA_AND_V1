@@ -156,11 +156,11 @@ class SignUpFragment : Fragment() {
                     }
                     else
                     {
-                        var email = txtName.text.toString()
-                        email = email.replace(" ", "") + "@gmail.com"
+                        var email = txtName.text.toString().lowercase()
+                        email = email.replace(" ", "") + "@gsha.com"
 
-                        var pass = txtName.text.toString()
-                        pass = pass.replace(" ", "") + "123!"
+                        var pass = txtName.text.toString().lowercase()
+                        pass = pass.replace(" ", "") + "123"
 
                         signUp(
                             txtName.text.toString(),

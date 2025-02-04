@@ -220,8 +220,16 @@ class SignInFragment : Fragment() {
             val ageList = ArrayList<Int>()
             val imageUrlList = ArrayList<String>()
             val uidList = ArrayList<String>()
-            val userList =
-            this@SignInFragment.context?.let { CommonMethods.getChildren(it) }
+            val userList = if(type == 1 && internal == 1){
+                this@SignInFragment.context?.let { CommonMethods.getChildren(it) }
+
+            }else if(type == 3) {
+                this@SignInFragment.context?.let { CommonMethods.getParent(it) }
+            }
+            else{
+                this@SignInFragment.context?.let { CommonMethods.getChildren(it) }
+            }
+
             btnSwitchUser.setOnClickListener{
                 if (userList != null && userList.size >0) {
                    for(i in 0 until userList.size)

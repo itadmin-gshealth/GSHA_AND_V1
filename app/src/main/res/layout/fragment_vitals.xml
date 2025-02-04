@@ -42,7 +42,7 @@
                         android:layout_height="32dp"
                         android:layout_marginTop="10dp"
                         android:text="Weight (Kgs)"
-                        android:textColor="@color/purple_700"
+                        android:textColor="@color/black"
                         android:textSize="16sp"
                         android:paddingLeft="20dp"
                         android:textStyle="bold"/>
@@ -67,7 +67,7 @@
                         android:layout_height="32dp"
                         android:layout_marginTop="10dp"
                         android:text="Height (cms)"
-                        android:textColor="@color/purple_700"
+                        android:textColor="@color/black"
                         android:textSize="16sp"
                         android:paddingLeft="20dp"
                         android:paddingRight="20dp"
@@ -94,7 +94,7 @@
                         android:layout_height="32dp"
                         android:layout_marginTop="10dp"
                         android:text="BP"
-                        android:textColor="@color/purple_700"
+                        android:textColor="@color/black"
                         android:textSize="16sp"
                         android:paddingLeft="20dp"
                         android:textStyle="bold"/>
@@ -116,7 +116,7 @@
                             android:layout_marginTop="10dp"
                             android:layout_marginLeft="5dp"
                             android:text="/"
-                            android:textColor="@color/purple_700"
+                            android:textColor="@color/black"
                             android:textSize="16sp"
                             android:textStyle="bold"/>
 
@@ -141,7 +141,7 @@
                         android:layout_height="32dp"
                         android:layout_marginTop="10dp"
                         android:text="Temp"
-                        android:textColor="@color/purple_700"
+                        android:textColor="@color/black"
                         android:textSize="16sp"
                         android:paddingLeft="20dp"
                         android:textStyle="bold"/>
@@ -167,7 +167,7 @@
                     android:layout_height="32dp"
                     android:layout_marginTop="10dp"
                     android:text="Sugar"
-                    android:textColor="@color/purple_700"
+                    android:textColor="@color/black"
                     android:textSize="16sp"
                     android:paddingLeft="20dp"
                     android:textStyle="bold"/>
@@ -193,7 +193,7 @@
                         android:layout_height="32dp"
                         android:layout_marginTop="10dp"
                         android:text="P/R"
-                        android:textColor="@color/purple_700"
+                        android:textColor="@color/black"
                         android:textSize="16sp"
                         android:paddingLeft="20dp"
                         android:textStyle="bold"/>
@@ -219,7 +219,7 @@
                         android:layout_height="32dp"
                         android:layout_marginTop="10dp"
                         android:text="SPO2"
-                        android:textColor="@color/purple_700"
+                        android:textColor="@color/black"
                         android:textSize="16sp"
                         android:paddingLeft="20dp"
                         android:textStyle="bold"/>

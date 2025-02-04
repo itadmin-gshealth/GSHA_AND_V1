@@ -48,7 +48,7 @@
                 android:paddingLeft="30dp"
                 android:textAppearance="@style/CustomTabText"
                 android:text="Specialities"
-                android:textColor="@color/purple_700"
+                android:textColor="@color/black"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -69,8 +69,8 @@
                         android:layout_centerInParent="true"
                         android:layout_gravity="center_horizontal"
                         android:layout_margin="2dp"
-                        android:src="@drawable/derma"
-                        app:civ_border_color="@color/purple_700"
+                        android:src="@drawable/derm"
+                        app:civ_border_color="@color/white"
                         app:civ_border_width="2dp" />
                     <TextView
                         android:id="@+id/text_derm"
@@ -96,7 +96,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="2dp"
                     android:src="@drawable/dental"
-                    app:civ_border_color="@color/purple_700"
+                    app:civ_border_color="@color/white"
                     app:civ_border_width="2dp" />
                     <TextView
                         android:id="@+id/text_dent"
@@ -121,8 +121,8 @@
                         android:layout_centerInParent="true"
                         android:layout_gravity="center_horizontal"
                         android:layout_margin="2dp"
-                        android:src="@drawable/gynaec"
-                        app:civ_border_color="@color/purple_700"
+                        android:src="@drawable/gynec"
+                        app:civ_border_color="@color/white"
                         app:civ_border_width="2dp" />
                     <TextView
                         android:id="@+id/text_gyn"
@@ -154,7 +154,7 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_margin="2dp"
                         android:src="@drawable/paeds"
-                        app:civ_border_color="@color/purple_700"
+                        app:civ_border_color="@color/white"
                         app:civ_border_width="2dp" />
                     <TextView
                         android:id="@+id/text_paed"
@@ -180,7 +180,7 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_margin="2dp"
                         android:src="@drawable/psych"
-                        app:civ_border_color="@color/purple_700"
+                        app:civ_border_color="@color/white"
                         app:civ_border_width="2dp" />
                     <TextView
                         android:id="@+id/text_psy"
@@ -206,7 +206,7 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_margin="2dp"
                         android:src="@drawable/gen"
-                        app:civ_border_color="@color/purple_700"
+                        app:civ_border_color="@color/white"
                         app:civ_border_width="2dp" />
                     <TextView
                         android:id="@+id/text_gen"
@@ -234,7 +234,7 @@
                 android:paddingLeft="30dp"
                 android:textAppearance="@style/CustomTabText"
                 android:text="Added Health Services"
-                android:textColor="@color/purple_700"
+                android:textColor="@color/black"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -257,7 +257,7 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_margin="2dp"
                         android:src="@drawable/pharm"
-                        app:civ_border_color="@color/purple_700"
+                        app:civ_border_color="@color/white"
                         app:civ_border_width="2dp" />
                     <TextView
                         android:id="@+id/text_phar"
@@ -282,8 +282,8 @@
                         android:layout_centerInParent="true"
                         android:layout_gravity="center_horizontal"
                         android:layout_margin="2dp"
-                        android:src="@drawable/diag"
-                        app:civ_border_color="@color/purple_700"
+                        android:src="@drawable/lab"
+                        app:civ_border_color="@color/white"
                         app:civ_border_width="2dp" />
                     <TextView
                         android:id="@+id/text_diag"
@@ -309,7 +309,7 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_margin="2dp"
                         android:src="@drawable/ins"
-                        app:civ_border_color="@color/purple_700"
+                        app:civ_border_color="@color/white"
                         app:civ_border_width="2dp" />
                     <TextView
                         android:id="@+id/text_ins"
@@ -342,8 +342,34 @@
                         android:layout_centerInParent="true"
                         android:layout_gravity="center_horizontal"
                         android:layout_margin="2dp"
+                        android:src="@drawable/physio"
+                        app:civ_border_color="@color/white"
+                        app:civ_border_width="2dp" />
+                    <TextView
+                        android:id="@+id/text_pysio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="center"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="15sp"
+                        android:textAppearance="@style/CustomTabText"
+                        android:clickable="true"
+                        android:text="Physiotherapy"
+                        android:textFontWeight="400" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="100dp"
+                    android:layout_height="120dp"
+                    android:layout_marginStart="20dp"
+                    android:orientation="vertical">
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="95dp"
+                        android:layout_height="93dp"
+                        android:layout_centerInParent="true"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="2dp"
                         android:src="@drawable/first"
-                        app:civ_border_color="@color/purple_700"
+                        app:civ_border_color="@color/white"
                         app:civ_border_width="2dp" />
                     <TextView
                         android:id="@+id/text_emer"
@@ -371,7 +397,7 @@
                 android:paddingLeft="30dp"
                 android:textAppearance="@style/CustomTabText"
                 android:text="Personal Care"
-                android:textColor="@color/purple_700"
+                android:textColor="@color/black"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -395,7 +421,7 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_margin="2dp"
                         android:src="@drawable/ger"
-                        app:civ_border_color="@color/purple_700"
+                        app:civ_border_color="@color/white"
                         app:civ_border_width="2dp" />
                     <TextView
                         android:id="@+id/text_eld"
@@ -421,7 +447,7 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_margin="2dp"
                         android:src="@drawable/diab"
-                        app:civ_border_color="@color/purple_700"
+                        app:civ_border_color="@color/white"
                         app:civ_border_width="2dp" />
                     <TextView
                         android:id="@+id/text_diab"

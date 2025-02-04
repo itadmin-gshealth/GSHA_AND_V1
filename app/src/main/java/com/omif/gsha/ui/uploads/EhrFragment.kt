@@ -237,7 +237,7 @@ class EhrFragment : Fragment() {
                         loadExpandable(mAuth.currentUser?.uid.toString())
                         Toast.makeText(this@EhrFragment.context,"File added successfully", Toast.LENGTH_SHORT).show()
                     }.addOnFailureListener {
-                        Toast.makeText(this@EhrFragment.context, "Failed in downloading", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this@EhrFragment.context, "Error in upload", Toast.LENGTH_SHORT).show();
                     }
                 }?.addOnFailureListener {
                     Toast.makeText(this@EhrFragment.context, "Failed in downloading", Toast.LENGTH_SHORT).show();
@@ -303,7 +303,7 @@ class EhrFragment : Fragment() {
                        )
                    }, Toast.LENGTH_SHORT
                ).show()*/
-            val link = expandableTitleList?.let {
+            val date = expandableTitleList?.let {
                 expandableDetailList?.get(
                     it[groupPosition]
                 )?.get(
@@ -311,7 +311,7 @@ class EhrFragment : Fragment() {
                 )
             }
 
-            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(link))
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(date))
             startActivity(browserIntent)
             false
         })

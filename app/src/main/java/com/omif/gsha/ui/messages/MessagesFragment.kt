@@ -10,11 +10,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.LinearLayout
-import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
@@ -30,11 +29,11 @@ import com.omif.gsha.adapter.UserAdapter
 import com.omif.gsha.databinding.FragmentMessagesBinding
 import com.omif.gsha.model.Message
 import com.omif.gsha.model.User
-import com.omif.gsha.ui.pharma.PharmaFragment
 import com.omif.gsha.ui.signin.SignInFragment
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
+
 
 class MessagesFragment : Fragment() {
 
@@ -73,6 +72,8 @@ class MessagesFragment : Fragment() {
         userRecyclerView = binding.userRecyclerView
         userRecyclerView.layoutManager = LinearLayoutManager(binding.root.context)
         userRecyclerView.adapter = adapter
+
+
 
         val preferences =
             activity?.getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)

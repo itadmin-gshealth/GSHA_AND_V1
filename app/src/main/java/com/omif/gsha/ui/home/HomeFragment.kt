@@ -53,7 +53,7 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        //val textView: TextView = binding.textHome
+        val textView: TextView = binding.textHome
         mAuth = FirebaseAuth.getInstance()
         mDbRef = FirebaseDatabase.getInstance().reference
         if(mAuth.currentUser != null)
@@ -77,9 +77,13 @@ class HomeFragment : Fragment() {
                            editor?.putString("uGender",user.gender)
                            editor?.putInt("uType",user.uType)
                            editor?.putInt("uInternal",user.internal)
-                           if(user.parentId.isNullOrBlank())
+                           if(user.uType == 3)
                            {
                                editor?.putString("uParentId",user.parentId)
+                           }
+                           else
+                           {
+                               editor?.putString("uParentId","")
                            }
                            if(user.uType == 2)
                            {
@@ -92,7 +96,6 @@ class HomeFragment : Fragment() {
                            }
                            editor?.commit()
                        }
-
                    }
                }
                override fun onCancelled(error: DatabaseError) {
@@ -102,7 +105,7 @@ class HomeFragment : Fragment() {
        }
 
         homeViewModel.text.observe(viewLifecycleOwner) {
-            //textView.text = it
+            textView.text = it
         }
 
         val scrollView: ScrollView = binding.scrollView
